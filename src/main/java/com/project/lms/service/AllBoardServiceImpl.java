@@ -1,8 +1,8 @@
-package com.project.lms.service.admin;
+package com.project.lms.service;
 
 import com.project.lms.dto.AllBoardDTO;
 import com.project.lms.entity.AllBoard;
-import com.project.lms.repository.admin.AllBoardRepository;
+import com.project.lms.repository.AllBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;

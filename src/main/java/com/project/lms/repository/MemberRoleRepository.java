@@ -1,4 +1,4 @@
-package com.project.lms.repository.member;
+package com.project.lms.repository;
 
 import com.project.lms.entity.MemberRole;
 import org.springframework.data.jpa.repository.JpaRepository;

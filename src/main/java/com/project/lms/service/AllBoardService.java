@@ -1,4 +1,4 @@
-package com.project.lms.service.admin;
+package com.project.lms.service;
 
 import com.project.lms.dto.AllBoardDTO;
 
