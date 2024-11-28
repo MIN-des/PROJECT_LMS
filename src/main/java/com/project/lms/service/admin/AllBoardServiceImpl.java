@@ -1,15 +1,11 @@
 package com.project.lms.service.admin;
 
 import com.project.lms.dto.AllBoardDTO;
-import com.project.lms.dto.PageRequestDTO;
-import com.project.lms.dto.PageResponseDTO;
 import com.project.lms.entity.AllBoard;
 import com.project.lms.repository.admin.AllBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -45,16 +41,6 @@ public class AllBoardServiceImpl implements AllBoardService {
 
     @Override
     public void remove(Long allBno) {
-        allBoardRepository.deleteById(allBno);
-    }
 
-    @Override
-    public PageResponseDTO<AllBoardDTO> list(PageRequestDTO pageRequestDTO) {
-
-//        String[] types = pageRequestDTO.getTypes();
-//        String keyword = pageRequestDTO.getKeyword();
-//        Pageable pageable = pageRequestDTO.getPageabLe("bno");
-//        Page<AllBoard> result = allBoardRepository.searchAll(types, keyword, pageable);
-        return null;
     }
 }

@@ -1,8 +1,6 @@
 package com.project.lms.service.admin;
 
 import com.project.lms.dto.AllBoardDTO;
-import com.project.lms.dto.PageRequestDTO;
-import com.project.lms.dto.PageResponseDTO;
 
 public interface AllBoardService {
 
@@ -13,6 +11,4 @@ public interface AllBoardService {
     void modify(AllBoardDTO allBoardDTO);
 
     void remove(Long allBno);
-
-    PageResponseDTO<AllBoardDTO> list(PageRequestDTO pageRequestDTO);
 }
