@@ -1,13 +1,9 @@
-package com.project.lms;
+package com.project.lms.repository;
 
 import com.project.lms.entity.AllBoard;
-import com.project.lms.repository.admin.AllBoardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
