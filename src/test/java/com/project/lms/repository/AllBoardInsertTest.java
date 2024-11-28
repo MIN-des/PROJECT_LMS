@@ -24,9 +24,6 @@ public class AllBoardInsertTest {
         allBoard.setAllContent("테스트 내용");
         allBoard.setAllWriter("테스트 작성자");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-
         AllBoard savedAllBoard = allBoardRepository.save(allBoard);
 
         assertNotNull(savedAllBoard.getAllBno());
