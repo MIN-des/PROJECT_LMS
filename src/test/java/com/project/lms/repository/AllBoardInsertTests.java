@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-public class AllBoardInsertTest {
+public class AllBoardInsertTests {
 
     @Autowired
     private AllBoardRepository allBoardRepository;

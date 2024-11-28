@@ -1,4 +1,4 @@
-package com.project.lms.repository.professor;
+package com.project.lms.repository;
 
 import com.project.lms.entity.Professor;
 import org.springframework.data.jpa.repository.JpaRepository;

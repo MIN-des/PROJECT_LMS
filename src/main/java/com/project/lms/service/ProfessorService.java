@@ -1,4 +1,4 @@
-package com.project.lms.service.professor;
+package com.project.lms.service;
 
 import com.project.lms.dto.ProfessorDTO;
 import org.springframework.http.ResponseEntity;

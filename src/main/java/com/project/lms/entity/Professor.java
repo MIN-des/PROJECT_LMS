@@ -44,5 +44,4 @@ public class Professor {
 
 	@CreatedDate
 	private LocalDateTime yearEmp; // 임용년도
-
 }

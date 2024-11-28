@@ -1,15 +1,13 @@
-package com.project.lms.service.admin;
+package com.project.lms.service;
 
 import com.project.lms.dto.AllBoardDTO;
 import com.project.lms.dto.PageRequestDTO;
 import com.project.lms.dto.PageResponseDTO;
 import com.project.lms.entity.AllBoard;
-import com.project.lms.repository.admin.AllBoardRepository;
+import com.project.lms.repository.AllBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

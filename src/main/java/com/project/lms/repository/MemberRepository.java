@@ -1,7 +1,13 @@
-package com.project.lms.repository.member;
+package com.project.lms.repository;
 
 import com.project.lms.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+import java.util.List;
+
+@Repository
+public interface MemberRepository extends JpaRepository<Member, String> {
+
+    List<Member> findByMid(String mid);
 }

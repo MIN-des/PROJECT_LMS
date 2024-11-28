@@ -14,7 +14,7 @@ import java.util.List;
 // Member와 MemberRole 저장이 하나의 트랜잭션으로 처리되도록함
 // 오류 발생 시 전체 트랜잭션이 롤백
 @Transactional
-public class MemberRepositoryTest {
+public class MemberRepositoryTests {
 
     @Autowired
     MemberRepository memberRepository;

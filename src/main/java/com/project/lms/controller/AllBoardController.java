@@ -4,7 +4,7 @@ package com.project.lms.controller;
 import com.project.lms.dto.AllBoardDTO;
 import com.project.lms.dto.PageRequestDTO;
 import com.project.lms.dto.PageResponseDTO;
-import com.project.lms.service.admin.AllBoardService;
+import com.project.lms.service.AllBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
