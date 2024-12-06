@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @ToString
-public class PageResponseDTO<E> {
+public class PageResponseDTO <E> {
     //페이징 처리 DTO
 
     private int page;
