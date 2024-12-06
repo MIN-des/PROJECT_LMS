@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class Files {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String uuid;
 
     private String fName;
