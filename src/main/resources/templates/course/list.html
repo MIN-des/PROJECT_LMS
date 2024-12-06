@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>강의 목록</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+    <link rel="icon" href="/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
+
+    <!-- Fonts and icons -->
+    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
+    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="/assets/css/demo.css"/>
+</head>
+
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-wrapper scrollbar-inner">
+            <div class="sidebar-content">
+                <div class="user">
+                    <div class="avatar-sm float-left me-2">
+                        <img src="/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+                    </div>
+                    <div class="info">
+                        <a href="#" aria-expanded="true">
+                            <span>
+                                Admin User
+                                <span class="user-level">Administrator</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="/dashboard">
+                            <i class="fas fa-home"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/courses/list">
+                            <i class="fas fa-book"></i>
+                            <p>Courses</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/students">
+                            <i class="fas fa-users"></i>
+                            <p>Students</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/professors">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <p>Professors</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/settings">
+                            <i class="fas fa-cog"></i>
+                            <p>Settings</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <div class="main-header">
+            <!-- Navbar Header -->
+            <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                <div class="container-fluid">
+                    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button type="submit" class="btn btn-search pe-1">
+                                    <i class="fa fa-search search-icon"></i>
+                                </button>
+                            </div>
+                            <input type="text" placeholder="Search ..." class="form-control"/>
+                        </div>
+                    </nav>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </div>
+
+        <div class="container mt-5">
+            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+                <div class="card card-round w-100">
+                    <!-- 검색 섹션 -->
+                    <div class="card-header">
+
+                    <div class="card-body">
+                        <form th:object="${searchDTO}" class="row g-3">
+                            <div class="col-md-3">
+                                <select th:field="*{searchDateType}" class="form-select">
+                                    <option value="all">전체기간</option>
+                                    <option value="1d">1일</option>
+                                    <option value="1w">1주</option>
+                                    <option value="1m">1개월</option>
+                                    <option value="6m">6개월</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select th:field="*{searchRestStatus}" class="form-select">
+                                    <option value="">상태(전체)</option>
+                                    <option value="REST">잔여 있음</option>
+                                    <option value="NO_REST">잔여 없음</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select th:field="*{searchBy}" class="form-select">
+                                    <option value="cName">강의명</option>
+                                    <option value="createdBy">등록자</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input th:field="*{searchQuery}" type="text" class="form-control"
+                                       placeholder="검색어를 입력하세요">
+                            </div>
+                            <div class="col-md-12 text-end">
+                                <button type="submit" class="btn btn-primary">검색</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div></div>
+
+            <!-- 강의 테이블 -->
+            <div class="card card-round">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>강의 ID</th>
+                            <th>강의명</th>
+                            <th>학점</th>
+                            <th>잔여인원</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="course : ${courses.content}">
+                            <td th:text="${course.cId}"></td>
+                            <td>
+                                <a th:href="'/courses/list/' + ${course.cId}" th:text="${course.cName}"></a>
+                            </td>
+                            <td th:text="${course.credits}"></td>
+                            <td th:text="${course.restNum}"></td>
+                            <td th:text="${course.status}"></td>
+                            <td>
+                                <a th:href="'/courses/update/' + ${course.cId}" class="btn btn-sm btn-primary">수정</a>
+                                <a th:href="'/courses/delete/' + ${course.cId}" class="btn btn-sm btn-danger">삭제</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 페이징 -->
+            <nav th:if="${courses.totalPages > 1}" aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${courses.first} ? 'disabled'">
+                        <a th:href="@{/courses/professor/list/{page}(page=${courses.number - 1})}"
+                           class="page-link">이전</a>
+                    </li>
+                    <li class="page-item" th:each="page : ${#numbers.sequence(0, courses.totalPages - 1)}"
+                        th:classappend="${page == courses.number} ? 'active'">
+                        <a th:href="@{/courses/professor/list/{page}(page=${page})}" class="page-link"
+                           th:text="${page + 1}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${courses.last} ? 'disabled'">
+                        <a th:href="@{/courses/professor/list/{page}(page=${courses.number + 1})}"
+                           class="page-link">다음</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery-3.7.1.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -17,6 +17,6 @@ public class RootConfig {
 						.AccessLevel.PRIVATE)
 				.setMatchingStrategy(MatchingStrategies.LOOSE);
 
-		return modelMapper;
-	}
+        return modelMapper;
+    }
 }
