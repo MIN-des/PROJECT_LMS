@@ -6,6 +6,7 @@ import com.project.lms.dto.StudentDTO;
 import com.project.lms.entity.Student;
 import com.project.lms.repository.StudentRepository;
 import org.modelmapper.ModelMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
 	@Autowired
@@ -61,6 +63,12 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
+	public Student getStudentInfo(String sId) {
+		return studentRepository.findById(sId)
+				.orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
+	}
+
+	@Override
 	public void deleteStudent(String sId) {
 		studentRepository.deleteById(sId);
 	}
@@ -90,13 +98,24 @@ public class StudentServiceImpl implements StudentService {
 		}
 	}
 
-//	@Override
-//	public Page<StudentDTO> searchStudentsByDept(String sDept, Pageable pageable) {
-//		Dept dept = Dept.valueOf(sDept.toUpperCase()); // Enum 변환
-//		return StudentRepository.findBysDept(dept, pageable)
-//				.map(student -> modelMapper.map(student, StudentDTO.class));
-//	}
+	@Override
+	public Student updateInfo(String sId, StudentDTO updateInfoDTO) {
+		Student updateInfo = studentRepository.findById(sId)
+				.orElseThrow(() -> new IllegalArgumentException("학생 정보를 찾을 수 없습니다."));
 
+		updateInfo.setSName(updateInfoDTO.getSName() != null ? updateInfoDTO.getSName() : updateInfo.getSName());
+		updateInfo.setSPw(updateInfoDTO.getSPw() != null ? updateInfoDTO.getSPw() : updateInfo.getSPw());
+		updateInfo.setSTel(updateInfoDTO.getSTel() != null ? updateInfoDTO.getSTel() : updateInfo.getSTel());
+		updateInfo.setSAdd(updateInfoDTO.getSAdd() != null ? updateInfoDTO.getSAdd() : updateInfo.getSAdd());
+		updateInfo.setSBirth(updateInfoDTO.getSBirth() != null ? updateInfoDTO.getSBirth() : updateInfo.getSBirth());
+		updateInfo.setSEmail(updateInfoDTO.getSEmail() != null ? updateInfoDTO.getSEmail() : updateInfo.getSEmail());
+		updateInfo.setGrade(updateInfoDTO.getGrade() > 0 ? updateInfoDTO.getGrade() : updateInfo.getGrade());
+		updateInfo.setSDept(updateInfoDTO.getSDept() != null ? updateInfoDTO.getSDept() : updateInfo.getSDept());
+		updateInfo.setSGen(updateInfoDTO.getSGen() != null ? updateInfoDTO.getSGen() : updateInfo.getSGen());
+		updateInfo.setRole(updateInfoDTO.getRole() != null ? updateInfoDTO.getRole() : updateInfo.getRole());
+
+		return studentRepository.save(updateInfo);
+	}
 
 	@Override
 	public Page<StudentDTO> getAllStudents(Pageable pageable) {

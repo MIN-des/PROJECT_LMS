@@ -35,5 +35,5 @@ public class Student {
     private Dept sDept;
 
     @Enumerated(EnumType.STRING)
-    private Role role; // 독립적인 테이블이므로 필요없음
+    private Role role = Role.STUDENT; // 독립적인 테이블이므로 필요없음
 }
