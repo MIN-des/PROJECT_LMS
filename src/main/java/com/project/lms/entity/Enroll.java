@@ -16,8 +16,6 @@ public class Enroll {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eId;
 
-    @JoinColumn(name = "cId")
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sId")
     private Student sId;
