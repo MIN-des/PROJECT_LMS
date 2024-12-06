@@ -1,25 +1,20 @@
-package com.project.lms.entity;
+package com.project.lms.dto;
 
 import com.project.lms.constant.RestStatus;
-import com.project.lms.dto.CourseDTO;
+import com.project.lms.entity.Course;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.modelmapper.ModelMapper;
 
-import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Entity
 @Getter
 @Setter
-@ToString
-public class Course extends BaseEntity {
+public class CourseDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cId;
 
     @NotBlank(message = "강의명은 필수 항목입니다.")
@@ -30,16 +25,20 @@ public class Course extends BaseEntity {
     @Max(value = 6, message = "학점은 6 이하이어야 합니다.")
     private int credits; // 학점
 
-    @Enumerated(EnumType.STRING)
     private RestStatus status; // 잔여인원 상태
 
     private int restNum; // 잔여인원 숫자
 
-    // 강의 생성 후 업데이트 하는 경우
-    public void updateCourse(CourseDTO courseDTO) {
-        this.cName = courseDTO.getCName();
-        this.credits = courseDTO.getCredits();
-        this.status = courseDTO.getStatus();
-        this.restNum = courseDTO.getRestNum();
+    private static ModelMapper modelMapper = new ModelMapper();
+
+    // 강의 생성하는 메소드
+    public Course createCourse() {
+        return modelMapper.map(this, Course.class);
+    }
+
+    // Course 객체를 입력받아 CourseDTO 객체로 변환하는 메소드
+    // 객체 변환을 위해 ModelMapper 사용함
+    public static CourseDTO of(Course course) {
+        return modelMapper.map(course, CourseDTO.class);
     }
 }

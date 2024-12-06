@@ -19,7 +19,7 @@ import javax.persistence.Id;
 public class Admin {
 
     @Id
-    private String aId; // role 1자리 + dept 2자리 + 입학 2자리 + 숫자 3자리(001...)
+    private String aId; // role 1자리(A, P, S) +  입학연도 2자리 + dept 1자리 + 숫자 3자리(001...)
     private String aName; // 부서 이름만
     private String aPw;
 
