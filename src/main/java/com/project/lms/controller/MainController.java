@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+
 public class MainController {
 
     @GetMapping("/hello")  // /hello 경로로 접근 시 hello.html을 반환

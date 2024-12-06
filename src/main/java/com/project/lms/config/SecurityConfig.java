@@ -1,4 +1,4 @@
-//package com.project.lms.config;
+package com.project.lms.config;//package com.project.lms.config;
 //
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;

@@ -21,6 +21,8 @@ public class Board {
 
     private String title;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private String writer;
@@ -28,6 +30,8 @@ public class Board {
     private LocalDate regDate;
 
     private LocalDate modDate;
+
+    private int views;
 
     @OneToMany(mappedBy = "bno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Files> fileList = new ArrayList<>();

@@ -6,8 +6,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class  UploadDTO {
+public class UploadDTO {
     private List<Files> files;
 }
-
-

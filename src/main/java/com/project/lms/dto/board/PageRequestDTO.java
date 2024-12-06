@@ -15,7 +15,7 @@ import java.net.URLEncoder;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageRequestDTO  { //페이징 처리 DTO
+public class PageRequestDTO { //페이징 처리 DTO
 
     @Builder.Default
     private int page = 1;
@@ -54,7 +54,6 @@ public class PageRequestDTO  { //페이징 처리 DTO
                     builder.append("&keyword=" + URLEncoder.encode(keyword, "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
 
-
                 }
             }
 
@@ -64,4 +63,3 @@ public class PageRequestDTO  { //페이징 처리 DTO
         return link;
     }
 }
-
