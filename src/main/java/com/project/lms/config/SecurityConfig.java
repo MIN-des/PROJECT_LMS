@@ -16,6 +16,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+      http.csrf().disable();
+//              .authorizeRequests()
+//              .anyRequest().authenticated();
     }
 
     // http 요청에 대한 보안을 설정함
