@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>교수 상세정보</title>
+</head>
+<body>
+<h1>교수 상세정보</h1>
+<div th:if="${error != null}" style="color: red;">
+  <p th:text="${error}"></p>
+</div>
+<form th:action="@{'/admin/professors/' + ${professor.pId} + '/edit'}" method="post">
+  <input type="hidden" name="page" th:value="${page != null ? page : 0}">
+  <input type="hidden" name="searchType" th:value="${searchType != null ? searchType : ''}">
+  <input type="hidden" name="keyword" th:value="${keyword != null ? keyword : ''}">
+  <label>교직원번호: </label><input type="text" name="pId" th:value="${professor.pId}" readonly><br>
+  <label>이름: </label><input type="text" name="pName" th:value="${professor.pName}" required><br>
+  <label>비밀번호: </label><input type="text" name="pPw" th:value="${professor.pPw}" required><br>
+  <label>전화번호: </label><input type="text" name="pTel" th:value="${professor.pTel}" required><br>
+  <label>주소: </label><input type="text" name="pAdd" th:value="${professor.pAdd}" required><br>
+  <label>생년월일: </label><input type="date" name="pBirth" th:value="${professor.pBirth}" required><br>
+  <label>이메일: </label><input type="email" name="pEmail" th:value="${professor.pEmail}" required><br>
+  <label>입사년도: </label>
+  <select name="year">
+    <option th:each="i : ${#numbers.sequence(1970, 2024)}"
+            th:value="${i}"
+            th:text="${i}"
+            th:selected="${i == professor.year}">
+    </option>
+  </select>
+  <br>
+  <label>성별: </label>
+  <select name="pGen">
+    <option th:each="gender : ${T(com.project.lms.constant.Gen).values()}"
+            th:value="${gender.name()}"
+            th:text="${gender}"
+            th:selected="${gender.name() == (professor.pGen != null ? professor.pGen.name() : '')}">Gender</option>
+  </select>
+  <br>
+  <label>학부: </label>
+  <select name="pDept">
+    <option th:each="department : ${T(com.project.lms.constant.Dept).values()}"
+            th:value="${department.name()}"
+            th:text="${department}"
+            th:selected="${department.name() == (professor.pDept != null ? professor.pDept.name() : '')}">Dept</option>
+  </select>
+  <br>
+
+  <label>ROLE: </label><input type="text" name="role" th:value="${professor.role}" readonly><br>
+
+  <button type="submit">수정</button>
+</form>
+<form th:action="@{'/admin/professors/' + ${professor.pId} + '/delete'}" method="post">
+  <input type="hidden" name="page" th:value="${page != null ? page : 0}">
+  <input type="hidden" name="searchType" th:value="${searchType != null ? searchType : ''}">
+  <input type="hidden" name="keyword" th:value="${keyword != null ? keyword : ''}">
+  <button type="submit">삭제</button>
+</form>
+<a th:href="@{/admin/professors}">돌아가기</a>
+</body>
+</html>
