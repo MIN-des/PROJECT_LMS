@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학생 생성</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
+  <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
+</head>
+<body>
+<div class="wrapper">
+  <!-- Sidebar -->
+  <div class="sidebar" data-background-color="dark">
+    <!-- Sidebar content here -->
+  </div>
+  <!-- End Sidebar -->
+
+  <div class="main-panel">
+    <div class="container">
+      <div class="page-inner">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+          <div>
+            <h3 class="fw-bold mb-3">학생 생성</h3>
+          </div>
+          <div class="ms-md-auto py-2 py-md-0">
+            <a th:href="@{/admin/students}" class="btn btn-secondary btn-round">학생 리스트로 돌아가기</a>
+          </div>
+        </div>
+
+        <div th:if="${error != null}" class="alert alert-danger">
+          <p th:text="${error}"></p>
+        </div>
+
+        <form th:action="@{/admin/students/create}" method="post" class="mb-4">
+          <div class="mb-3">
+            <label for="sId" class="form-label">학번</label>
+            <input type="text" id="sId" name="sId" th:value="${student.sId}" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="sName" class="form-label">이름</label>
+            <input type="text" id="sName" name="sName" th:value="${student.sName}" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="sPw" class="form-label">비밀번호</label>
+            <input type="text" id="sPw" name="sPw" th:value="${student.sPw}" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="sTel" class="form-label">전화번호</label>
+            <input type="text" id="sTel" name="sTel" th:value="${student.sTel}" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="sAdd" class="form-label">주소</label>
+            <input type="text" id="sAdd" name="sAdd" th:value="${student.sAdd}" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="sBirth" class="form-label">생년월일</label>
+            <input type="date" id="sBirth" name="sBirth" th:value="${student.sBirth}" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="sEmail" class="form-label">이메일</label>
+            <input type="email" id="sEmail" name="sEmail" th:value="${student.sEmail}" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="sDept" class="form-label">학부</label>
+            <select id="sDept" name="sDept" class="form-select" required>
+              <option value="HUMAN" th:selected="${student.sDept == 'HUMAN'}">인문</option>
+              <option value="SOCIAL" th:selected="${student.sDept == 'SOCIAL'}">사회</option>
+              <option value="TECH" th:selected="${student.sDept == 'TECH'}">공학</option>
+              <option value="ARTS" th:selected="${student.sDept == 'ARTS'}">예체능</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="grade" class="form-label">학년</label>
+            <select id="grade" name="grade" class="form-select" required>
+              <option value="1" th:selected="${student.grade == 1}">1학년</option>
+              <option value="2" th:selected="${student.grade == 2}">2학년</option>
+              <option value="3" th:selected="${student.grade == 3}">3학년</option>
+              <option value="4" th:selected="${student.grade == 4}">4학년</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="sGen" class="form-label">성별</label>
+            <select id="sGen" name="sGen" class="form-select" required>
+              <option value="MALE" th:selected="${student.sGen == 'MALE'}">남성</option>
+              <option value="FEMALE" th:selected="${student.sGen == 'FEMALE'}">여성</option>
+            </select>
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">생성</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container-fluid d-flex justify-content-between">
+        <div>Copyright © 2024. All rights reserved.</div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/kaiadmin.min.js"></script>
+</body>
+</html>
