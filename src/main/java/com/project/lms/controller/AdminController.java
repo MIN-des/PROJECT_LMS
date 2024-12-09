@@ -1,6 +1,5 @@
 package com.project.lms.controller;
 
-import com.project.lms.constant.Dept;
 import com.project.lms.dto.ProfessorDTO;
 import com.project.lms.dto.StudentDTO;
 import com.project.lms.service.ProfessorService;
@@ -13,9 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @Controller
 @RequestMapping("/admin")
@@ -139,18 +135,23 @@ public class AdminController {
 		return "admin/student/list";
 	}
 
-
 	// 학생 상세정보
 	@GetMapping("/students/{id}")
 	public String getStudent(@PathVariable String id, Model model,
 													 @RequestParam(required = false) String searchType,
 													 @RequestParam(required = false) String keyword,
+													 @RequestParam(defaultValue = "sId") String sortField, // 기본값 sId
+													 @RequestParam(defaultValue = "asc") String sortDir,   // 기본값 asc
+													 @RequestParam(required = false) Boolean isSorted,   // 정렬 여부 플래그
 													 @RequestParam(required = false) Integer page) {
 		StudentDTO student = studentService.getStudentById(id)
 				.orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
 		model.addAttribute("student", student);
 		model.addAttribute("searchType", searchType);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("sortDir", sortDir);
+		model.addAttribute("isSorted", isSorted != null && isSorted); // 정렬 여부 전달
 		model.addAttribute("page", page);
 		return "admin/student/detail";
 	}
@@ -162,19 +163,29 @@ public class AdminController {
 															@RequestParam(required = false) String searchType,
 															@RequestParam(required = false) String keyword,
 															@RequestParam(required = false, defaultValue = "0") Integer page,
+															@RequestParam(defaultValue = "sId") String sortField, // 정렬 필드
+															@RequestParam(defaultValue = "asc") String sortDir,  // 정렬 방향
+															@RequestParam(required = false) Boolean isSorted,   // 정렬 여부 플래그
 															Model model) {
 
 		try {
 			studentService.updateStudent(id, studentDTO);
 			return "redirect:/admin/students?page=" + (page - 1) +
 					(searchType != null ? "&searchType=" + searchType : "") +
-					(keyword != null ? "&keyword=" + keyword : "");
+					(keyword != null ? "&keyword=" + keyword : "") +
+					"&sortField=" + sortField +
+					"&sortDir=" + sortDir +
+					"&isSorted=" + isSorted;
+
 		} catch (IllegalArgumentException e) {
 			model.addAttribute("error", e.getMessage());
 			model.addAttribute("student", studentDTO);
 			model.addAttribute("page", page);
 			model.addAttribute("searchType", searchType);
 			model.addAttribute("keyword", keyword);
+			model.addAttribute("sortField", sortField);
+			model.addAttribute("sortDir", sortDir);
+			model.addAttribute("isSorted", isSorted != null && isSorted); // 정렬 여부 전달
 			return "admin/student/detail";
 		}
 	}
@@ -184,11 +195,18 @@ public class AdminController {
 	public String deleteStudent(@PathVariable String id,
 															@RequestParam(required = false) String searchType,
 															@RequestParam(required = false) String keyword,
-															@RequestParam(required = false, defaultValue = "0") Integer page) {
+															@RequestParam(defaultValue = "sId") String sortField, // 정렬 필드
+															@RequestParam(defaultValue = "asc") String sortDir,  // 정렬 방향
+															@RequestParam(required = false) Boolean isSorted,   // 정렬 여부 플래그
+															@RequestParam(required = false, defaultValue = "0") Integer page
+															) {
 		studentService.deleteStudent(id);
 		return "redirect:/admin/students?page=" + (page - 1) +
 				(searchType != null ? "&searchType=" + searchType : "") +
-				(keyword != null ? "&keyword=" + keyword : "");
+				(keyword != null ? "&keyword=" + keyword : "") +
+				"&sortField=" + sortField +
+				"&sortDir=" + sortDir +
+				"&isSorted=" + isSorted;
 	}
 
 	// 교수 리스트
@@ -255,6 +273,9 @@ public class AdminController {
 	public String getProfessor(@PathVariable String id, Model model,
 														 @RequestParam(required = false) String searchType,
 														 @RequestParam(required = false) String keyword,
+														 @RequestParam(defaultValue = "pId") String sortField, // 정렬 필드
+														 @RequestParam(defaultValue = "asc") String sortDir,  // 정렬 방향
+														 @RequestParam(required = false) Boolean isSorted,   // 정렬 여부 플래그
 														 @RequestParam(required = false) Integer page) {
 		ProfessorDTO professor = professorService.getProfessorById(id)
 				.orElseThrow(() -> new IllegalArgumentException("교수를 찾을 수 없습니다."));
@@ -262,6 +283,9 @@ public class AdminController {
 		model.addAttribute("searchType", searchType);
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("page", page);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("sortDir", sortDir);
+		model.addAttribute("isSorted", isSorted != null && isSorted); // 정렬 여부 전달
 		return "admin/professor/detail";
 	}
 
@@ -270,19 +294,29 @@ public class AdminController {
 	public String updateProfessor(@PathVariable String id, @ModelAttribute ProfessorDTO professorDTO,
 																@RequestParam(required = false) String searchType,
 																@RequestParam(required = false) String keyword,
+																@RequestParam(defaultValue = "pId") String sortField, // 정렬 필드
+																@RequestParam(defaultValue = "asc") String sortDir,  // 정렬 방향
+																@RequestParam(required = false) Boolean isSorted,   // 정렬 여부 플래그
 																@RequestParam(required = false, defaultValue = "0") Integer page,
 																Model model) {
 		try {
 			professorService.updateProfessor(id, professorDTO);
 			return "redirect:/admin/professors?page=" + (page - 1) +
 					(searchType != null ? "&searchType=" + searchType : "") +
-					(keyword != null ? "&keyword=" + keyword : "");
+					(keyword != null ? "&keyword=" + keyword : "") +
+					"&sortField=" + sortField +
+					"&sortDir=" + sortDir +
+					"&isSorted=" + isSorted;
+
 		} catch (IllegalArgumentException e) {
 			model.addAttribute("error", e.getMessage());
 			model.addAttribute("professor", professorDTO);
 			model.addAttribute("page", page);
 			model.addAttribute("searchType", searchType);
 			model.addAttribute("keyword", keyword);
+			model.addAttribute("sortField", sortField);
+			model.addAttribute("sortDir", sortDir);
+			model.addAttribute("isSorted", isSorted != null && isSorted); // 정렬 여부 전달
 			return "admin/professor/detail";
 		}
 	}
@@ -292,10 +326,17 @@ public class AdminController {
 	public String deleteProfessor(@PathVariable String id,
 																@RequestParam(required = false, defaultValue = "") String searchType,
 																@RequestParam(required = false, defaultValue = "") String keyword,
+																@RequestParam(defaultValue = "pId") String sortField, // 정렬 필드
+																@RequestParam(defaultValue = "asc") String sortDir,  // 정렬 방향
+																@RequestParam(required = false) Boolean isSorted,   // 정렬 여부 플래그
 																@RequestParam(required = false, defaultValue = "0") Integer page) {
 		professorService.deleteProfessor(id);
+
 		return "redirect:/admin/professors?page=" + (page - 1) +
 				(searchType != null ? "&searchType=" + searchType : "") +
-				(keyword != null ? "&keyword=" + keyword : "");
+				(keyword != null ? "&keyword=" + keyword : "") +
+				"&sortField=" + sortField +
+				"&sortDir=" + sortDir +
+				"&isSorted=" + isSorted;
 	}
 }

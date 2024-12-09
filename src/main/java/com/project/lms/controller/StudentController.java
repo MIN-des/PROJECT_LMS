@@ -1,18 +1,21 @@
 package com.project.lms.controller;
 
 import com.project.lms.dto.StudentDTO;
+import com.project.lms.dto.TuitionInvoiceUploadDTO;
 import com.project.lms.entity.Student;
 import com.project.lms.service.StudentService;
+import com.project.lms.service.TuitionInvoiceUploadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,6 +23,7 @@ import javax.validation.Valid;
 public class StudentController {
 
   private final StudentService studentService;
+  private final TuitionInvoiceUploadService tuitionInvoiceUploadService;
 
   @GetMapping("/info/{sId}")
   public String getStudentById(@PathVariable String sId, Model model) {
@@ -46,6 +50,50 @@ public class StudentController {
     return "redirect:/student/info/" + updatedInfo.getSId();
   }
 
+  // 등록금 고지서 목록 조회
+  @GetMapping("/invoices/{sId}")
+  public String getMyInvoices(@PathVariable String sId, Model model) {
+    List<TuitionInvoiceUploadDTO> invoices = tuitionInvoiceUploadService.getInvoicesByStudentId(sId);
+    model.addAttribute("invoices", invoices);
+    return "student/invoices"; // 학생용 고지서 목록 뷰
+  }
+
+  // 등록금 고지서 다운로드
+  @GetMapping("/invoices/{sId}/download/{tId}")
+  public ResponseEntity<byte[]> downloadInvoice(@PathVariable String sId, @PathVariable Long tId) throws Exception {
+    // sId와 tId의 유효성 검증
+    if (sId == null || sId.isEmpty()) {
+      throw new IllegalArgumentException("학생 ID가 유효하지 않습니다.");
+    }
+    if (tId == null || tId <= 0) {
+      throw new IllegalArgumentException("tId가 유효하지 않습니다.");
+    }
+
+    byte[] fileData = tuitionInvoiceUploadService.downloadInvoice(tId);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_PDF);
+    headers.setContentDispositionFormData("attachment", "invoice_" + tId + ".pdf");
+
+    return ResponseEntity.ok()
+        .headers(headers)
+        .body(fileData);
+  }
+
+  // 등록금 고지서 미리보기
+  @GetMapping("/invoices/preview/{tId}")
+  public ResponseEntity<byte[]> previewInvoice(@PathVariable Long tId) throws Exception {
+
+    // 등록금 고지서 다운로드 서비스 호출
+    byte[] fileData = tuitionInvoiceUploadService.downloadInvoice(tId);
+
+    // HTTP 응답 설정
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_PDF); // 브라우저가 PDF로 렌더링하도록 Content-Type 설정
+    return ResponseEntity.ok()
+        .headers(headers)
+        .body(fileData);
+  }
 
 //  @GetMapping("/info")
 //  public Student getMyInfo() {

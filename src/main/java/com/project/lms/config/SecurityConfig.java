@@ -15,6 +15,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // 보안 설정 커스터마이징
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.headers()
+            .frameOptions()
+            .sameOrigin(); // SAMEORIGIN 설정으로 변경 / pdf 파일 미리보기 설정
 
     }
 

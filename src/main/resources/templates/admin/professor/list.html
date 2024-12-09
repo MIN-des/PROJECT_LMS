@@ -2,19 +2,81 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
   <title>교수 리스트</title>
   <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
   <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
+  <!-- Fonts and icons -->
+  <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+  <script>
+    WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+            families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
+            urls: ["/assets/css/fonts.min.css"],
+        },
+        active: function () {
+            sessionStorage.fonts = true;
+        },
+    });
+  </script>
 </head>
 <body>
 <div class="wrapper">
-  <!-- Sidebar -->
-  <div class="sidebar" data-background-color="dark">
-    <!-- Sidebar contents can be added here -->
-  </div>
-  <!-- End Sidebar -->
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-logo">
+            <a href="hello.html" class="logo">
+                <img src="/assets/img/logo_light.svg" alt="Logo" class="navbar-brand" height="20"/>
+            </a>
+        </div>
+        <div class="sidebar-wrapper scrollbar-inner">
+            <div class="sidebar-content">
+                <ul class="nav">
+                    <li>
+                        <a th:href="@{/hello}">
+                            <i class="fas fa-home"></i>
+                            <p>메인 페이지</p>
+                        </a>
+                    </li>
+                    <!-- 관리자 페이지 섹션 -->
+                    <li class="nav-item">
+                        <a href="#adminMenu" data-bs-toggle="collapse" aria-expanded="false">
+                            <i class="fas fa-user-cog"></i>
+                            <p>관리자 페이지</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="adminMenu">
+                            <ul class="nav nav-collapse">
+                                <li>
+                                    <a th:href="@{/admin/professors}">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        <p>교수 리스트</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/admin/students}">
+                                        <i class="fas fa-user-graduate"></i>
+                                        <p>학생 리스트</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/admin/invoices}">
+                                        <i class="fas fa-file-invoice"></i>
+                                        <p>등록금 고지서 등록</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Sidebar -->
 
   <div class="main-panel">
     <div class="container">
@@ -57,28 +119,28 @@
             <thead class="table-light">
             <tr>
               <th>
-                <a th:href="@{/admin/professors(sortField='pId', sortDir=${sortField == 'pId' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}">
-<!--                   th:text="'번호' + (${isSorted and sortField == 'pId' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">-->번호
+                <a th:href="@{/admin/professors(sortField='pId', sortDir=${sortField == 'pId' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                   th:text="'번호' + (${isSorted and sortField == 'pId' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
               <th>
-                <a th:href="@{/admin/professors(sortField='pName', sortDir=${sortField == 'pName' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}">
-<!--                   th:text="'이름' + (${isSorted and sortField == 'pName' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">-->이름
+                <a th:href="@{/admin/professors(sortField='pName', sortDir=${sortField == 'pName' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                   th:text="'이름' + (${isSorted and sortField == 'pName' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
               <th>
-                <a th:href="@{/admin/professors(sortField='pDept', sortDir=${sortField == 'pDept' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}">
-<!--                   th:text="'학부' + (${isSorted and sortField == 'pDept' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">-->학부
+                <a th:href="@{/admin/professors(sortField='pDept', sortDir=${sortField == 'pDept' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                   th:text="'학부' + (${isSorted and sortField == 'pDept' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
               <th>
-                <a th:href="@{/admin/professors(sortField='pEmail', sortDir=${sortField == 'pEmail' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}">
-<!--                   th:text="'이메일' + (${isSorted and sortField == 'pEmail' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">-->이메일
+                <a th:href="@{/admin/professors(sortField='pEmail', sortDir=${sortField == 'pEmail' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                   th:text="'이메일' + (${isSorted and sortField == 'pEmail' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
               <th>
-                <a th:href="@{/admin/professors(sortField='year', sortDir=${sortField == 'year' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}">
-<!--                   th:text="'입사년도' + (${isSorted and sortField == 'year' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">-->입사년도
+                <a th:href="@{/admin/professors(sortField='year', sortDir=${sortField == 'year' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                   th:text="'입사년도' + (${isSorted and sortField == 'year' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
               <th>상세정보</th>
@@ -88,11 +150,11 @@
             <tr th:each="professor : ${professors.content}">
               <td th:text="${professor.pId}"></td>
               <td th:text="${professor.pName}"></td>
-              <td th:text="${professor.pDept}"></td>
+              <td th:text="${professor.pDept.koreanName}"></td>
               <td th:text="${professor.pEmail}"></td>
               <td th:text="${professor.year}"></td>
               <td>
-                <a th:href="@{'/admin/professors/' + ${professor.pId} + '?page=' + ${currentPage} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword}}"
+                <a th:href="@{'/admin/professors/' + ${professor.pId} + '?page=' + ${currentPage} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + '&isSorted=' + ${isSorted}}"
                    class="btn btn-primary btn-sm">보기</a>
               </td>
             </tr>
@@ -103,16 +165,16 @@
         <nav th:if="${totalPages > 0}">
           <ul class="pagination justify-content-center">
             <li class="page-item" th:if="${startPage > 1}">
-              <a class="page-link" th:href="@{|/admin/professors?page=${startPage - groupSize - 1}&size=${pageSize}&searchType=${searchType}&keyword=${keyword}&sortField=${sortField}&sortDir=${sortDir}|}">이전</a>
+              <a class="page-link" th:href="@{|/admin/professors?page=${startPage - groupSize - 1}&size=${pageSize}&searchType=${searchType}&keyword=${keyword}&sortField=${sortField}&sortDir=${sortDir}&isSorted=${isSorted}|}">이전</a>
             </li>
 
             <li class="page-item" th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
                 th:classappend="${pageNum == currentPage} ? 'active' : ''">
-              <a class="page-link" th:href="@{|/admin/professors?page=${pageNum - 1}&size=${pageSize}&searchType=${searchType}&keyword=${keyword}&sortField=${sortField}&sortDir=${sortDir}|}" th:text="${pageNum}"></a>
+              <a class="page-link" th:href="@{|/admin/professors?page=${pageNum - 1}&size=${pageSize}&searchType=${searchType}&keyword=${keyword}&sortField=${sortField}&sortDir=${sortDir}&isSorted=${isSorted}|}" th:text="${pageNum}"></a>
             </li>
 
             <li class="page-item" th:if="${endPage < totalPages}">
-              <a class="page-link" th:href="@{|/admin/professors?page=${endPage}&size=${pageSize}&searchType=${searchType}&keyword=${keyword}&sortField=${sortField}&sortDir=${sortDir}|}">다음</a>
+              <a class="page-link" th:href="@{|/admin/professors?page=${endPage}&size=${pageSize}&searchType=${searchType}&keyword=${keyword}&sortField=${sortField}&sortDir=${sortDir}&isSorted=${isSorted}|}">다음</a>
             </li>
           </ul>
         </nav>
@@ -130,8 +192,11 @@
     </footer>
   </div>
 </div>
+<!-- Core JS Files -->
+<script src="/assets/js/core/jquery-3.7.1.min.js"></script>
+<script src="/assets/js/core/popper.min.js"></script>
+<script src="/assets/js/core/bootstrap.min.js"></script>
 
-<script src="/assets/js/bootstrap.min.js"></script>
 <script src="/assets/js/kaiadmin.min.js"></script>
 </body>
 </html>
