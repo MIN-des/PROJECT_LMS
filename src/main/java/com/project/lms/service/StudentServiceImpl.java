@@ -1,7 +1,6 @@
 package com.project.lms.service;
 
 import com.project.lms.constant.Dept;
-import com.project.lms.dto.ProfessorDTO;
 import com.project.lms.dto.StudentDTO;
 import com.project.lms.entity.Student;
 import com.project.lms.repository.StudentRepository;
@@ -10,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -21,12 +22,14 @@ public class StudentServiceImpl implements StudentService {
 
 	@Autowired
 	private StudentRepository studentRepository;
-
 	@Autowired
 	private ModelMapper modelMapper;
+  private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public StudentDTO createStudent(StudentDTO studentDTO) {
+    String encodedPassword = passwordEncoder.encode(studentDTO.getSPw());
+    studentDTO.setSPw(encodedPassword);
 		if (studentRepository.existsById(studentDTO.getSId())) {
 			throw new IllegalArgumentException("이미 중복된 학번이 존재합니다.");
 		}
@@ -103,8 +106,34 @@ public class StudentServiceImpl implements StudentService {
 		Student updateInfo = studentRepository.findById(sId)
 				.orElseThrow(() -> new IllegalArgumentException("학생 정보를 찾을 수 없습니다."));
 
-		updateInfo.setSName(updateInfoDTO.getSName() != null ? updateInfoDTO.getSName() : updateInfo.getSName());
-		updateInfo.setSPw(updateInfoDTO.getSPw() != null ? updateInfoDTO.getSPw() : updateInfo.getSPw());
+    // 이메일 중복 검사
+    if (updateInfoDTO.getSEmail() != null &&
+            !updateInfoDTO.getSEmail().equals(updateInfo.getSEmail()) &&
+            studentRepository.existsBysEmail(updateInfoDTO.getSEmail())) {
+      throw new IllegalArgumentException("이 이메일은 사용하실 수 없습니다.");
+    }
+
+    // 전화번호 중복 검사
+    if (updateInfoDTO.getSTel() != null &&
+            !updateInfoDTO.getSTel().equals(updateInfo.getSTel()) &&
+            studentRepository.existsBysTel(updateInfoDTO.getSTel())) {
+      throw new IllegalArgumentException("이 전화번호는 사용하실 수 없습니다.");
+    }
+
+//    // 주소 중복 검사 (필요하다면)
+//    if (updateInfoDTO.getSAdd() != null &&
+//            !updateInfoDTO.getSAdd().equals(updateInfo.getSAdd()) &&
+//            studentRepository.existsBysAdd(updateInfoDTO.getSAdd())) {
+//      throw new IllegalArgumentException("중복된 주소가 존재합니다: ");
+//    }
+
+
+    updateInfo.setSName(updateInfoDTO.getSName() != null ? updateInfoDTO.getSName() : updateInfo.getSName());
+//		updateInfo.setSPw(updateInfoDTO.getSPw() != null ? updateInfoDTO.getSPw() : updateInfo.getSPw());
+    if (updateInfoDTO.getSPw() != null && !updateInfoDTO.getSPw().isEmpty()) {
+      String encodedPassword = passwordEncoder.encode(updateInfoDTO.getSPw());
+      updateInfo.setSPw(encodedPassword);
+    }
 		updateInfo.setSTel(updateInfoDTO.getSTel() != null ? updateInfoDTO.getSTel() : updateInfo.getSTel());
 		updateInfo.setSAdd(updateInfoDTO.getSAdd() != null ? updateInfoDTO.getSAdd() : updateInfo.getSAdd());
 		updateInfo.setSBirth(updateInfoDTO.getSBirth() != null ? updateInfoDTO.getSBirth() : updateInfo.getSBirth());
@@ -122,4 +151,11 @@ public class StudentServiceImpl implements StudentService {
 		return studentRepository.findAll(pageable)
 				.map(student -> modelMapper.map(student, StudentDTO.class));
 	}
+
+//  @Transactional
+//  public void registerStudent(Student student) {
+//    String encodedPassword = passwordEncoder.encode(student.getSPw());
+//    student.setSPw(encodedPassword);
+//    studentRepository.save(student);
+//  }
 }

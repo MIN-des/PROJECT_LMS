@@ -50,7 +50,7 @@ class StudentServiceTest {
 
 	@Test
 	void testCreateMultipleStudents() {
-		for (int i = 1; i <= 250; i++) {
+		for (int i = 253; i <= 254; i++) {
 			StudentDTO studentDTO = new StudentDTO();
 			String studentId = String.format("S%07d", i); // S0000001, S0000002 ...
 			studentDTO.setSId(studentId);

@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -25,6 +22,8 @@ public class Student {
     private String sTel; // 전화번호
     private String sAdd; // 주소
     private String sBirth; // 생년월일
+
+    @Column(name = "s_email")
     private String sEmail;
     private int grade; // 학년
 

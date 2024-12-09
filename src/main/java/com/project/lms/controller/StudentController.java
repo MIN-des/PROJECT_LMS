@@ -42,6 +42,13 @@ public class StudentController {
       model.addAttribute("student", studentDTO);
       return "student/modify"; // 유효성 검사 실패 시 폼으로 돌아가기
     }
+    try{
+      studentService.updateInfo(sId, studentDTO);
+    } catch (IllegalArgumentException e) {
+      model.addAttribute("errorMessage", e.getMessage());
+      model.addAttribute("student", studentDTO);
+      return "student/modify"; // 오류발생시 수정 페이지로 돌아가지
+    }
     Student updatedInfo = studentService.updateInfo(sId, studentDTO);
     return "redirect:/student/info/" + updatedInfo.getSId();
   }
