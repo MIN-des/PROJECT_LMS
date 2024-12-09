@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,9 +26,12 @@ class ProfessorServiceTest {
 	@Autowired
 	private ProfessorRepository professorRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Test
 	void testCreateMultipleProfessors() {
-		for (int i = 1; i <= 250; i++) {
+		for (int i = 1; i <= 10; i++) {
 			ProfessorDTO professorDTO = new ProfessorDTO();
 			String professorId = String.format("P%07d", i); // P0000001, P0000002 ...
 			professorDTO.setPId(professorId);

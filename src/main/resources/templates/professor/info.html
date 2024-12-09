@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>교수 정보</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+    <link rel="icon" href="/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
+
+    <!-- Fonts and icons -->
+    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
+    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
+</head>
+
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-wrapper scrollbar-inner">
+            <!-- Logo -->
+            <div class="logo d-flex justify-content-center align-items-center py-3">
+                <a href="/">
+                    <img src="/assets/img/kaiadmin/logo_light.svg" alt="Kaiadmin Logo" height="30">
+                </a>
+            </div>
+            <!-- Sidebar Content -->
+            <div class="sidebar-content">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="/dashboard">
+                            <i class="fas fa-home"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/courses/list">
+                            <i class="fas fa-book"></i>
+                            <p>Courses</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/students">
+                            <i class="fas fa-users"></i>
+                            <p>Students</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/professors">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <p>Professors</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/settings">
+                            <i class="fas fa-cog"></i>
+                            <p>Settings</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <!-- Header -->
+        <header class="main-header">
+            <!-- Navbar -->
+            <nav class="navbar navbar-header navbar-expand-lg border-bottom">
+                <div class="container-fluid">
+                    <ul class="navbar-nav topbar-nav ms-auto align-items-center">
+                        <!-- User Info -->
+                        <li class="nav-item dropdown hidden-caret">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle fa-lg me-2"></i>
+                                <span>Professor</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                <li>
+                                    <div class="user-box">
+                                        <div class="avatar-lg">
+                                            <i class="fas fa-user-circle fa-3x text-muted"></i>
+                                        </div>
+                                        <div class="u-text">
+                                            <h4>Professor User</h4>
+                                            <p class="text-muted">professor@example.com</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/logout">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </header>
+
+        <div class="container my-4">
+            <div class="card card-round">
+                <div class="card-header">
+                    <h3 class="card-title">MY INFORMATION</h3>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/professor/info}" th:object="${professor}" method="post">
+                        <!-- 읽기 전용 필드 -->
+                        <div class="mb-3">
+                            <label for="pId" class="form-label">아이디</label>
+                            <input type="text" id="pId" th:field="*{pId}" class="form-control" readonly/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pName" class="form-label">이름</label>
+                            <input type="text" id="pName" th:field="*{pName}" class="form-control" readonly/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pPw" class="form-label">비밀번호</label>
+                            <div class="input-group">
+                                <!-- 기존 비밀번호 표시 (readonly 상태) -->
+                                <input type="password" id="pPw" th:field="*{pPw}" class="form-control"
+                                       placeholder="기존 비밀번호를 확인하세요" readonly value="*****"/>
+                                <button type="button" class="btn btn-secondary" id="editPasswordBtn"
+                                        onclick="enablePasswordEdit()">비밀번호 수정
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 새 비밀번호 입력 필드 (기본적으로 숨김 상태) -->
+                        <div id="passwordChangeSection" class="mb-3" style="display: none;">
+                            <label for="newPw" class="form-label">새 비밀번호</label>
+                            <input type="password" id="newPw" name="newPw" class="form-control"
+                                   placeholder="새 비밀번호를 입력하세요" required/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pEmail" class="form-label">이메일</label>
+                            <input type="email" id="pEmail" th:field="*{pEmail}" class="form-control" readonly/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pTel" class="form-label">전화번호</label>
+                            <input type="text" id="pTel" th:field="*{pTel}" class="form-control"
+                                   placeholder="010-1234-5678" required/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pAdd" class="form-label">주소</label>
+                            <div class="input-group">
+                                <input type="text" id="pAdd" th:field="*{pAdd}" class="form-control"
+                                       placeholder="주소 검색 후 상세 주소를 입력해주세요" required/>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                        data-bs-target="#addressModal">주소 검색
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pBirth" class="form-label">생년월일</label>
+                            <input type="text" id="pBirth" th:field="*{pBirth}" class="form-control" readonly/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="year" class="form-label">입사년도</label>
+                            <input type="text" id="year" th:field="*{year}" class="form-control" readonly/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pGen" class="form-label">성별</label>
+                            <input type="text" id="pGen" th:field="*{pGen}" class="form-control" readonly/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pDept" class="form-label">학과</label>
+                            <input type="text" id="pDept" th:field="*{pDept}" class="form-control" readonly/>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">수정</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Address Search -->
+        <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addressModalLabel">주소 검색</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <input type="text" id="addressSearchInput" class="form-control"
+                                   placeholder="도로명 또는 지번 주소를 입력하세요">
+                            <button type="button" class="btn btn-primary" onclick="searchAddress()">검색</button>
+                        </div>
+                        <div id="addressResult" class="list-group"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container-fluid text-center">
+                <p>© 2024 Kaiadmin - All Rights Reserved</p>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- Core JS Files -->
+<script src="/assets/js/core/jquery-3.7.1.min.js"></script>
+<script src="/assets/js/core/popper.min.js"></script>
+<script src="/assets/js/core/bootstrap.min.js"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+<!-- Kaiadmin JS -->
+<script src="/assets/js/kaiadmin.min.js"></script>
+
+<!-- Address Search Script -->
+<script>
+    function searchAddress() {
+        const query = document.getElementById('addressSearchInput').value;
+        if (!query) {
+            alert('주소를 입력하세요!');
+            return;
+        }
+
+        // Kakao 주소 검색 API 요청
+        const apiUrl = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}`;
+        const apiKey = ''; // 여기서 자신의 Kakao API 키로 변경
+
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: { 'Authorization': `KakaoAK ${apiKey}` }
+        })
+            .then(response => response.json())
+            .then(data => {
+                const results = data.documents;
+                const resultContainer = document.getElementById('addressResult');
+                resultContainer.innerHTML = '';
+
+                if (results.length === 0) {
+                    resultContainer.innerHTML = '<div class="text-danger">검색 결과가 없습니다.</div>';
+                    return;
+                }
+
+                results.forEach(result => {
+                    const address = result.address_name;
+                    const item = document.createElement('button');
+                    item.classList.add('list-group-item', 'list-group-item-action');
+                    item.textContent = address;
+                    item.onclick = () => {
+                        document.getElementById('pAdd').value = address;
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('addressModal'));
+                        modal.hide();
+                    };
+                    resultContainer.appendChild(item);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('주소 검색 중 오류가 발생했습니다.');
+            });
+    }
+
+    function enablePasswordEdit() {
+        // 기존 비밀번호 필드는 readonly 상태 유지
+        const currentPasswordField = document.getElementById("pPw");
+        currentPasswordField.setAttribute("readonly", "true");
+
+        // 새 비밀번호 입력 필드 활성화
+        const passwordChangeSection = document.getElementById("passwordChangeSection");
+        passwordChangeSection.style.display = "block";
+
+        // "비밀번호 수정" 버튼 비활성화
+        document.getElementById("editPasswordBtn").disabled = true;
+    }
+</script>
+</body>
+</html>

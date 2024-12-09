@@ -12,6 +12,7 @@ public class MainController {
     public String hello() {
         return "hello";  // hello.html 파일을 찾아 반환
     }
+
     @GetMapping("/")
     public String root() {
         return "redirect:/hello";

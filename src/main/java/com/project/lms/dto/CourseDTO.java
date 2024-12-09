@@ -25,16 +25,13 @@ public class CourseDTO {
     @Max(value = 6, message = "학점은 6 이하이어야 합니다.")
     private int credits; // 학점
 
-    private RestStatus status; // 잔여인원 상태
+    private RestStatus status; // 잔여인원, 수강정원
 
     private int restNum; // 잔여인원 숫자
 
-    private static ModelMapper modelMapper = new ModelMapper();
+    private String createdBy; // 등록자
 
-    // 강의 생성하는 메소드
-    public Course createCourse() {
-        return modelMapper.map(this, Course.class);
-    }
+    private static ModelMapper modelMapper = new ModelMapper();
 
     // Course 객체를 입력받아 CourseDTO 객체로 변환하는 메소드
     // 객체 변환을 위해 ModelMapper 사용함
