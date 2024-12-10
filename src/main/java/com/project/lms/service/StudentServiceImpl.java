@@ -2,6 +2,7 @@ package com.project.lms.service;
 
 import com.project.lms.constant.Dept;
 import com.project.lms.dto.StudentDTO;
+import com.project.lms.entity.Professor;
 import com.project.lms.entity.Student;
 import com.project.lms.repository.StudentRepository;
 import org.modelmapper.ModelMapper;
@@ -9,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -158,4 +162,15 @@ public class StudentServiceImpl implements StudentService {
 //    student.setSPw(encodedPassword);
 //    studentRepository.save(student);
 //  }
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    Student student = studentRepository.findById(username)
+            .orElseThrow(() -> new UsernameNotFoundException("Professor not found"));
+
+    return User.builder()
+            .username(student.getSId())
+            .password(student.getSPw())
+            .roles("STUDENT")
+            .build();
+  }
 }

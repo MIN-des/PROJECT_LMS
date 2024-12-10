@@ -4,10 +4,11 @@ import com.project.lms.dto.StudentDTO;
 import com.project.lms.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 
-public interface StudentService {
+public interface StudentService extends UserDetailsService {
 	StudentDTO createStudent(StudentDTO studentDTO);
 	Optional<StudentDTO> getStudentById(String sId);
 	StudentDTO updateStudent(String sId, StudentDTO studentDTO);

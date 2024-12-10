@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class StudentRepositoryTest {
 
@@ -29,7 +27,7 @@ class StudentRepositoryTest {
 		student.setGrade(1);
 		student.setSGen(Gen.MALE);
 		student.setSDept(Dept.HUMAN);
-		student.setRole(Role.STUDENT);
+		student.setRole(Role.ROLE_STUDENT);
 
 		studentRepository.save(student);
 	}

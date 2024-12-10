@@ -1667,13 +1667,22 @@
 <!--</body>-->
 <!--</html>-->
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>Main Page</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
     <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon"/>
+
+    // 이미지 스타일
+    <style>
+        .cropped-img {
+          height: 400px; /* 원하는 높이 설정 */
+          object-fit: cover; /* 위아래를 잘라내고 꽉 차게 표시 */
+          object-position: center; /* 이미지의 중앙을 기준으로 자르기 */
+        }
+    </style>
 
     <!-- Fonts and icons -->
     <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
@@ -1707,23 +1716,41 @@
         <div class="sidebar-wrapper scrollbar-inner">
             <div class="sidebar-content">
                 <ul class="nav">
-                    <li class="nav-item active">
-                        <a href="hello.html">
+                    <li>
+                        <a th:href="@{/hello}">
                             <i class="fas fa-home"></i>
-                            <p>Main Page</p>
+                            <p>메인 페이지</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#">
-                            <i class="fas fa-list"></i>
-                            <p>Boards</p>
+                    <!-- 관리자 페이지 섹션 -->
+                    <li class="nav-item dropdown">
+                        <a href="#adminMenu" data-bs-toggle="collapse" aria-expanded="false">
+                            <i class="fas fa-user-cog"></i>
+                            <p>관리자 페이지</p>
+                            <span class="caret"></span>
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#">
-                            <i class="fas fa-info-circle"></i>
-                            <p>About Us</p>
-                        </a>
+                        <div class="collapse" id="adminMenu">
+                            <ul class="nav nav-collapse">
+                                <li>
+                                    <a th:href="@{/admin/professors}">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        <p>교수 리스트</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/admin/students}">
+                                        <i class="fas fa-user-graduate"></i>
+                                        <p>학생 리스트</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/admin/invoices}">
+                                        <i class="fas fa-file-invoice"></i>
+                                        <p>등록금 고지서 등록</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -1737,18 +1764,51 @@
             <h1>00 대학교</h1>
         </header>
 
-        <div class="container">
-            <div class="page-inner">
-                <!-- Promotion Section -->
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <div class="card card-round">
-                            <div class="card-body p-0">
-                                <img src="/assets/img/university_promo_large.jpg" alt="대학교 홍보 사진" class="img-fluid rounded">
-                            </div>
+        <!-- Promotion Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div id="promoCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <!-- Indicators (optional) -->
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active"
+                                aria-current="true"></button>
+                        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2"></button>
+                    </div>
+
+                    <!-- Carousel Items -->
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="/assets/img/examples/school1.jpg" alt="대학교 홍보 사진 1"
+                                 class="d-block w-100 cropped-img">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="/assets/img/examples/school2.jpg" alt="대학교 홍보 사진 2"
+                                 class="d-block w-100 cropped-img">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="/assets/img/examples/school3.jpg" alt="대학교 홍보 사진 3"
+                                 class="d-block w-100 cropped-img">
                         </div>
                     </div>
+
+                    <!-- Controls -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="page-inner">
 
                 <!-- Board Section -->
                 <div class="row">

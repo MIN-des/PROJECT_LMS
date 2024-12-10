@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class AdminRepositoryTest {
 //입학처, 교무처, 총무처, 홍보처
@@ -21,7 +19,7 @@ class AdminRepositoryTest {
 		admin.setAId("A0000004");
 		admin.setAPw("A0000004");
 		admin.setAName("홍보처");
-		admin.setRole(Role.ADMIN);
+		admin.setRole(Role.ROLE_ADMIN);
 
 		adminRepository.save(admin);
 	}

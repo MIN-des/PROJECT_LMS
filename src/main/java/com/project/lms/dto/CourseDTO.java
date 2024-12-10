@@ -15,30 +15,27 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class CourseDTO {
 
-    private Long cId;
+  private Long cId;
 
-    @NotBlank(message = "강의명은 필수 항목입니다.")
-    private String cName;
+  @NotBlank(message = "강의명은 필수 항목입니다.")
+  private String cName;
 
-    @NotNull(message = "학점은 필수 항목입니다.")
-    @Min(value = 1, message = "학점은 1 이상이어야 합니다.")
-    @Max(value = 6, message = "학점은 6 이하이어야 합니다.")
-    private int credits; // 학점
+  @NotNull(message = "학점은 필수 항목입니다.")
+  @Min(value = 1, message = "학점은 1 이상이어야 합니다.")
+  @Max(value = 6, message = "학점은 6 이하이어야 합니다.")
+  private int credits; // 학점
 
-    private RestStatus status; // 잔여인원 상태
+  private RestStatus status; // 잔여인원, 수강정원
 
-    private int restNum; // 잔여인원 숫자
+  private int restNum; // 잔여인원 숫자
 
-    private static ModelMapper modelMapper = new ModelMapper();
+  private String createdBy; // 등록자
 
-    // 강의 생성하는 메소드
-    public Course createCourse() {
-        return modelMapper.map(this, Course.class);
-    }
+  private static ModelMapper modelMapper = new ModelMapper();
 
-    // Course 객체를 입력받아 CourseDTO 객체로 변환하는 메소드
-    // 객체 변환을 위해 ModelMapper 사용함
-    public static CourseDTO of(Course course) {
-        return modelMapper.map(course, CourseDTO.class);
-    }
+  // Course 객체를 입력받아 CourseDTO 객체로 변환하는 메소드
+  // 객체 변환을 위해 ModelMapper 사용함
+  public static CourseDTO of(Course course) {
+    return modelMapper.map(course, CourseDTO.class);
+  }
 }

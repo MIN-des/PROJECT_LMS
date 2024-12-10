@@ -5,13 +5,10 @@ import com.project.lms.constant.Gen;
 import com.project.lms.constant.Role;
 import com.project.lms.dto.ProfessorDTO;
 import com.project.lms.repository.ProfessorRepository;
-import com.project.lms.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ProfessorServiceTest {
@@ -55,7 +52,7 @@ class ProfessorServiceTest {
 			Dept[] depts = Dept.values();
 			professorDTO.setPDept(depts[i % depts.length]);
 
-			professorDTO.setRole(Role.PROFESSOR);
+			professorDTO.setRole(Role.ROLE_PROFESSOR);
 
 			// 교수 데이터 저장
 			ProfessorDTO savedProfessor = professorService.createProfessor(professorDTO);
