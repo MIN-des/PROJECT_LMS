@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -46,16 +48,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/");
 
         http.authorizeRequests()
-            .mvcMatchers("/", "/login", "/student/invoices/preview/**", "/invoices/download/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
+            .mvcMatchers("/", "/login", "/student/invoices/preview/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
             .antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico").permitAll() // 정적 자원에 대한 접근 허용
             .mvcMatchers("/admin/**").hasAuthority(Role.ROLE_ADMIN.name()) // "ROLE_ADMIN"
-            .mvcMatchers("/student/**").hasAuthority(Role.ROLE_STUDENT.name()) // "ROLE_STUDENT"
+            .mvcMatchers("/student/**", "/student/invoices/download/**").hasAuthority(Role.ROLE_STUDENT.name()) // "ROLE_STUDENT"
             .mvcMatchers("/professor/**").hasAuthority(Role.ROLE_PROFESSOR.name()) // "ROLE_PROFESSOR"
             .anyRequest().authenticated();
 
         http.exceptionHandling()
             .accessDeniedHandler((request, response, accessDeniedException) -> {
-                response.sendRedirect("/access-denied");
+                if (request.getRequestURI().startsWith("/student/invoices/download")) {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 상태 반환
+                    response.getWriter().write("Access Denied");
+                } else {
+                    response.sendRedirect("/access-denied");
+                }
             });
 
         http.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint()); // 인증 문제 예외처리

@@ -120,16 +120,7 @@ public class StudentServiceImpl implements StudentService {
       throw new IllegalArgumentException("이 전화번호는 사용하실 수 없습니다.");
     }
 
-//    // 주소 중복 검사 (필요하다면)
-//    if (updateInfoDTO.getSAdd() != null &&
-//            !updateInfoDTO.getSAdd().equals(updateInfo.getSAdd()) &&
-//            studentRepository.existsBysAdd(updateInfoDTO.getSAdd())) {
-//      throw new IllegalArgumentException("중복된 주소가 존재합니다: ");
-//    }
-
-
     updateInfo.setSName(updateInfoDTO.getSName() != null ? updateInfoDTO.getSName() : updateInfo.getSName());
-//		updateInfo.setSPw(updateInfoDTO.getSPw() != null ? updateInfoDTO.getSPw() : updateInfo.getSPw());
     if (updateInfoDTO.getSPw() != null && !updateInfoDTO.getSPw().isEmpty()) {
       String encodedPassword = passwordEncoder.encode(updateInfoDTO.getSPw());
       updateInfo.setSPw(encodedPassword);

@@ -1,5 +1,6 @@
 package com.project.lms.service;
 
+import com.project.lms.controller.StudentController;
 import com.project.lms.dto.StudentDTO;
 import com.project.lms.dto.TuitionInvoiceUploadDTO;
 import com.project.lms.entity.Student;
@@ -7,6 +8,8 @@ import com.project.lms.entity.TuitionInvoiceUpload;
 import com.project.lms.repository.StudentRepository;
 import com.project.lms.repository.TuitionInvoiceUploadRepository;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 public class TuitionInvoiceUploadServiceImpl implements TuitionInvoiceUploadService {
 
 	// 필드 선언
+	private static final Logger log = LoggerFactory.getLogger(StudentController.class);
 	private final TuitionInvoiceUploadRepository uploadRepository;
 	private final StudentRepository studentRepository;
 	private final ModelMapper modelMapper;
@@ -95,7 +99,6 @@ public class TuitionInvoiceUploadServiceImpl implements TuitionInvoiceUploadServ
 		return uploadRepository.existsBytIdAndStudent_sId(tId, sId);
 	}
 
-
 	// 파일 다운로드
 	@Override
 	// 파일 데이터를 바이트(byte) 배열로 반환
@@ -111,6 +114,7 @@ public class TuitionInvoiceUploadServiceImpl implements TuitionInvoiceUploadServ
 
 		// 엔티티의 filePath 필드를 사용해 해당 파일의 경로를 만듦, 실제로 존재하는지 확인
 		Path path = Path.of(invoice.getFilePath());
+		log.info("Attempting to download file from path: {}", path);
 		if (!Files.exists(path)) {
 			throw new IllegalArgumentException("파일을 찾을 수 없습니다. 경로: " + invoice.getFilePath());
 		}

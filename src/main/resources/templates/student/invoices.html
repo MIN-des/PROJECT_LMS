@@ -29,7 +29,7 @@
         <td th:text="${invoice.sName}"></td>
         <td th:text="${#temporals.format(invoice.uploadDate, 'yyyy-MM-dd HH:mm')}"></td>
         <td>
-          <a th:href="@{'/admin/invoices/download/' + ${invoice.tId}}" class="btn btn-success btn-sm">다운로드</a>
+          <a th:href="@{'/student/invoices/download/' + ${invoice.tId}}" class="btn btn-success btn-sm">다운로드</a>
         </td>
         <td>
           <button class="btn btn-primary btn-sm" th:attr="data-id=${invoice.tId}, data-file-name=${invoice.fileName}" onclick="previewInvoiceFromData(this)">미리보기</button>

@@ -152,6 +152,11 @@ public class StudentController {
     String sId = authentication.getName();
     log.info("Authenticated student ID: {}", sId);
 
+    if (!tuitionInvoiceUploadService.isInvoiceOwnedByStudent(tId, sId)) {
+      log.warn("Unauthorized access attempt by student ID: {} for invoice ID: {}", sId, tId);
+      throw new AccessDeniedException("접근 권한이 없습니다.");
+    }
+
     // tId의 유효성 검증
     if (tId == null || tId <= 0) {
       throw new IllegalArgumentException("tId가 유효하지 않습니다.");
@@ -159,10 +164,12 @@ public class StudentController {
 
     // 해당 학생이 tId를 소유하고 있는지 확인
     if (!tuitionInvoiceUploadService.isInvoiceOwnedByStudent(tId, sId)) {
+      log.warn("Unauthorized access attempt by student ID: {} for invoice ID: {}", sId, tId);
       throw new AccessDeniedException("접근 권한이 없습니다.");
     }
 
     byte[] fileData = tuitionInvoiceUploadService.downloadInvoice(tId);
+    log.info("File downloaded successfully for invoice ID: {}", tId);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_PDF);
