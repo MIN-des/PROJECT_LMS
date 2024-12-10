@@ -4,6 +4,7 @@ import com.project.lms.dto.ProfessorDTO;
 import com.project.lms.dto.ProfessorUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 

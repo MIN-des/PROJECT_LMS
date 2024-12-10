@@ -34,7 +34,7 @@
       <div class="sidebar-content">
         <ul class="nav">
           <li>
-            <a th:href="@{/hello}">
+            <a th:href="@{/main}">
               <i class="fas fa-home"></i>
               <p>메인 페이지</p>
             </a>
@@ -97,7 +97,7 @@
               <div class="col-md-6">
                 <label for="role" class="form-label">권한</label>
                 <select id="role" name="role" class="form-select" required>
-                  <option value="STUDENT" th:selected="${student.role == 'STUDENT'}">학생</option>
+                  <option value="ROLE_STUDENT" th:selected="${student.role == 'ROLE_STUDENT'}">학생</option>
                 </select>
               </div>
 

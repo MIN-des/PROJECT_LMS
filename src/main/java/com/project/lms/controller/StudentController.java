@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -51,12 +53,19 @@ public class StudentController {
   }
 
   // 등록금 고지서 목록 조회
-  @GetMapping("/invoices/{sId}")
-  public String getMyInvoices(@PathVariable String sId, Model model) {
+  @GetMapping("/invoices")
+  public String getMyInvoices(Model model) {
+    // 현재 로그인된 사용자 정보 가져오기
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String sId = authentication.getName(); // 로그인된 학생의 ID (학번)
+
+    // 학번을 사용하여 고지서 목록 조회
     List<TuitionInvoiceUploadDTO> invoices = tuitionInvoiceUploadService.getInvoicesByStudentId(sId);
     model.addAttribute("invoices", invoices);
+
     return "student/invoices"; // 학생용 고지서 목록 뷰
   }
+
 
   // 등록금 고지서 다운로드
   @GetMapping("/invoices/{sId}/download/{tId}")

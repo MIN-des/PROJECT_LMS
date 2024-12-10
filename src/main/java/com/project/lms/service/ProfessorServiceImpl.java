@@ -3,6 +3,7 @@ package com.project.lms.service;
 import com.project.lms.constant.Dept;
 import com.project.lms.dto.ProfessorDTO;
 import com.project.lms.dto.ProfessorUpdateDTO;
+import com.project.lms.entity.Admin;
 import com.project.lms.entity.Professor;
 import com.project.lms.repository.ProfessorRepository;
 import org.modelmapper.ModelMapper;
@@ -10,11 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -118,4 +124,5 @@ public class ProfessorServiceImpl implements ProfessorService {
         return professorRepository.findAll(pageable)
                 .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
     }
+
 }

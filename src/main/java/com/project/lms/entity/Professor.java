@@ -40,7 +40,7 @@ public class Professor extends BaseEntity {
     private Dept pDept;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.ROLE_PROFESSOR;
 
     // 업데이트 메소드(교수)
     public void updateMyProfessor(ProfessorUpdateDTO updateDTO) {

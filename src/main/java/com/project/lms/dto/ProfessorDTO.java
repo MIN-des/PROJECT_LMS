@@ -50,7 +50,7 @@ public class ProfessorDTO {
     private Dept pDept;
 
     @NotBlank(message = "계정 권한은 필수 항목입니다.")
-    private Role role;
+    private Role role = Role.ROLE_PROFESSOR;
 
     private static ModelMapper modelMapper = new ModelMapper();
 
