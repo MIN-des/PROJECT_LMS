@@ -7,10 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -40,30 +37,42 @@ public class ProfessorController {
 
     // 교수 자신의 정보 업데이트 (주소, 전화번호, 비밀번호)
     @PostMapping("/info")
-    public String updateProfessorInfo(@Valid @ModelAttribute("professor") Professor updatedProfessor,
-                                      BindingResult bindingResult,
-                                      Principal principal, RedirectAttributes redirectAttributes) {
+    public String updateProfessorInfo(
+            @Valid @ModelAttribute("professor") Professor updatedProfessor,
+            BindingResult bindingResult,
+            @RequestParam(required = false) String newPw, // 새 비밀번호
+            @RequestParam(required = false) String newPTel, // 새 전화번호
+            @RequestParam(required = false) String newPAdd, // 새 주소
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+
         if (bindingResult.hasErrors()) {
-            return "professor/info"; // 에러 발생 시 원래 페이지로
+            return "professor/info";
         }
 
-        String pId = principal.getName(); // 로그인된 교수의 ID 가져오기
+        String pId = principal.getName();
         Professor professor = professorRepository.findById(pId)
                 .orElseThrow(() -> new IllegalArgumentException("Professor not found for ID: " + pId));
 
-        // 비밀번호가 업데이트되었을 경우 암호화 처리
-        if (updatedProfessor.getPPw() != null && !updatedProfessor.getPPw().isEmpty()) {
-            professor.setPPw(passwordEncoder.encode(updatedProfessor.getPPw()));
+        // 비밀번호 업데이트
+        if (newPw != null && !newPw.trim().isEmpty()) {
+            professor.setPPw(passwordEncoder.encode(newPw));
         }
 
-        // 업데이트 가능한 필드 업데이트
-        professor.setPTel(updatedProfessor.getPTel());
-        professor.setPAdd(updatedProfessor.getPAdd());
+        // 전화번호 업데이트
+        if (newPTel != null && !newPTel.trim().isEmpty()) {
+            professor.setPTel(newPTel);
+        }
 
+        // 주소 업데이트
+        if (newPAdd != null && !newPAdd.trim().isEmpty()) {
+            professor.setPAdd(newPAdd);
+        }
+
+        // 변경된 정보를 저장
         professorRepository.save(professor);
 
         redirectAttributes.addFlashAttribute("successMessage", "정보가 수정되었습니다.");
-
-        return "redirect:/professor/info"; // 리다이렉트
+        return "redirect:/professor/info";
     }
 }
