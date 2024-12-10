@@ -4,9 +4,7 @@ import com.project.lms.constant.Dept;
 import com.project.lms.constant.Gen;
 import com.project.lms.constant.Role;
 import com.project.lms.dto.StudentDTO;
-import com.project.lms.entity.Student;
 import com.project.lms.repository.StudentRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +41,7 @@ class StudentServiceTest {
 		studentDTO.setGrade(1);
 		studentDTO.setSGen(Gen.MALE);
 		studentDTO.setSDept(Dept.HUMAN);
-		studentDTO.setRole(Role.STUDENT);
+		studentDTO.setRole(Role.ROLE_STUDENT);
 
 		StudentDTO savedStudent = studentService.createStudent(studentDTO);
 	}
@@ -77,7 +75,7 @@ class StudentServiceTest {
 			Dept[] depts = Dept.values();
 			studentDTO.setSDept(depts[i % depts.length]);
 
-			studentDTO.setRole(Role.STUDENT);
+			studentDTO.setRole(Role.ROLE_STUDENT);
 
 			// 학생 데이터 저장
 			StudentDTO savedStudent = studentService.createStudent(studentDTO);
@@ -100,7 +98,7 @@ class StudentServiceTest {
 		updatedStudentDTO.setGrade(2);
 		updatedStudentDTO.setSGen(Gen.FEMALE);
 		updatedStudentDTO.setSDept(Dept.SOCIAL);
-		updatedStudentDTO.setRole(Role.STUDENT);
+		updatedStudentDTO.setRole(Role.ROLE_STUDENT);
 
 		StudentDTO updatedStudent = studentService.updateStudent("S2401001", updatedStudentDTO);
 	}

@@ -87,19 +87,22 @@
                             </thead>
                             <tbody>
                             <tr th:each="board, loop: ${paging}">
-                                <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td><!--번호-->
+                                <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
+                                <!--번호-->
                                 <td><!--제목-->
-                                    <a th:href="@{/board/detail/{bno}(bno=${board.bno})}"
+                                    <a th:href="@{/admin/board/detail/{bno}(bno=${board.bno})}"
                                        th:text="${board.title}"></a>
 
                                 </td>
                                 <td th:text="${#temporals.format(board.regDate, 'yyyy-MM-dd')}"></td><!--작성일시-->
                                 <td><!--작업(수정,삭제)-->
                                     <!-- 수정 버튼 -->
-                                    <a th:href="@{/board/detail/{bno}/modify(bno=${board.bno})}" class="btn btn-primary mr-2">수정</a>
+                                    <a th:href="@{/admin/board/detail/{bno}/modify(bno=${board.bno})}"
+                                       class="btn btn-primary mr-2">수정</a>
 
                                     <!-- 삭제 버튼 -->
-                                    <form th:action="@{/board/detail/{bno}/delete(bno=${board.bno})}" method="post" style="display:inline;">
+                                    <form th:action="@{/admin/board/detail/{bno}/delete(bno=${board.bno})}"
+                                          method="post" style="display:inline;">
                                         <button class="btn btn-danger" type="submit">삭제</button>
                                     </form>
                                 </td>
@@ -119,7 +122,8 @@
                                 <!-- 페이지 번호 -->
                                 <li th:each="page : ${#numbers.sequence(startPage, endPage)}"
                                     th:classappend="${page == paging.number} ? 'active'" class="page-item">
-                                    <a class="page-link" th:href="@{/board/list(page=${page})}" th:text="${page + 1}"></a>
+                                    <a class="page-link" th:href="@{/board/list(page=${page})}"
+                                       th:text="${page + 1}"></a>
                                 </li>
 
                                 <!-- 다음 버튼 -->
@@ -133,7 +137,7 @@
 
                         <!-- 페이징처리 끝 -->
 
-                        <a th:href="@{/board/create}" class="btn btn-primary">게시글 등록하기</a>
+                        <a th:href="@{/admin/board/create}" class="btn btn-primary">게시글 등록하기</a>
                     </div>
 
                 </div>

@@ -80,7 +80,7 @@
                             <h2>게시글 수정</h2>
                         </div>
                         <!-- th:action을 사용하여 수정된 게시글을 서버로 보냄 -->
-                        <form th:action="@{/board/detail/{bno}/modify(bno=${bno})}" th:object="${registerFormDTO}" method="post">
+                        <form th:action="@{/admin/board/detail/{bno}/modify(bno=${bno})}" th:object="${registerFormDTO}" method="post">
                             <div>
                                 <label for="title">제목</label>
                                 <input type="text" id="title" th:field="*{title}" class="form-control" th:errorclass="field-error">
@@ -95,7 +95,7 @@
                             <!-- 수정 완료 버튼 -->
                             <button class="btn btn-primary" type="submit">수정 완료</button>
                             <!-- 취소 버튼: 상세 페이지로 돌아가기 -->
-                            <button class="btn btn-secondary" th:onclick="|location.href='@{/board/detail/{bno}(bno=${bno})}'|" type="button">취소</button>
+                            <button class="btn btn-secondary" th:onclick="|location.href='@{/admin/board/detail/{bno}(bno=${bno})}'|" type="button">취소</button>
                         </form>
                     </div>
 
