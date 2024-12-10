@@ -2,26 +2,36 @@ package com.project.lms.controller.board;
 
 import com.project.lms.dto.board.RegisterFormDTO;
 import com.project.lms.entity.Board;
+import com.project.lms.entity.Files;
 import com.project.lms.service.admin.BoardServiceImpl;
+import com.project.lms.service.admin.FileServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 @RequestMapping("/board")
 @RequiredArgsConstructor
 @Controller
 public class BoardController {
-    private final BoardServiceImpl boardServiceImple;
-//    private final AllBoardRepository allBoardRepository;
+    private final BoardServiceImpl boardServiceImpl;
+    private final FileServiceImpl fileService;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;  // 파일 업로드 경로 설정 (application.properties에서 설정)
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value="page", defaultValue = "0") int page) {
-        Page<Board> paging = this.boardServiceImple.getList(page);
+        Page<Board> paging = this.boardServiceImpl.getList(page);
 
         int totalPages = paging.getTotalPages();
         int currentBlock = page / 5; // 5개의 페이지 번호로 묶기
@@ -34,33 +44,34 @@ public class BoardController {
         return "admin/board/list";
     }
 
-    //http://localhost:8081/board/detail/10 검색(없는 allBno번호는 나오지 않으니 주의 필요)
+    // 게시판 상세보기
     @GetMapping(value = "/detail/{bno}")
     public String detail(Model model, @PathVariable("bno") Long bno) {
-        Board board = this.boardServiceImple.getBoard(bno);
+        Board board = this.boardServiceImpl.getBoard(bno);
         model.addAttribute("board", board);
         return "admin/board/detail";
     }
-    //등록
+
+    // 등록 페이지
     @GetMapping("/create")
     public String boardCreate(RegisterFormDTO registerFormDto) {
-        //model.addAttribute("registerFormDTO", new RegisterFormDTO());// RegisterFormDTO 객체를 모델에 추가
-        return "admin/board/register"; // 폼 페이지 반환
+        return "admin/board/register";
     }
 
-@PostMapping("/create")
-public String boardCreate(@Valid RegisterFormDTO registerFormDto, BindingResult bindingResult) {  // RegisterFormDTO에 대한 유효성 검사
-   // 유효성 검사에서 오류가 있으면 폼을 다시 표시
-    if (bindingResult.hasErrors()) {
-        return "/admin/board/register";
+    // 등록 처리
+    @PostMapping("/create")
+    public String boardCreate(@Valid RegisterFormDTO registerFormDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "admin/board/register";
+        }
+        this.boardServiceImpl.create(registerFormDto.getTitle(), registerFormDto.getContent());
+        return "redirect:/board/list";
     }
-    this.boardServiceImple.create(registerFormDto.getTitle(), registerFormDto.getContent());
-    // 게시판 목록으로 리다이렉트
-    return "redirect:/board/list";
-}
+
+    // 수정 페이지
     @GetMapping("/detail/{bno}/modify")
     public String modifyForm(@PathVariable Long bno, Model model) {
-        Board board = boardServiceImple.getBoard(bno);
+        Board board = boardServiceImpl.getBoard(bno);
 
         RegisterFormDTO registerFormDTO = new RegisterFormDTO();
         registerFormDTO.setTitle(board.getTitle());
@@ -71,20 +82,52 @@ public String boardCreate(@Valid RegisterFormDTO registerFormDto, BindingResult 
 
         return "admin/board/modify";
     }
+
+    // 수정 처리
     @PostMapping("/detail/{bno}/modify")
     public String modify(@PathVariable Long bno, @Valid @ModelAttribute RegisterFormDTO registerFormDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "admin/board/modify";
         }
-        boardServiceImple.modify(bno, registerFormDTO.getTitle(), registerFormDTO.getContent());
+        boardServiceImpl.modify(bno, registerFormDTO.getTitle(), registerFormDTO.getContent());
         return "redirect:/board/detail/{bno}";
     }
-    // 게시글 삭제
+
+    // 삭제 처리
     @PostMapping("/detail/{bno}/delete")
     public String delete(@PathVariable Long bno) {
-        boardServiceImple.delete(bno); // 서비스에서 삭제 로직 호출
-        return "redirect:/board/list"; // 게시글 목록 페이지로 리다이렉트
+        boardServiceImpl.delete(bno);
+        return "redirect:/board/list";
     }
 
+    // 파일 업로드 처리
+    @PostMapping("/detail/{bno}/upload")
+    public String uploadFile(@PathVariable Long bno, @RequestParam("file") MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            return "파일을 선택해주세요.";
+        }
+
+        // 파일 이름과 경로 설정
+        String originalFilename = file.getOriginalFilename();
+        String uuid = UUID.randomUUID().toString();
+        String savedFileName = uuid + "_" + originalFilename;
+
+        // 파일을 지정된 경로에 저장
+        File targetFile = new File(uploadDir + File.separator + savedFileName);
+        file.transferTo(targetFile);
+
+        // DB에 파일 정보 저장
+        Board board = boardServiceImpl.getBoard(bno);
+        Files files = new Files();
+        files.setUuid(uuid);
+        files.setFName(originalFilename);
+        files.setFPath(targetFile.getAbsolutePath());
+        files.setBno(board);
+
+        board.getFileList().add(files);
+        boardServiceImpl.save(board);  // 파일 정보 저장 후 board 객체 저장
+
+        return "redirect:/board/detail/" + bno;
+    }
 
 }

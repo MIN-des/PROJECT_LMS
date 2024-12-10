@@ -13,11 +13,11 @@ import javax.persistence.*;
 public class Files {
 
     @Id
-    private String uuid;
+    private String uuid;//id
 
-    private String fName;
+    private String fName;//fileName
 
-    private String fPath;
+    private String fPath;//filePath
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bno", nullable = false)

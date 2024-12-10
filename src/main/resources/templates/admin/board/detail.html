@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Main Page</title>
+    <title>게시글 상세보기</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
     <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon"/>
 
@@ -90,6 +90,16 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- 업로드된 파일 목록 -->
+                        <div class="my-3">
+                            <h5>첨부 파일</h5>
+                            <ul>
+                                <li th:each="file : ${board.fileList}">
+                                    <a th:href="@{/board/file/download/{id}(id=${file.id})}" th:text="${file.fName}"></a>
+                                </li>
+                            </ul>
                         </div>
 
                         <!-- 수정, 삭제 버튼 및 목록으로 돌아가기 버튼 -->

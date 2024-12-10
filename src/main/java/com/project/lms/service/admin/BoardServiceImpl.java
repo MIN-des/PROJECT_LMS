@@ -31,6 +31,10 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
 
+    public Board save(Board board) {
+        return boardRepository.save(board);  // Board 객체 저장
+    }
+
     public List<Board> getList() {
         return this.boardRepository.findAll();
     }
