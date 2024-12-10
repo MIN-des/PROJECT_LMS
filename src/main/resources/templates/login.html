@@ -179,6 +179,7 @@
       <div class="content active" id="student">
         <form action="/login" method="POST">
           <h3>학생 로그인</h3>
+          <input type="hidden" name="role" value="ROLE_STUDENT">
           <input type="text" name="username" placeholder="학번" class="input" required>
           <input type="password" name="password" placeholder="비밀번호" class="input" required>
           <button class="submit">로그인</button>
@@ -189,6 +190,7 @@
       <div class="content" id="professor">
         <form action="/login" method="POST">
           <h3>교수 로그인</h3>
+          <input type="hidden" name="role" value="ROLE_PROFESSOR">
           <input type="text" name="username" placeholder="교직원 번호" class="input" required>
           <input type="password" name="password" placeholder="비밀번호" class="input" required>
           <button class="submit">로그인</button>
@@ -199,6 +201,7 @@
       <div class="content" id="admin">
         <form action="/login" method="POST">
           <h3>관리자 로그인</h3>
+          <input type="hidden" name="role" value="ROLE_ADMIN">
           <input type="text" name="username" placeholder="관리자 번호" class="input" required>
           <input type="password" name="password" placeholder="비밀번호" class="input" required>
           <button class="submit">로그인</button>

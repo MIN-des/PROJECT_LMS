@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProfessorRepository extends JpaRepository<Professor, String> {
-    Professor findBypId(String pId);
 
     Page<Professor> findAll(Pageable pageable);
 
@@ -20,7 +19,9 @@ public interface ProfessorRepository extends JpaRepository<Professor, String> {
 
     Page<Professor> findBypDept(Dept pDept, Pageable pageable);
 
+    // 교수 아이디 중복 검사
     boolean existsById(String pId);
 
+    // 교수 이메일 중복 검사
     boolean existsBypEmail(String pEmail);
 }

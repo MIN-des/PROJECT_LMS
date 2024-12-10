@@ -2,25 +2,17 @@ package com.project.lms.service;
 
 import com.project.lms.constant.Dept;
 import com.project.lms.dto.ProfessorDTO;
-import com.project.lms.dto.ProfessorUpdateDTO;
-import com.project.lms.entity.Admin;
 import com.project.lms.entity.Professor;
 import com.project.lms.repository.ProfessorRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -36,6 +28,12 @@ public class ProfessorServiceImpl implements ProfessorService {
     public ProfessorDTO createProfessor(ProfessorDTO professorDTO) {
         if (professorRepository.existsById(professorDTO.getPId())) {
             throw new IllegalArgumentException("이미 중복된 교직원 번호가 존재합니다.");
+        }
+
+        // 비밀번호 암호화
+        if (professorDTO.getPPw() != null && !professorDTO.getPPw().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(professorDTO.getPPw());
+            professorDTO.setPPw(encodedPassword);
         }
 
         if (professorRepository.existsBypEmail(professorDTO.getPEmail())) {
@@ -69,6 +67,12 @@ public class ProfessorServiceImpl implements ProfessorService {
             throw new IllegalArgumentException("이미 중복된 이메일이 존재합니다: " + professorDTO.getPEmail());
         }
 
+        // 비밀번호 암호화
+        if (professorDTO.getPPw() != null && !professorDTO.getPPw().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(professorDTO.getPPw());
+            professorDTO.setPPw(encodedPassword);
+        }
+
         modelMapper.map(professorDTO, professor);
         return modelMapper.map(professorRepository.save(professor), ProfessorDTO.class);
     }
@@ -76,22 +80,6 @@ public class ProfessorServiceImpl implements ProfessorService {
     @Override
     public void deleteProfessor(String pId) {
         professorRepository.deleteById(pId);
-    }
-
-    // 교수 계정이 내 정보 업데이트 하는 메소드
-    @Override
-    public String updateMyProfessor(ProfessorUpdateDTO updateDTO) throws Exception {
-        Professor professor = professorRepository.findById(updateDTO.getPId()).orElseThrow(EntityNotFoundException::new);
-
-        // 새 비밀번호가 제공된 경우에만 암호화 처리
-        if (updateDTO.getNewPw() != null && !updateDTO.getNewPw().isEmpty()) {
-            String encodedPassword = passwordEncoder.encode(updateDTO.getNewPw());
-            updateDTO.setNewPw(encodedPassword);
-        }
-
-        professor.updateMyProfessor(updateDTO);
-
-        return professor.getPId();
     }
 
     @Override

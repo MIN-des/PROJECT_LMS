@@ -6,7 +6,6 @@ import com.project.lms.entity.Student;
 import com.project.lms.entity.TuitionInvoiceUpload;
 import com.project.lms.repository.StudentRepository;
 import com.project.lms.repository.TuitionInvoiceUploadRepository;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,6 +90,11 @@ public class TuitionInvoiceUploadServiceImpl implements TuitionInvoiceUploadServ
 			return dto;
 		}).collect(Collectors.toList());
 	}
+
+	public boolean isInvoiceOwnedByStudent(Long tId, String sId) {
+		return uploadRepository.existsBytIdAndStudent_sId(tId, sId);
+	}
+
 
 	// 파일 다운로드
 	@Override

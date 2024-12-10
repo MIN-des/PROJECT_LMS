@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>교수 정보</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+    <link rel="icon" href="/assets/img/kaiadmin/favicon.ico" type="image/x-icon"/>
+
+    <!-- Fonts and icons -->
+    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
+    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
+</head>
+
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-wrapper scrollbar-inner">
+            <!-- Logo -->
+            <div class="logo d-flex justify-content-center align-items-center py-3">
+                <a href="/">
+                    <img src="/assets/img/kaiadmin/logo_light.svg" alt="Kaiadmin Logo" height="30">
+                </a>
+            </div>
+            <!-- Sidebar Content -->
+            <div class="sidebar-content">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="/dashboard">
+                            <i class="fas fa-home"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/courses/list">
+                            <i class="fas fa-book"></i>
+                            <p>Courses</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/students">
+                            <i class="fas fa-users"></i>
+                            <p>Students</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/professors">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <p>Professors</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/settings">
+                            <i class="fas fa-cog"></i>
+                            <p>Settings</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <!-- Header -->
+        <header class="main-header">
+            <!-- Navbar -->
+            <nav class="navbar navbar-header navbar-expand-lg border-bottom">
+                <div class="container-fluid">
+                    <ul class="navbar-nav topbar-nav ms-auto align-items-center">
+                        <!-- User Info -->
+                        <li class="nav-item dropdown hidden-caret">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle fa-lg me-2"></i>
+                                <span>Professor</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                <li>
+                                    <div class="user-box">
+                                        <div class="avatar-lg">
+                                            <i class="fas fa-user-circle fa-3x text-muted"></i>
+                                        </div>
+                                        <div class="u-text">
+                                            <h4>Professor User</h4>
+                                            <p class="text-muted">professor@example.com</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/logout">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </header>
+
+        <div class="container my-4">
+            <div class="card card-round">
+                <div class="card-header">
+                    <h3 class="card-title">MY INFORMATION</h3>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/professor/info}" method="post">
+                        <!-- ID -->
+                        <div class="mb-3">
+                            <label for="pId" class="form-label">아이디</label>
+                            <input type="text" id="pId" th:value="${professor.pId}" class="form-control" readonly/>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label for="pName" class="form-label">이름</label>
+                            <input type="text" id="pName" th:value="${professor.pName}" class="form-control" readonly/>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="pPw" class="form-label">비밀번호</label>
+                            <div class="input-group">
+                                <input type="password" id="pPw" value="******" class="form-control" readonly/>
+                                <button type="button" class="btn btn-secondary" onclick="toggleEdit('newPw')">수정
+                                </button>
+                            </div>
+                            <input type="password" id="newPw" name="newPw" class="form-control mt-2"
+                                   placeholder="새 비밀번호 입력"
+                                   style="display: none;">
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="mb-3">
+                            <label for="pTel" class="form-label">전화번호</label>
+                            <div class="input-group">
+                                <input type="text" id="pTel" th:value="${professor.pTel}" class="form-control"
+                                       readonly/>
+                                <button type="button" class="btn btn-secondary" onclick="toggleEdit('newPTel')">수정
+                                </button>
+                            </div>
+                            <input type="text" id="newPTel" name="newPTel" class="form-control mt-2"
+                                   placeholder="새 전화번호 입력"
+                                   style="display: none;">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="mb-3">
+                            <label for="pAdd" class="form-label">주소</label>
+                            <div class="input-group">
+                                <input type="text" id="pAdd" th:value="${professor.pAdd}" class="form-control"
+                                       readonly/>
+                                <button type="button" class="btn btn-secondary" onclick="toggleAddressEdit()">수정
+                                </button>
+                            </div>
+                            <div id="newAddressContainer" style="display: none;" class="mt-2">
+                                <div class="input-group">
+                                    <input type="text" id="newPAdd" name="newPAdd" class="form-control"
+                                           placeholder="새 주소 입력"/>
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                            data-bs-target="#addressModal">주소 검색
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Birthdate -->
+                        <div class="mb-3">
+                            <label for="pBirth" class="form-label">생년월일</label>
+                            <input type="text" id="pBirth" th:value="${professor.pBirth}" class="form-control"
+                                   readonly/>
+                        </div>
+
+                        <!-- Year of employment -->
+                        <div class="mb-3">
+                            <label for="year" class="form-label">입사년도</label>
+                            <input type="text" id="year" th:value="${professor.year}" class="form-control" readonly/>
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="mb-3">
+                            <label for="pGen" class="form-label">성별</label>
+                            <input type="text" id="pGen" th:value="${professor.pGen}" class="form-control" readonly/>
+                        </div>
+
+                        <!-- Department -->
+                        <div class="mb-3">
+                            <label for="pDept" class="form-label">학과</label>
+                            <input type="text" id="pDept" th:value="${professor.pDept}" class="form-control" readonly/>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">저장</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Address Search -->
+        <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addressModalLabel">주소 검색</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <input type="text" id="addressSearchInput" class="form-control"
+                                   placeholder="도로명 또는 지번 주소를 입력하세요">
+                            <button type="button" class="btn btn-primary" onclick="searchAddress()">검색</button>
+                        </div>
+                        <div id="addressResult" class="list-group"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container-fluid text-center">
+                    <p>© 2024 Kaiadmin - All Rights Reserved</p>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Core JS Files -->
+        <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
+        <script src="/assets/js/core/popper.min.js"></script>
+        <script src="/assets/js/core/bootstrap.min.js"></script>
+
+        <!-- jQuery Scrollbar -->
+        <script src="/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+        <!-- Kaiadmin JS -->
+        <script src="/assets/js/kaiadmin.min.js"></script>
+
+        <script>
+            function toggleEdit(fieldId) {
+                const inputField = document.getElementById(fieldId);
+                if (inputField) {
+                    inputField.style.display = "block";
+                    inputField.focus();
+                }
+            }
+
+            function toggleAddressEdit() {
+                const newAddressContainer = document.getElementById("newAddressContainer");
+                if (newAddressContainer.style.display === "none") {
+                    newAddressContainer.style.display = "block";
+                } else {
+                    newAddressContainer.style.display = "none";
+                }
+            }
+
+        </script>
+
+        <script>
+            function searchAddress() {
+               const query = document.getElementById('addressSearchInput').value;
+               if (!query) {
+                   alert('주소를 입력하세요!');
+                   return;
+               }
+
+               // Kakao 주소 검색 API 요청
+               const apiUrl = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}`;
+               const apiKey = '848a61ea755fa4899a301f126a35bd4c'; // 자신의 Kakao API 키로 변경
+
+               fetch(apiUrl, {
+                   method: 'GET',
+                   headers: { 'Authorization': `KakaoAK ${apiKey}` }
+               })
+                   .then(response => response.json())
+                   .then(data => {
+                       const results = data.documents;
+                       const resultContainer = document.getElementById('addressResult');
+                       resultContainer.innerHTML = '';
+
+                       if (results.length === 0) {
+                           resultContainer.innerHTML = '<div class="text-danger">검색 결과가 없습니다.</div>';
+                           return;
+                       }
+
+                       results.forEach(result => {
+                           const address = result.address_name;
+                           const item = document.createElement('button');
+                           item.classList.add('list-group-item', 'list-group-item-action');
+                           item.textContent = address;
+
+                           // 검색된 주소를 'newPAdd' 필드에 입력
+                           item.onclick = () => {
+                               document.getElementById('newPAdd').value = address;
+                               const modal = bootstrap.Modal.getInstance(document.getElementById('addressModal'));
+                               modal.hide(); // 모달 닫기
+                           };
+                           resultContainer.appendChild(item);
+                       });
+                   })
+                   .catch(error => {
+                       console.error('Error:', error);
+                       alert('주소 검색 중 오류가 발생했습니다.');
+                   });
+           }
+        </script>
+
+</body>
+</html>

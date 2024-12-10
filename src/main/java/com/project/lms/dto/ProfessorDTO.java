@@ -4,6 +4,7 @@ import com.project.lms.constant.Dept;
 import com.project.lms.constant.Gen;
 import com.project.lms.constant.Role;
 import com.project.lms.entity.Professor;
+import org.hibernate.validator.constraints.Length;
 import org.modelmapper.ModelMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +29,12 @@ public class ProfessorDTO {
     private String pName;
 
     @NotBlank(message = "비밀번호는 필수 항목입니다.")
+    @Length(min = 8, max = 16, message = "비밀번호는 최소 8자리 이상, 16자리 이하이어야 합니다.")
     private String pPw;
 
+    @NotBlank(message = "전화번호는 필수 항목입니다.")
     private String pTel; // 전화번호
+
     private String pAdd; // 주소
 
     @NotBlank(message = "생년월일은 필수 항목입니다.")

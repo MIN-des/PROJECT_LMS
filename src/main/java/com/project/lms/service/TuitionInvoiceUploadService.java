@@ -18,4 +18,6 @@ public interface TuitionInvoiceUploadService {
 
 	StudentDTO getStudentById(String id); // 학생 정보 가져오기
 
+	boolean isInvoiceOwnedByStudent(Long tId, String sId);
+
 }

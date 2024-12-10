@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MainController {
 
     @GetMapping("/main")  // /hello 경로로 접근 시 hello.html을 반환
-    public String hello() {
+    public String mainPage() {
         return "main";  // main.html 파일을 찾아 반환
     }
+
     @GetMapping("/")
     public String root() {
         return "redirect:/main";

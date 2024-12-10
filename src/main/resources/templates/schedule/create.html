@@ -692,91 +692,44 @@
     </div>
 
     <div class="container mt-8">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="card shadow">
-            <div class="card-header bg-primary text-white text-center">
-              <h5>학생 정보 수정</h5>
+      <div class="card shadow" style="max-width: 800px; margin: auto;">
+        <div class="card-header bg-primary text-white text-center">
+          <h4>새 스케줄 추가</h4>
+        </div>
+        <div class="card-body" style="padding: 10px;">
+          <form th:action="@{/schedule/create}" method="post" th:object="${schedule}">
+
+            <!-- Content Field -->
+            <div class="mb-3">
+              <label for="content" class="form-label">내용</label>
+              <textarea id="content" name="content" class="form-control" rows="3" placeholder="스케줄 내용을 입력하세요" required></textarea>
             </div>
-            <div class="card-body">
-              <form th:action="@{/student/modify/{sId}(sId=${student.sId})}" th:object="${student}" method="post">
-                <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-                  <span th:text="${errorMessage}"></span>
-                </div>
-                 <!--이름-->
-                <div class="mb-3">
-                  <label for="sName" class="form-label">이름</label>
-                  <input type="text" class="form-control" id="sName" th:field="*{sName}" placeholder="이름 입력" readonly>
-                </div>
 
-                 <!--비밀번호-->
-                <div class="mb-3">
-                  <label for="sPw" class="form-label">비밀번호</label>
-                  <input type="password" class="form-control" id="sPw" th:field="*{sPw}" placeholder="새 비밀번호 입력" required>
-                  <small class="form-text text-muted">비밀번호를 변경하지 않으려면 비워 두세요.</small>
-                </div>
-
-                <!-- 전화번호 -->
-                <div class="mb-3">
-                  <label for="sTel" class="form-label">전화번호</label>
-                  <input type="text" class="form-control" id="sTel" th:field="*{sTel}" placeholder="전화번호 입력">
-                </div>
-
-                <!-- 주소 -->
-                <div class="mb-3">
-                  <label for="sAdd" class="form-label">주소</label>
-                  <input type="text" class="form-control" id="sAdd" th:field="*{sAdd}" placeholder="주소 입력">
-                </div>
-
-                 <!--생년월일-->
-                <div class="mb-3">
-                  <label for="sBirth" class="form-label">생년월일</label>
-                  <input type="date" class="form-control" id="sBirth" th:field="*{sBirth}" readonly>
-                </div>
-
-                <!-- 이메일 -->
-                <div class="mb-3">
-                  <label for="sEmail" class="form-label">이메일</label>
-                  <input type="email" class="form-control" id="sEmail" th:field="*{sEmail}" placeholder="이메일 입력" readonly>
-                </div>
-
-                 <!--학년-->
-                <div class="mb-3">
-                  <label for="grade" class="form-label">학년</label>
-                  <input type="number" class="form-control" id="grade" th:field="*{grade}" placeholder="학년 입력" readonly>
-                </div>
-
-                 <!--단과-->
-                <div class="mb-3">
-                  <label for="sDept" class="form-label">단과</label>
-                  <input type="text" class="form-control" id="sDept" th:value="${student.sDept.koreanName}" readonly>
-                </div>
-
-                 <!--성별-->
-                <div class="mb-3">
-                  <label for="sGen" class="form-label">성별</label>
-                  <input type="text" class="form-control" id="sGen" th:value="${student.sGen.koreanName}" readonly>
-                </div>
-
-                 <!--권한-->
-                <!--<div class="mb-3">
-                  <label for="role" class="form-label">권한</label>
-                  <select class="form-select" id="role" th:field="*{role}">
-                    <option th:each="role : ${T(com.project.lms.constant.Role).values()}"
-                            th:value="${role}" th:text="${role.koreanName}"></option>
-                  </select>
-                </div>-->
-
-                <div class="d-flex justify-content-between">
-                  <button type="submit" class="btn btn-success">저장</button>
-                  <a th:href="@{/student/info}" class="btn btn-secondary">취소</a>
-                </div>
-              </form>
+            <!-- Start Date Field -->
+            <div class="mb-3">
+              <label for="startDay" class="form-label">시작일</label>
+              <input type="date" id="startDay" name="startDay" class="form-control" required>
             </div>
-          </div>
+
+            <!-- End Date Field -->
+            <div class="mb-3">
+              <label for="endDay" class="form-label">종료일</label>
+              <input type="date" id="endDay" name="endDay" class="form-control" required>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-success me-2">저장</button>
+              <a th:href="@{/schedule/list}" class="btn btn-secondary">취소</a>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer d-flex justify-content-end">
+          <span class="text-muted">필수 입력 항목을 확인하세요</span>
         </div>
       </div>
     </div>
+
 
 
     <footer class="footer">

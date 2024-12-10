@@ -20,7 +20,7 @@ public class BoardController {
 //    private final AllBoardRepository allBoardRepository;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value="page", defaultValue = "0") int page) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
         Page<Board> paging = this.boardServiceImple.getList(page);
 
         int totalPages = paging.getTotalPages();
@@ -41,23 +41,25 @@ public class BoardController {
         model.addAttribute("board", board);
         return "admin/board/detail";
     }
+
     //등록
     @GetMapping("/create")
     public String boardCreate(RegisterFormDTO registerFormDto) {
         //model.addAttribute("registerFormDTO", new RegisterFormDTO());// RegisterFormDTO 객체를 모델에 추가
-        return "admin/board/register"; // 폼 페이지 반환
+        return "/admin/board/register"; // 폼 페이지 반환
     }
 
-@PostMapping("/create")
-public String boardCreate(@Valid RegisterFormDTO registerFormDto, BindingResult bindingResult) {  // RegisterFormDTO에 대한 유효성 검사
-   // 유효성 검사에서 오류가 있으면 폼을 다시 표시
-    if (bindingResult.hasErrors()) {
-        return "/admin/board/register";
+    @PostMapping("/create")
+    public String boardCreate(@Valid RegisterFormDTO registerFormDto, BindingResult bindingResult) {  // RegisterFormDTO에 대한 유효성 검사
+        // 유효성 검사에서 오류가 있으면 폼을 다시 표시
+        if (bindingResult.hasErrors()) {
+            return "admin/board/register";
+        }
+        this.boardServiceImple.create(registerFormDto.getTitle(), registerFormDto.getContent());
+        // 게시판 목록으로 리다이렉트
+        return "redirect:/admin/board/list";
     }
-    this.boardServiceImple.create(registerFormDto.getTitle(), registerFormDto.getContent());
-    // 게시판 목록으로 리다이렉트
-    return "redirect:/board/list";
-}
+
     @GetMapping("/detail/{bno}/modify")
     public String modifyForm(@PathVariable Long bno, Model model) {
         Board board = boardServiceImple.getBoard(bno);
@@ -71,19 +73,21 @@ public String boardCreate(@Valid RegisterFormDTO registerFormDto, BindingResult 
 
         return "admin/board/modify";
     }
+
     @PostMapping("/detail/{bno}/modify")
     public String modify(@PathVariable Long bno, @Valid @ModelAttribute RegisterFormDTO registerFormDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "admin/board/modify";
+            return "/admin/board/modify";
         }
         boardServiceImple.modify(bno, registerFormDTO.getTitle(), registerFormDTO.getContent());
-        return "redirect:/board/detail/{bno}";
+        return "redirect:/admin/board/detail/{bno}";
     }
+
     // 게시글 삭제
     @PostMapping("/detail/{bno}/delete")
     public String delete(@PathVariable Long bno) {
         boardServiceImple.delete(bno); // 서비스에서 삭제 로직 호출
-        return "redirect:/board/list"; // 게시글 목록 페이지로 리다이렉트
+        return "redirect:/admin/board/list"; // 게시글 목록 페이지로 리다이렉트
     }
 
 

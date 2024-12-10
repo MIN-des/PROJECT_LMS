@@ -36,18 +36,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.formLogin()
-            .loginPage("/login")
-            .defaultSuccessUrl("/")
-            .usernameParameter("username")
-            .failureUrl("/login/error")
-            .and()
-            .logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/");
+                .loginPage("/login")
+                .defaultSuccessUrl("/main", true)
+                .usernameParameter("username")
+                .failureUrl("/login?error=true")
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/");
 
         http.authorizeRequests()
-            .mvcMatchers("/", "/login", "/student/invoices/preview/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
-            .antMatchers("/css/**", "/js/**", "/img/**").permitAll() // 정적 자원에 대한 접근 허용
+            .mvcMatchers("/", "/login", "/student/invoices/preview/**", "/invoices/download/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
+            .antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico").permitAll() // 정적 자원에 대한 접근 허용
             .mvcMatchers("/admin/**").hasAuthority(Role.ROLE_ADMIN.name()) // "ROLE_ADMIN"
             .mvcMatchers("/student/**").hasAuthority(Role.ROLE_STUDENT.name()) // "ROLE_STUDENT"
             .mvcMatchers("/professor/**").hasAuthority(Role.ROLE_PROFESSOR.name()) // "ROLE_PROFESSOR"

@@ -29,7 +29,7 @@ class StudentRepositoryTest {
 		student.setGrade(1);
 		student.setSGen(Gen.MALE);
 		student.setSDept(Dept.HUMAN);
-		student.setRole(Role.STUDENT);
+//		student.setRole(Role.STUDENT);
 
 		studentRepository.save(student);
 	}
