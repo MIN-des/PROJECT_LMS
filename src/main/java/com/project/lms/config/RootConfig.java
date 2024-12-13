@@ -51,6 +51,6 @@ public class RootConfig {
 				.setFieldMatchingEnabled(true) // 필드 이름 매칭 활성화
 				.setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
 
-		return modelMapper;
-	}
+        return modelMapper;
+    }
 }

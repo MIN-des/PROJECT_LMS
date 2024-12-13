@@ -5,10 +5,32 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
+//@RequestMapping("/")
 public class MainController {
 
+    @GetMapping("/main")  // /hello 경로로 접근 시 hello.html을 반환
+    public String mainPage() {
+        return "main";  // main.html 파일을 찾아 반환
+    }
+
+    // permit All
+    @GetMapping("/dashboard/greetings")
+    public String greetingsPage() {
+        return "greetings_page";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboardPage() {
+        return "dashboard";
+    }
+
     @GetMapping("/hello")
-    public void main() {
+    public String helloPage() {
+        return "/hello";
+    }
+
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/login";
     }
 }

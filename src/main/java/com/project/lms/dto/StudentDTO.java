@@ -30,5 +30,5 @@ public class StudentDTO {
 	@Enumerated(EnumType.STRING)
 	private Dept sDept;
 
-	private Role role = Role.STUDENT;
+	private Role role = Role.ROLE_STUDENT;
 }

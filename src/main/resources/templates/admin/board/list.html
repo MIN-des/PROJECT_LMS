@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Main Page</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+    <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon"/>
+
+    <!-- Fonts and icons -->
+    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
+                urls: ["/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
+    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-logo">
+            <a href="hello.html" class="logo">
+                <img src="/assets/img/logo_light.svg" alt="Logo" class="navbar-brand" height="20"/>
+            </a>
+        </div>
+        <div class="sidebar-wrapper scrollbar-inner">
+            <div class="sidebar-content">
+                <ul class="nav">
+                    <li class="nav-item active">
+                        <a href="hello.html">
+                            <i class="fas fa-home"></i>
+                            <p>Main Page</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">
+                            <i class="fas fa-list"></i>
+                            <p>Boards</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">
+                            <i class="fas fa-info-circle"></i>
+                            <p>About Us</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <!-- Main Panel -->
+    <div class="main-panel">
+        <header class="header bg-primary text-white text-center py-4">
+            <h1>학사 게시판</h1>
+        </header>
+
+        <div class="container">
+            <div class="page-inner">
+
+                <!-- Board Section -->
+                <div class="row">
+
+                    <div layout:fragment="content" class="container my-3">
+                        <table class="table">
+                            <thead class="table-dark">
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성일시</th>
+                                <th>작업</th> <!-- 수정 및 삭제 버튼 열 추가 -->
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="board, loop: ${paging}">
+                                <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td><!--번호-->
+                                <td><!--제목-->
+                                    <a th:href="@{/board/detail/{bno}(bno=${board.bno})}"
+                                       th:text="${board.title}"></a>
+
+                                </td>
+                                <td th:text="${#temporals.format(board.regDate, 'yyyy-MM-dd')}"></td><!--작성일시-->
+                                <td><!--작업(수정,삭제)-->
+                                    <!-- 수정 버튼 -->
+                                    <a th:href="@{/board/detail/{bno}/modify(bno=${board.bno})}" class="btn btn-primary mr-2">수정</a>
+
+                                    <!-- 삭제 버튼 -->
+                                    <form th:action="@{/board/detail/{bno}/delete(bno=${board.bno})}" method="post" style="display:inline;">
+                                        <button class="btn btn-danger" type="submit">삭제</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- 페이징처리 시작 -->
+                        <div th:if="${!paging.isEmpty()}">
+                            <ul class="pagination justify-content-center">
+                                <!-- 이전 버튼 -->
+                                <li class="page-item" th:classappend="${paging.hasPrevious()} ? '' : 'disabled'">
+                                    <a class="page-link" th:href="@{/board/list(page=${paging.number - 1})}">
+                                        이전
+                                    </a>
+                                </li>
+
+                                <!-- 페이지 번호 -->
+                                <li th:each="page : ${#numbers.sequence(startPage, endPage)}"
+                                    th:classappend="${page == paging.number} ? 'active'" class="page-item">
+                                    <a class="page-link" th:href="@{/board/list(page=${page})}" th:text="${page + 1}"></a>
+                                </li>
+
+                                <!-- 다음 버튼 -->
+                                <li class="page-item" th:classappend="${paging.hasNext()} ? '' : 'disabled'">
+                                    <a class="page-link" th:href="@{/board/list(page=${paging.number + 1})}">
+                                        다음
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 페이징처리 끝 -->
+
+                        <a th:href="@{/board/create}" class="btn btn-primary">게시글 등록하기</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <footer class="footer bg-dark text-white text-center py-3">
+            <p>© 2024 우리 대학교. All rights reserved.</p>
+        </footer>
+    </div>
+    <!-- End Main Panel -->
+</div>
+
+<!-- Core JS Files -->
+<script src="/assets/js/core/jquery-3.7.1.min.js"></script>
+<script src="/assets/js/core/popper.min.js"></script>
+<script src="/assets/js/core/bootstrap.min.js"></script>
+
+<!-- Kaiadmin JS -->
+<script src="/assets/js/kaiadmin.min.js"></script>
+</body>
+</html>
