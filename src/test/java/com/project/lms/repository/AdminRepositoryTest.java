@@ -5,24 +5,36 @@ import com.project.lms.entity.Admin;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AdminRepositoryTest {
-//입학처, 교무처, 총무처, 홍보처
 
 	@Autowired
 	private AdminRepository adminRepository;
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Test
 	void createAdmin() {
 		Admin admin = new Admin();
 		admin.setAId("A0000004");
-		admin.setAPw("A0000004");
+
+		// 비밀번호 암호화
+		String rawPassword = "A0000004"; // 원본 비밀번호
+		String encodedPassword = passwordEncoder.encode(rawPassword); // 암호화된 비밀번호
+		admin.setAPw(encodedPassword);
+
 		admin.setAName("홍보처");
-		admin.setRole(Role.ADMIN);
+		admin.setRole(Role.ROLE_ADMIN);
 
 		adminRepository.save(admin);
+
+		// 암호화된 비밀번호가 저장되는지 확인
+		Admin savedAdmin = adminRepository.findById("A0000004").orElseThrow();
+		assertTrue(passwordEncoder.matches(rawPassword, savedAdmin.getAPw())); // 암호화된 비밀번호 확인
 	}
 }

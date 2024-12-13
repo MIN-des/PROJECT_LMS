@@ -43,7 +43,7 @@ class StudentServiceTest {
 		studentDTO.setGrade(1);
 		studentDTO.setSGen(Gen.MALE);
 		studentDTO.setSDept(Dept.HUMAN);
-		studentDTO.setRole(Role.STUDENT);
+//		studentDTO.setRole(Role.STUDENT);
 
 		StudentDTO savedStudent = studentService.createStudent(studentDTO);
 	}
@@ -77,7 +77,7 @@ class StudentServiceTest {
 			Dept[] depts = Dept.values();
 			studentDTO.setSDept(depts[i % depts.length]);
 
-			studentDTO.setRole(Role.STUDENT);
+//			studentDTO.setRole(Role.STUDENT);
 
 			// 학생 데이터 저장
 			StudentDTO savedStudent = studentService.createStudent(studentDTO);
@@ -100,7 +100,7 @@ class StudentServiceTest {
 		updatedStudentDTO.setGrade(2);
 		updatedStudentDTO.setSGen(Gen.FEMALE);
 		updatedStudentDTO.setSDept(Dept.SOCIAL);
-		updatedStudentDTO.setRole(Role.STUDENT);
+//		updatedStudentDTO.setRole(Role.STUDENT);
 
 		StudentDTO updatedStudent = studentService.updateStudent("S2401001", updatedStudentDTO);
 	}

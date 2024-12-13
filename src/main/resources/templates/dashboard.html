@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Main Page</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+    <link rel="icon" th:href="@{/assets/img/favicon.ico}" type="image/x-icon"/>
+
+    // 이미지 스타일
+    <style>
+        .cropped-img {
+          height: 400px; /* 원하는 높이 설정 */
+          object-fit: cover; /* 위아래를 잘라내고 꽉 차게 표시 */
+          object-position: center; /* 이미지의 중앙을 기준으로 자르기 */
+        }
+    </style>
+
+    <!-- Fonts and icons -->
+    <script th:src="@{/assets/js/plugin/webfont/webfont.min.js}"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
+                urls: ["/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/plugins.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/kaiadmin.min.css}"/>
+</head>
+
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+        <div class="logo-header" data-background-color="dark">
+            <a th:href="@{icon-menu.html}" class="logo">
+                <img th:src="@{/assets/img/logo_light.svg}" alt="Logo" class="navbar-brand" height="20"/>
+            </a>
+        </div>
+        <div class="sidebar-wrapper scrollbar-inner">
+            <div class="sidebar-content">
+                <ul class="nav">
+                    <li>
+                        <div>대시보드</div>
+                    </li>
+                    <li>
+                        <a th:href="@{/dashboard/greetings}">
+                            인사말 & 총장 프로필
+                        </a>
+                    </li>
+                    <li>
+                        <div>찾아오시는 길</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <footer class="footer bg-dark text-white text-center py-3">
+        <p>© 2024 우리 대학교. All rights reserved.</p>
+    </footer>
+</div>
+<!-- End Main Panel -->
+
+<!-- Core JS Files -->
+<script src="@{/assets/js/core/jquery-3.7.1.min.js}"></script>
+<script src="@{/assets/js/core/popper.min.js}"></script>
+<script src="@{/assets/js/core/bootstrap.min.js}"></script>
+
+<!-- Kaiadmin JS -->
+<script src="@{/assets/js/kaiadmin.min.js}"></script>
+</body>
+</html>

@@ -7,14 +7,73 @@
   <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
   <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
+  <!-- Fonts and icons -->
+  <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+  <script>
+    WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+            families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
+            urls: ["/assets/css/fonts.min.css"],
+        },
+        active: function () {
+            sessionStorage.fonts = true;
+        },
+    });
+  </script>
 </head>
 <body>
 <div class="wrapper">
   <!-- Sidebar -->
   <div class="sidebar" data-background-color="dark">
     <!-- Sidebar contents can be added here -->
+    <div class="logo">
+      <a href="#" class="simple-text logo-mini">LMS</a>
+    </div>
+    <div class="sidebar-wrapper scrollbar-inner">
+      <div class="sidebar-content">
+        <ul class="nav">
+          <li>
+            <a th:href="@{/main}">
+              <i class="fas fa-home"></i>
+              <p>메인 페이지</p>
+            </a>
+          </li>
+          <!-- 관리자 페이지 섹션 -->
+          <li class="nav-item dropdown">
+            <a href="#adminMenu" data-bs-toggle="collapse" aria-expanded="false">
+              <i class="fas fa-user-cog"></i>
+              <p>관리자 페이지</p>
+              <span class="caret"></span>
+            </a>
+            <div class="collapse" id="adminMenu">
+              <ul class="nav nav-collapse">
+                <li>
+                  <a th:href="@{/admin/professors}">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <p>교수 리스트</p>
+                  </a>
+                </li>
+                <li>
+                  <a th:href="@{/admin/students}">
+                    <i class="fas fa-user-graduate"></i>
+                    <p>학생 리스트</p>
+                  </a>
+                </li>
+                <li>
+                  <a th:href="@{/admin/invoices}">
+                    <i class="fas fa-file-invoice"></i>
+                    <p>등록금 고지서 등록</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
-  <!-- End Sidebar -->
+  <!--End Sidebar-->
 
   <div class="main-panel">
     <div class="container">
@@ -33,9 +92,22 @@
         </div>
 
         <form th:action="@{/admin/professors/create}" method="post" class="mb-4">
+
           <div class="mb-3">
-            <label for="pId" class="form-label">교직원 번호</label>
-            <input type="text" id="pId" name="pId" th:value="${professor.pId}" class="form-control" required>
+            <div class="row">
+              <!-- 권한 -->
+              <div class="col-md-6">
+                <label for="role" class="form-label">권한</label>
+                <select id="role" name="role" class="form-select" required>
+                  <option value="ROLE_PROFESSOR" th:selected="${professor.role == 'ROLE_PROFESSOR'}">교수</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="pId" class="form-label">교직원 번호</label>
+                <input type="text" id="pId" name="pId" th:value="${professor.pId}" class="form-control" required>
+              </div>
+            </div>
           </div>
 
           <div class="mb-3">
@@ -59,42 +131,55 @@
           </div>
 
           <div class="mb-3">
-            <label for="pBirth" class="form-label">생년월일</label>
-            <input type="date" id="pBirth" name="pBirth" th:value="${professor.pBirth}" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
             <label for="pEmail" class="form-label">이메일</label>
             <input type="email" id="pEmail" name="pEmail" th:value="${professor.pEmail}" class="form-control" required>
           </div>
 
           <div class="mb-3">
-            <label for="pDept" class="form-label">학부</label>
-            <select id="pDept" name="pDept" class="form-select" required>
-              <option value="HUMAN" th:selected="${professor.pDept == 'HUMAN'}">인문</option>
-              <option value="SOCIAL" th:selected="${professor.pDept == 'SOCIAL'}">사회</option>
-              <option value="TECH" th:selected="${professor.pDept == 'TECH'}">공학</option>
-              <option value="ARTS" th:selected="${professor.pDept == 'ARTS'}">예체능</option>
-            </select>
+            <div class="row">
+              <!-- 생년월일 -->
+              <div class="col-md-6">
+                <label for="pBirth" class="form-label">생년월일</label>
+                <input type="date" id="pBirth" name="pBirth" th:value="${professor.pBirth}" class="form-control" required>
+              </div>
+
+              <!-- 학부 -->
+              <div class="col-md-6">
+                <label for="pDept" class="form-label">학부</label>
+                <select id="pDept" name="pDept" class="form-select" required>
+                  <option value="HUMAN" th:selected="${professor.pDept == 'HUMAN'}">인문</option>
+                  <option value="SOCIAL" th:selected="${professor.pDept == 'SOCIAL'}">사회</option>
+                  <option value="TECH" th:selected="${professor.pDept == 'TECH'}">공학</option>
+                  <option value="ARTS" th:selected="${professor.pDept == 'ARTS'}">예체능</option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div class="mb-3">
-            <label for="year" class="form-label">입사년도</label>
-            <select id="year" name="year" class="form-select" required>
-              <option th:each="i : ${#numbers.sequence(1970, 2024)}"
-                      th:value="${i}"
-                      th:text="${i}"
-                      th:selected="${i == professor.year}"></option>
-            </select>
+            <div class="row">
+              <!-- 입사년도 -->
+              <div class="col-md-6">
+                <label for="year" class="form-label">입사년도</label>
+                <select id="year" name="year" class="form-select" required>
+                  <option th:each="i : ${#numbers.sequence(1970, 2024)}"
+                          th:value="${i}"
+                          th:text="${i}"
+                          th:selected="${i == professor.year}"></option>
+                </select>
+              </div>
+
+              <!-- 성별 -->
+              <div class="col-md-6">
+                <label for="pGen" class="form-label">성별</label>
+                <select id="pGen" name="pGen" class="form-select" required>
+                  <option value="MALE" th:selected="${professor.pGen == 'MALE'}">남성</option>
+                  <option value="FEMALE" th:selected="${professor.pGen == 'FEMALE'}">여성</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label for="pGen" class="form-label">성별</label>
-            <select id="pGen" name="pGen" class="form-select" required>
-              <option value="MALE" th:selected="${professor.pGen == 'MALE'}">남성</option>
-              <option value="FEMALE" th:selected="${professor.pGen == 'FEMALE'}">여성</option>
-            </select>
-          </div>
 
           <button type="submit" class="btn btn-primary">생성</button>
         </form>
@@ -110,7 +195,8 @@
   </div>
 </div>
 
-<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/core/bootstrap.min.js"></script>
 <script src="/assets/js/kaiadmin.min.js"></script>
+
 </body>
 </html>

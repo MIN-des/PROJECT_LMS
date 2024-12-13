@@ -16,11 +16,7 @@ public class Enroll {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eId;
 
-    @ManyToOne
-    @JoinColumn(name = "cId")
-    private Course cId; // null true
-
-    @ManyToOne
-    @JoinColumn(name = "sId")
-    private Student sId; //
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student")
+    private Student student;
 }

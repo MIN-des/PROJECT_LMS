@@ -55,7 +55,7 @@ class ProfessorServiceTest {
 			Dept[] depts = Dept.values();
 			professorDTO.setPDept(depts[i % depts.length]);
 
-			professorDTO.setRole(Role.PROFESSOR);
+//			professorDTO.setRole(Role.PROFESSOR);
 
 			// 교수 데이터 저장
 			ProfessorDTO savedProfessor = professorService.createProfessor(professorDTO);

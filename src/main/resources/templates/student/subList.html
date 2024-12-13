@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수강 신청 목록</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>수강 신청 목록</h2>
+
+    <!-- 신청 내역이 없을 경우 메시지 출력 -->
+    <div th:if="${#lists.isEmpty(orderList)}" class="alert alert-warning mt-3" role="alert">
+        신청 내역이 없습니다.
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success">
+        <span th:text="${successMessage}"></span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- 신청 내역이 있을 경우 테이블 출력 -->
+    <div th:if="${not #lists.isEmpty(orderList)}">
+        <table class="table table-bordered mt-3">
+            <thead>
+            <tr>
+                <th>강의 아이디</th>
+                <th>강의 이름</th>
+                <th>학점</th>
+                <th>강의 교수</th>
+                <th>신청 날짜</th>
+                <th>상태</th>
+                <th>취소하기</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orderList}">
+                <td th:text="${order.cId}">강의 아이디</td>
+                <td th:text="${order.cName}">강의 이름</td>
+                <td th:text="${order.credits}">학점</td>
+                <td th:text="${order.pId}">강의 교수</td>
+                <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}">신청 날짜</td>
+                <td th:text="${order.orderStatus}">상태</td>
+                <td>
+                    <!-- 신청 취소 버튼 -->
+                    <form th:action="@{/student/courses/cancel/{oId}(oId=${order.oId})}" method="post">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">취소</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/student/courses/list" class="btn btn-outline-primary">강의 목록으로 돌아가기</a>
+</div>
+
+<!-- Core JS -->
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
