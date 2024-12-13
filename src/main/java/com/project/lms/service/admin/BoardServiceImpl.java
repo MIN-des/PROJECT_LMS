@@ -240,5 +240,11 @@ public class BoardServiceImpl implements BoardService {
                 return boardRepository.findByKeywordAndRegDateBetween(keyword, startDateTime, endDateTime, pageable);
         }
     }
-
+    @Transactional
+    public void incrementViews(Long bno) {
+        Board board = boardRepository.findById(bno)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다." + bno));
+        board.setViews(board.getViews() + 1); // 조회수 증가
+        boardRepository.save(board); // 변경 사항 저장
+    }
 }

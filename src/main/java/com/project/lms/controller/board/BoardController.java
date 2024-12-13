@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -123,6 +124,10 @@ public class BoardController {
     //http://localhost:8081/board/detail/10 검색(없는 allBno번호는 나오지 않으니 주의 필요), 게시글 상세보기
     @GetMapping(value = "/board/detail/{bno}")
     public String detail(Model model, @PathVariable("bno") Long bno) {
+        // 조회수 증가
+        boardServiceImpl.incrementViews(bno);
+
+        // 게시글 데이터 가져오기
         Board board = this.boardServiceImpl.getBoard(bno);
         model.addAttribute("board", board);
         return "admin/board/detail";
@@ -245,14 +250,18 @@ public class BoardController {
     }
 
 
-    @GetMapping("/admin/board/file/download/{id}")
+    @GetMapping("/board/file/download/{id}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long id) throws IOException {
         Files file = fileService.getFile(id);
         Path filePath = Paths.get(file.getFPath());
         Resource resource = new UrlResource(filePath.toUri());
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new IOException("파일을 읽을 수 없거나 존재하지 않습니다.");
+        }
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFName() + "\"")
                 .body(resource);
     }
+
 }

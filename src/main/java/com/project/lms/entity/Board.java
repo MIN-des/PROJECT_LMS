@@ -32,6 +32,7 @@ public class Board {
 
     private LocalDateTime modDate;
 
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0") // 조회수 필드 매핑
     private int views;
 
     @OneToMany(mappedBy = "bno", cascade = CascadeType.ALL, orphanRemoval = true)
