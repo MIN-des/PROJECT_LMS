@@ -12,17 +12,16 @@ import javax.persistence.*;
 @ToString
 public class EnrollCourse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ceId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long ceId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "eId")
-    private Enroll eId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "enroll_id", nullable = false)
+  private Enroll enroll;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cId")
-    private Course cId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "course_id", nullable = false)
+  private Course course;
 
-    private int count; // 장바구니에 담은 강의 개수
 }
