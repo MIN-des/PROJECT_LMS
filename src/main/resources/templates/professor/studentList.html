@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Student List for Course</h2>
+
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <tr>
+                <th>학번</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>학점 입력</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.student.sId}"></td>
+                <td th:text="${order.student.sName}"></td>
+                <td th:text="${order.student.sEmail}"></td>
+                <td>
+                    <form th:action="@{/professor/courses/studentList/score}" method="post" class="d-flex">
+                        <input type="hidden" name="oId" th:value="${order.oId}"/>
+                        <input type="hidden" name="cId" th:value="${order.course.cId}"/>
+                        <input type="number" name="score" class="form-control me-2" min="0" max="100"
+                               th:value="${order.score != null ? order.score : ''}"/>
+                        <button type="submit" class="btn btn-primary btn-sm">저장</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(orders)}" class="text-center">
+            <p>수강한 학생 정보가 없습니다.</p>
+        </div>
+    </div>
+    <a href="/professor/courses/myCourses" class="btn btn-primary mt-3">내 강의로 돌아가기</a>
+</div>
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
