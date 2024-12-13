@@ -1,0 +1,106 @@
+    .cropped-img {
+        height: 400px !important; /* 원하는 높이 설정 */
+        object-fit: cover !important; /* 위아래를 잘라내고 꽉 차게 표시 */
+        object-position: center !important; /* 이미지의 중앙을 기준으로 자르기 */
+    }
+    #promoCarousel .carousel-inner .carousel-item img {
+        height: 400px !important; /* 이걸로 조정 가능 원하는 높이 설정 */
+        object-fit: cover !important;
+    }
+    .user-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* 왼쪽과 오른쪽으로 요소 배치 */
+    }
+    .user-info {
+        display: flex;
+        align-items: center; /* 아이콘과 텍스트 수직 정렬 */
+    }
+    .user-dropdown {
+        padding: 10px 15px; /* 버튼의 안쪽 여백을 늘려 크기 조정 */
+        font-size: 1.2rem; /* 폰트 크기 증가 */
+        border-radius: 8px; /* 버튼 모서리를 부드럽게 */
+    }
+
+    .user-info i {
+        font-size: 2rem; /* 아이콘 크기 조정 */
+    }
+    .user-info {
+        display: flex;
+        align-items: center; /* 수직 정렬 */
+    }
+
+    .user-name {
+        font-size: 1.2rem; /* 이름 폰트 크기 증가 */
+        line-height: 1; /* 텍스트의 라인 높이를 아이콘과 동일하게 맞춤 */
+        margin-top: 0; /* 상단 여백 제거 */
+        margin-bottom: 0; /* 하단 여백 제거 */
+    }
+    .navbar-logo {
+        height: 45px; /* 원하는 높이로 설정 */
+        max-height: 50px; /* 최대 높이를 제한 */
+        width: auto; /* 비율에 따라 너비를 자동으로 조정 */
+        object-fit: contain; /* 이미지 비율 유지 */
+        display: block; /* 이미지가 inline 속성으로 밀리지 않도록 설정 */
+    }
+
+    .navbar-brand {
+        position: absolute;
+        left: 50%; /* 수평 가운데 정렬 */
+        transform: translateX(-50%); /* 가운데 정렬 */
+        max-height: 50px; /* 로고의 최대 크기 제한 */
+    }
+    .navbar-brand1 {
+        height: 50px; /* 기존보다 조금 키운 높이 */
+        width: auto; /* 비율에 맞춰 너비 자동 조정 */
+        object-fit: contain; /* 이미지 비율 유지 */
+    }
+    .sidebar-logo1 {
+        position: relative; /* 부모 요소 기준으로 위치 설정 */
+        top: 20px; /* 페이지 상단에서 30px */
+        left: 40px; /* 왼쪽에서 30px */
+        margin-bottom: 30px; /* 추가적인 여백 설정 */
+    }
+    .sidebar .nav>.nav-item a {
+        margin-bottom: 10px !important;
+    }
+    .pagination .page-item a {
+      background-color: transparent; /* 일반 페이지 배경 제거 */
+      border: none; /* 일반 페이지 테두리 제거 */
+      color: #2c3e50 !important; /* 일반 텍스트 색상 */
+      padding: 10px 16px; /* 상하, 좌우 패딩을 충분히 설정 */
+      font-size: 1.2rem;
+    }
+    .pagination .page-item.active a {
+      background-color: transparent; /* 배경색 제거 */
+      border: none; /* 테두리 제거 */
+      color: #007bff !important; /* 텍스트 색상 유지 */
+      font-weight: bold; /* 숫자를 강조 */
+      width: 40px; /* 버튼의 가로 */
+      height: 40px; /* 버튼의 세로 */
+      display: inline-block; /* 요소를 블록처럼 처리 */
+      align-items: center;
+      text-align: center; /* 텍스트 정렬 */
+      font-size: 1.2rem;
+    }
+    .pagination .page-item a:hover {
+      color: #0056b3 !important; /* 호버 시 색상 변경 */
+    }
+    #searchForm {
+        font-size: 1rem;
+        border-color: #ebedf2;
+        padding: 5px 10px !important;
+        height: inherit !important;
+        border-width: 2px;
+    }
+    .custom-btn {
+        padding: 6px 15px;
+        font-size: 1rem;
+        width: max-content;
+    }
+    .custom-a {
+        color: #fff;
+    }
+    .custom-card {
+        background-color: #2a2f5b !important;
+    }

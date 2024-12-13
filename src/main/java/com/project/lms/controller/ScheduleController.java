@@ -34,7 +34,7 @@ public class ScheduleController {
   @PostMapping("/create")
   public String createSchedule(@ModelAttribute ScheduleDTO scheduleDTO) {
     scheduleService.createSchedule(scheduleDTO);
-    return "redirect:/schedule/list";
+    return "redirect:/main";
   }
 
   @GetMapping("/modify/{sno}")
@@ -47,13 +47,13 @@ public class ScheduleController {
   @PostMapping("/modify")
   public String updateSchedule(@ModelAttribute ScheduleDTO scheduleDTO) {
     scheduleService.updateSchedule(scheduleDTO);
-    return "redirect:/schedule/list";
+    return "redirect:/main";
   }
 
   @GetMapping("delete/{sno}")
   public String deleteSchedule(@PathVariable Long sno) {
     scheduleService.deleteSchedule(sno);
-    return "redirect:/schedule/list";
+    return "redirect:/main";
   }
 
   @GetMapping("/list")

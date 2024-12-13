@@ -109,7 +109,7 @@ public class EnrollServiceImpl implements EnrollService {
         throw new IllegalStateException("강의 [" + course.getCName() + "]의 잔여 정원이 부족합니다.");
       }
 
-      course.removeStock(1); // 잔여 인원 감소
+//      course.removeStock(1); // 잔여 인원 감소
       courseRepository.save(course);
     }
 

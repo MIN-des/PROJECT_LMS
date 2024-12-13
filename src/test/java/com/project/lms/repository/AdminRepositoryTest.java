@@ -21,10 +21,10 @@ class AdminRepositoryTest {
 	@Test
 	void createAdmin() {
 		Admin admin = new Admin();
-		admin.setAId("A0000004");
+		admin.setAId("A0000001");
 
 		// 비밀번호 암호화
-		String rawPassword = "A0000004"; // 원본 비밀번호
+		String rawPassword = "A0000001"; // 원본 비밀번호
 		String encodedPassword = passwordEncoder.encode(rawPassword); // 암호화된 비밀번호
 		admin.setAPw(encodedPassword);
 
@@ -34,7 +34,7 @@ class AdminRepositoryTest {
 		adminRepository.save(admin);
 
 		// 암호화된 비밀번호가 저장되는지 확인
-		Admin savedAdmin = adminRepository.findById("A0000004").orElseThrow();
+		Admin savedAdmin = adminRepository.findById("A0000001").orElseThrow();
 		assertTrue(passwordEncoder.matches(rawPassword, savedAdmin.getAPw())); // 암호화된 비밀번호 확인
 	}
 }

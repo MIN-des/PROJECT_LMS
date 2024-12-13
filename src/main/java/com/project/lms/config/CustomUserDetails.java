@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+
 public class CustomUserDetails implements UserDetails {
 
 	private final String id; // 교수 ID

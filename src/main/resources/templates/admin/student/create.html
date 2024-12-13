@@ -1,139 +1,63 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>학생 생성</title>
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
-  <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
-  <!-- Fonts and icons -->
-  <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
-  <script>
-    WebFont.load({
-        google: { families: ["Public Sans:300,400,500,600,700"] },
-        custom: {
-            families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-            urls: ["/assets/css/fonts.min.css"],
-        },
-        active: function () {
-            sessionStorage.fonts = true;
-        },
-    });
-  </script>
-</head>
+<th:block th:replace="fragments/head::headFragment"></th:block>
+
 <body>
-<div class="wrapper">
-  <!-- Sidebar -->
-  <div class="sidebar" data-background-color="dark">
-    <!-- Sidebar contents can be added here -->
-    <div class="logo">
-      <a href="#" class="simple-text logo-mini">LMS</a>
-    </div>
-    <div class="sidebar-wrapper scrollbar-inner">
-      <div class="sidebar-content">
-        <ul class="nav">
-          <li>
-            <a th:href="@{/main}">
-              <i class="fas fa-home"></i>
-              <p>메인 페이지</p>
-            </a>
-          </li>
-          <!-- 관리자 페이지 섹션 -->
-          <li class="nav-item dropdown">
-            <a href="#adminMenu" data-bs-toggle="collapse" aria-expanded="false">
-              <i class="fas fa-user-cog"></i>
-              <p>관리자 페이지</p>
-              <span class="caret"></span>
-            </a>
-            <div class="collapse" id="adminMenu">
-              <ul class="nav nav-collapse">
-                <li>
-                  <a th:href="@{/admin/professors}">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <p>교수 리스트</p>
-                  </a>
-                </li>
-                <li>
-                  <a th:href="@{/admin/students}">
-                    <i class="fas fa-user-graduate"></i>
-                    <p>학생 리스트</p>
-                  </a>
-                </li>
-                <li>
-                  <a th:href="@{/admin/invoices}">
-                    <i class="fas fa-file-invoice"></i>
-                    <p>등록금 고지서 등록</p>
-                  </a>
-                </li>
-              </ul>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+<div class="container mt-8">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary custom-card text-white text-center ">
+          <h5>학생 생성</h5>
+        </div>
+        <div class="card-body">
+          <div th:if="${error != null}" class="alert alert-danger">
+            <p th:text="${error}"></p>
+          </div>
+          <form th:action="@{/admin/students/create}" method="post">
+
+            <div class="mb-3">
+              <label for="role" class="form-label">권한</label>
+              <select id="role" name="role" class="form-select" required>
+                <option value="ROLE_STUDENT" th:selected="${student.role == 'ROLE_STUDENT'}">학생</option>
+              </select>
             </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <!--End Sidebar-->
+            <div class="mb-3">
+              <label for="sId" class="form-label">학번</label>
+              <input type="text" id="sId" name="sId" th:value="${student.sId}" class="form-control" required>
+            </div>
 
-  <div class="main-panel">
-    <div class="container">
-      <div class="page-inner">
-        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-          <div>
-            <h3 class="fw-bold mb-3">학생 생성</h3>
-          </div>
-          <div class="ms-md-auto py-2 py-md-0">
-            <a th:href="@{/admin/students}" class="btn btn-secondary btn-round">학생 리스트로 돌아가기</a>
-          </div>
-        </div>
+            <div class="mb-3">
+              <label for="sName" class="form-label">이름</label>
+              <input type="text" id="sName" name="sName" th:value="${student.sName}" class="form-control" required>
+            </div>
 
-        <div th:if="${error != null}" class="alert alert-danger">
-          <p th:text="${error}"></p>
-        </div>
+            <div class="mb-3">
+              <label for="sPw" class="form-label">비밀번호</label>
+              <input type="text" id="sPw" name="sPw" th:value="${student.sPw}" class="form-control" required>
+            </div>
 
-        <form th:action="@{/admin/students/create}" method="post" class="mb-4">
-          <div class="mb-3">
-            <div class="row">
-              <div class="col-md-6">
-                <label for="role" class="form-label">권한</label>
-                <select id="role" name="role" class="form-select" required>
-                  <option value="ROLE_STUDENT" th:selected="${student.role == 'ROLE_STUDENT'}">학생</option>
-                </select>
-              </div>
+            <div class="mb-3">
+              <label for="sTel" class="form-label">전화번호</label>
+              <input type="text" id="sTel" name="sTel" th:value="${student.sTel}" class="form-control" required>
+            </div>
 
-              <div class="col-md-6">
-                <label for="sId" class="form-label">학번</label>
-                <input type="text" id="sId" name="sId" th:value="${student.sId}" class="form-control" required>
+            <div class="mb-3">
+              <label for="newSAdd" class="form-label">주소</label>
+              <div class="d-flex align-items-center">
+                <input type="text" id="newSAdd" name="newSAdd" th:value="${student.sAdd}" class="form-control">
+                <button type="button" class="btn btn-outline-primary" style="width: max-content; white-space: nowrap;" data-bs-toggle="modal"
+                        data-bs-target="#addressModal">주소 검색
+                </button>
               </div>
             </div>
-          </div>
 
-          <div class="mb-3">
-            <label for="sName" class="form-label">이름</label>
-            <input type="text" id="sName" name="sName" th:value="${student.sName}" class="form-control" required>
-          </div>
+            <div class="mb-3">
+              <label for="sEmail" class="form-label">이메일</label>
+              <input type="email" id="sEmail" name="sEmail" th:value="${student.sEmail}" class="form-control" required>
+            </div>
 
-          <div class="mb-3">
-            <label for="sPw" class="form-label">비밀번호</label>
-            <input type="text" id="sPw" name="sPw" th:value="${student.sPw}" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="sTel" class="form-label">전화번호</label>
-            <input type="text" id="sTel" name="sTel" th:value="${student.sTel}" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="sAdd" class="form-label">주소</label>
-            <input type="text" id="sAdd" name="sAdd" th:value="${student.sAdd}" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="sEmail" class="form-label">이메일</label>
-            <input type="email" id="sEmail" name="sEmail" th:value="${student.sEmail}" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
             <div class="row">
               <div class="col-md-6">
                 <label for="sBirth" class="form-label">생년월일</label>
@@ -150,9 +74,7 @@
                 </select>
               </div>
             </div>
-          </div>
 
-          <div class="mb-3">
             <div class="row">
               <div class="col-md-6">
                 <label for="grade" class="form-label">학년</label>
@@ -172,24 +94,104 @@
                 </select>
               </div>
             </div>
-          </div>
-
-          <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary">생성</button>
-          </div>
-        </form>
+            <div class="d-flex justify-content-between mt-4">
+              <button type="submit" class="btn btn-outline-primary">생성</button>
+              <a href="javascript:history.back()" class="btn btn-outline-danger">취소</a>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-
-    <footer class="footer">
-      <div class="container-fluid d-flex justify-content-between">
-        <div>Copyright © 2024. All rights reserved.</div>
+  </div>
+</div>
+<!-- Modal for Address Search -->
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addressModalLabel">주소 검색</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    </footer>
+      <div class="modal-body">
+        <div class="input-group mb-3">
+          <input type="text" id="addressSearchInput" class="form-control"
+                 placeholder="도로명 또는 지번 주소를 입력하세요">
+          <button type="button" class="btn btn-primary" onclick="searchAddress()">검색</button>
+        </div>
+        <div id="addressResult" class="list-group"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<script src="/assets/js/core/bootstrap.min.js"></script>
-<script src="/assets/js/kaiadmin.min.js"></script>
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
+<script>
+  function toggleEdit(fieldId) {
+      const inputField = document.getElementById(fieldId);
+      if (inputField) {
+          inputField.style.display = "block";
+          inputField.focus();
+      }
+  }
+
+  function toggleAddressEdit() {
+      const newAddressContainer = document.getElementById("newAddressContainer");
+      if (newAddressContainer.style.display === "none") {
+          newAddressContainer.style.display = "block";
+      } else {
+          newAddressContainer.style.display = "none";
+      }
+  }
+
+</script>
+
+<script>
+  function searchAddress() {
+     const query = document.getElementById('addressSearchInput').value;
+     if (!query) {
+         alert('주소를 입력하세요!');
+         return;
+     }
+
+     // Kakao 주소 검색 API 요청
+     const apiUrl = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}`;
+     const apiKey = '848a61ea755fa4899a301f126a35bd4c'; // 자신의 Kakao API 키로 변경
+
+     fetch(apiUrl, {
+         method: 'GET',
+         headers: { 'Authorization': `KakaoAK ${apiKey}` }
+     })
+         .then(response => response.json())
+         .then(data => {
+             const results = data.documents;
+             const resultContainer = document.getElementById('addressResult');
+             resultContainer.innerHTML = '';
+
+             if (results.length === 0) {
+                 resultContainer.innerHTML = '<div class="text-danger">검색 결과가 없습니다.</div>';
+                 return;
+             }
+
+             results.forEach(result => {
+                 const address = result.address_name;
+                 const item = document.createElement('button');
+                 item.classList.add('list-group-item', 'list-group-item-action');
+                 item.textContent = address;
+
+                 // 검색된 주소를 'newSAdd' 필드에 입력
+                 item.onclick = () => {
+                     document.getElementById('newSAdd').value = address;
+                     const modal = bootstrap.Modal.getInstance(document.getElementById('addressModal'));
+                     modal.hide(); // 모달 닫기
+                 };
+                 resultContainer.appendChild(item);
+             });
+         })
+         .catch(error => {
+             console.error('Error:', error);
+             alert('주소 검색 중 오류가 발생했습니다.');
+         });
+ }
+</script>
 </body>
 </html>
