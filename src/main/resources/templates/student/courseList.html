@@ -29,24 +29,24 @@
     <p th:text="${successMessage}"></p>
   </div>
 
-  <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+  <div th:if="${errorMessage}" class="alert alert-danger text-center">
     <p th:text="${errorMessage}"></p>
   </div>
 
-  <h1 class="text-center mb-4">Course List</h1>
+  <h1 class="text-center mb-4">강의 목록</h1>
 
   <div class="container mt-4">
-    <form th:action="@{/professor/courses/list}" method="get" class="row g-3">
+    <form th:action="@{/student/courses/list}" method="get" class="row g-3">
       <div class="col-auto">
         <select class="form-select" name="searchType" required>
           <option th:selected="${searchType == 'id'}" value="id">강의 ID</option>
           <option th:selected="${searchType == 'name'}" value="name">강의명</option>
-          <option th:selected="${searchType == 'pId'}" value="pId">교수명</option>
+          <option th:selected="${searchType == 'pId'}" value="pId">교수 아이디</option>
         </select>
       </div>
       <div class="col-auto">
         <input type="text" class="form-control" name="searchQuery" th:value="${searchQuery}"
-               placeholder="검색어 입력" required/>
+               placeholder="검색어 입력"/>
       </div>
       <div class="col-auto">
         <button type="submit" class="btn btn-outline-primary">검색</button>
@@ -54,7 +54,7 @@
 
       <!-- 오른쪽 정렬 -->
       <div class="col-auto ms-auto">
-        <a th:href="@{/professor/courses/create}" class="btn btn-label-info"><b>New</b></a>
+        <a th:href="@{/student/courses/subList}" class="btn btn-label-info"><b>수강 신청 내역 조회</b></a>
       </div>
     </form>
     <br>
@@ -70,7 +70,7 @@
           <th>수강 정원</th>
           <th>잔여 인원</th>
           <th>강의 교수</th>
-          <th>수정 | 삭제</th>
+          <th>수강 신청</th>
         </tr>
         </thead>
         <tbody>
@@ -80,15 +80,13 @@
           <td th:text="${course.credits}"></td>
           <td th:text="${course.maxCapacity}"></td>
           <td th:text="${course.restNum}"></td>
-          <td th:text="${course.pId}"></td> <!-- 교수 이름으로 표시 -->
+          <td th:text="${course.pId}"></td>
           <td>
-            <a th:href="@{/professor/courses/update/{cId}(cId=${course.cId})}"
-               class="btn btn-sm btn-outline-primary">수정</a>
-            <form th:action="@{/professor/courses/delete}" method="post" style="display: inline;">
-              <input type="hidden" name="cId" th:value="${course.cId}"/>
-              <button type="submit" class="btn btn-sm btn-outline-danger"
-                      onclick="return confirm('해당 강의를 삭제하시겠습니까?')">
-                삭제
+            <form th:action="@{/student/courses/sub}" method="post">
+              <input type="hidden" name="courseId" th:value="${course.cId}"/>
+              <button type="submit" class="btn btn-sm btn-outline-primary"
+                      onclick="return confirm('해당 강의를 신청하시겠습니까?')">
+                수강 신청
               </button>
             </form>
           </td>
@@ -102,7 +100,7 @@
         <ul class="pagination">
           <!-- 이전 버튼 -->
           <li class="page-item" th:classappend="${page.hasPrevious()} ? '' : 'disabled'">
-            <a class="page-link" th:href="@{/professor/courses/list(page=${page.number - 1})}"
+            <a class="page-link" th:href="@{/student/courses/list(page=${page.number - 1})}"
                tabindex="-1">이전</a>
           </li>
 
@@ -110,12 +108,12 @@
           <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
               th:classappend="${page.number == i} ? 'active' : ''">
             <!-- 페이지 번호는 i+1로 표시, URL은 i를 사용 -->
-            <a class="page-link" th:href="@{/professor/courses/list(page=${i})}" th:text="${i+1}"></a>
+            <a class="page-link" th:href="@{/student/courses/list(page=${i})}" th:text="${i+1}"></a>
           </li>
 
           <!-- 다음 버튼 -->
           <li class="page-item" th:classappend="${page.hasNext()} ? '' : 'disabled'">
-            <a class="page-link" th:href="@{/professor/courses/list(page=${page.number + 1})}">이전</a>
+            <a class="page-link" th:href="@{/student/courses/list(page=${page.number + 1})}">다음</a>
           </li>
         </ul>
       </nav>

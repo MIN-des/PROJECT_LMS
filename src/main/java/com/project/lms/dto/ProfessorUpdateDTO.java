@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+//// 사용하지 않는 파일
+
 @Getter
 @Setter
 public class ProfessorUpdateDTO {
@@ -31,3 +33,4 @@ public class ProfessorUpdateDTO {
         return modelMapper.map(professor, ProfessorUpdateDTO.class);
     }
 }
+

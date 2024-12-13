@@ -133,13 +133,13 @@
             <nav aria-label="Page navigation">
               <ul class="pagination mb-0">
                 <!-- 이전 버튼 -->
-                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <!--<li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                   <a class="page-link" href="#"
                      th:onclick="${currentPage > 0} ? 'loadSchedules(' + (${currentPage} - 1) + ', event)' : ''"
                      onclick="event.preventDefault()">
                     &laquo;
                   </a>
-                </li>
+                </li>-->
 
                 <!-- 페이지 번호 -->
                 <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
@@ -152,14 +152,23 @@
                   </a>
                 </li>
 
+                <!--<li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    class="page-item"
+                    th:classappend="${currentPage == i} ? 'active'">
+                  <a class="page-link" href="#"
+                     onclick="loadSchedules([[${i}]], event)"
+                  th:text="${i + 1}">  &lt;!&ndash; 사용자에게는 1부터 표시 &ndash;&gt;
+                  </a>
+                </li>-->
+
                 <!-- 다음 버튼 -->
-                <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                <!--<li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
                   <a class="page-link" href="#"
                      th:onclick="${currentPage + 1 < totalPages} ? 'loadSchedules(' + (${currentPage} + 1) + ', event)' : ''"
                      onclick="event.preventDefault()">
                     &raquo;
                   </a>
-                </li>
+                </li>-->
               </ul>
             </nav>
 
@@ -187,7 +196,7 @@
           data: { page: page, size: 5 },
           success: function (data) {
               // 서버에서 반환된 Fragment를 #schedule-list-container에 삽입
-              $('#schedule-list-container').html(data);
+              $('#schedule-list').html(data);
 
               // 페이지네이션 버튼 업데이트
               updatePaginationButtons(page);
@@ -209,18 +218,10 @@
           $('.pagination .page-item:first-child').addClass('disabled');
       }
 
-      // 다음 버튼 활성화 여부 설정
-      if (currentPage + 1 < totalPages) {
-          $('.pagination .page-item:last-child').removeClass('disabled');
-      } else {
-          $('.pagination .page-item:last-child').addClass('disabled');
-      }
-
       // 현재 페이지 활성화
       $('.pagination .page-item').removeClass('active');
-      $(`.pagination .page-item:nth-child(${currentPage + 2})`).addClass('active');
+      $(`.pagination .page-item:nth-child(${currentPage + 1})`).addClass('active');
   }
-
 </script>
 </body>
 </html>

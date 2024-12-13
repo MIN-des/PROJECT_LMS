@@ -1,129 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset=
-                  <!-- CSS Files -->"UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Main Page</title>
-    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
-    <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon"/>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:replace="fragments/head::headFragment"></th:block>
 
-    <!-- Fonts and icons -->
-    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
-    <script>
-        WebFont.load({
-            google: { families: ["Public Sans:300,400,500,600,700"] },
-            custom: {
-                families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-                urls: ["/assets/css/fonts.min.css"],
-            },
-            active: function () {
-                sessionStorage.fonts = true;
-            },
-        });
-    </script>
-
-    <!-- CSS Files -->rap.min.css"/>
-    <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
-    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
-</head>
 <body>
-<div class="wrapper">
-    <!-- Sidebar -->
-    <div class="sidebar" data-background-color="dark">
-        <div class="sidebar-logo">
-            <a href="hello.html" class="logo">
-                <img src="/assets/img/logo_light.svg" alt="Logo" class="navbar-brand" height="20"/>
-            </a>
-        </div>
-        <div class="sidebar-wrapper scrollbar-inner">
-            <div class="sidebar-content">
-                <ul class="nav">
-                    <li class="nav-item active">
-                        <a href="hello.html">
-                            <i class="fas fa-home"></i>
-                            <p>Main Page</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#">
-                            <i class="fas fa-list"></i>
-                            <p>Boards</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#">
-                            <i class="fas fa-info-circle"></i>
-                            <p>About Us</p>
-                        </a>
-                    </li>
-                </ul>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container">
+  <div class="page-inner">
+
+    <!-- Board Section -->
+    <div class="row">
+      <h1 class="text-center my-4" style="cursor: pointer;" onclick="location.href='/board/list'">학사 게시판</h1>
+      <div layout:fragment="content" class="container">
+        <h2 class="my-3 border-bottom pb-2">게시글 등록</h2>
+        <form th:action="@{/admin/board/create}" enctype="multipart/form-data" method="post"
+              th:object="${registerFormDTO}"><!--enctype="multipart/form-data-->
+          <!-- 오류 메시지 출력 -->
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err.defaultMessage}"/>
+          </div>
+
+          <!-- 제목 필드 -->
+          <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" id="title" th:field="*{title}" class="form-control">
+            <!-- 제목 오류 메시지 -->
+            <div th:if="${#fields.hasErrors('title')}" class="text-danger">
+              <span th:errors="*{title}"></span>
             </div>
-        </div>
-    </div>
-    <!-- End Sidebar -->
+          </div>
 
-    <!-- Main Panel -->
-    <div class="main-panel">
-        <header class="header bg-primary text-white text-center py-4">
-            <h1>학사 게시판</h1>
-        </header>
-
-        <div class="container">
-            <div class="page-inner">
-
-                <!-- Board Section -->
-                <div class="row">
-
-                    <div layout:fragment="content" class="container">
-                    <h5 class="my-3 border-bottom pb-2">게시글 등록</h5>
-                    <form th:action="@{/board/create}" method="post" th:object="${registerFormDTO}">
-                        <!-- 오류 메시지 출력 -->
-                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-                            <div th:each="err : ${#fields.allErrors()}" th:text="${err.defaultMessage}"/>
-                        </div>
-
-                        <!-- 제목 필드 -->
-                        <div class="mb-3">
-                            <label for="title" class="form-label">제목</label>
-                            <input type="text" id="title" th:field="*{title}" class="form-control">
-                            <!-- 제목 오류 메시지 -->
-                            <div th:if="${#fields.hasErrors('title')}" class="text-danger">
-                                <span th:errors="*{title}"></span>
-                            </div>
-                        </div>
-
-                        <!-- 내용 필드 -->
-                        <div class="mb-3">
-                            <label for="content" class="form-label">내용</label>
-                            <textarea id="content" th:field="*{content}" class="form-control" rows="10"></textarea>
-                            <!-- 내용 오류 메시지 -->
-                            <div th:if="${#fields.hasErrors('content')}" class="text-danger">
-                                <span th:errors="*{content}"></span>
-                            </div>
-                        </div>
-
-                        <input type="submit" value="저장하기" class="btn btn-primary my-2">
-                    </form>
-                </div>
-
-                </div>
+          <!-- 내용 필드 -->
+          <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea id="content" th:field="*{content}" class="form-control" rows="10"></textarea>
+            <!-- 내용 오류 메시지 -->
+            <div th:if="${#fields.hasErrors('content')}" class="text-danger">
+              <span th:errors="*{content}"></span>
             </div>
-        </div>
+          </div>
 
-        <footer class="footer bg-dark text-white text-center py-3">
-            <p>© 2024 우리 대학교. All rights reserved.</p>
-        </footer>
+          <!-- 파일 업로드 필드 -->
+          <div class="mb-3">
+            <label for="file" class="form-label">첨부 파일</label>
+            <input type="file" name="file" class="form-control" id="file" multiple>
+          </div>
+
+          <input type="submit" value="저장하기" class="btn btn-outline-primary my-2">
+        </form>
+
+
+      </div>
+
     </div>
-    <!-- End Main Panel -->
+  </div>
 </div>
 
-<!-- Core JS Files -->
-<script src="/assets/js/core/jquery-3.7.1.min.js"></script>
-<script src="/assets/js/core/popper.min.js"></script>
-<script src="/assets/js/core/bootstrap.min.js"></script>
-
-<!-- Kaiadmin JS -->
-<script src="/assets/js/kaiadmin.min.js"></script>
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 </body>
 </html>

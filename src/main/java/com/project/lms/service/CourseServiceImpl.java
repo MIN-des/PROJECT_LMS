@@ -1,131 +1,143 @@
 package com.project.lms.service;
 
-import com.project.lms.constant.RestStatus;
 import com.project.lms.dto.CourseDTO;
 import com.project.lms.entity.Course;
+import com.project.lms.entity.Order;
+import com.project.lms.entity.Professor;
 import com.project.lms.repository.CourseRepository;
+import com.project.lms.repository.OrderRepository;
+import com.project.lms.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
 
-    private final CourseRepository courseRepository;
-    private final ModelMapper modelMapper;
+  private final ProfessorRepository professorRepository;
+  private final CourseRepository courseRepository;
+  private final OrderRepository orderRepository;
+  private final ModelMapper modelMapper;
 
-    // 강의 생성 메소드
-    @Override
-    public CourseDTO createCourse(CourseDTO courseDTO) {
+  // 강의 담당 교수 조회
+  @Override
+  public List<Course> getCoursesByProfessorId(String pId) {
 
-        // 강의 이름 중복 검사
-        if (courseRepository.existsBycName(courseDTO.getCName())) {
-            throw new IllegalArgumentException("이미 중복된 강의 이름이 존재합니다.");
-        }
+    // 교수 ID로 강의 리스트 가져오기
+    List<Course> courses = courseRepository.findCoursesByProfessor_pId(pId);
 
-        Course course = modelMapper.map(courseDTO, Course.class);
-
-        return modelMapper.map(courseRepository.save(course), CourseDTO.class);
+    // 각 강의의 수강 신청한 학생 정보를 로드
+    for (Course course : courses) {
+      for (Order order : course.getOrders()) {
+        Hibernate.initialize(order.getStudent());
+      }
     }
+    return courses;
+  }
 
-    @Override
-    public Optional<CourseDTO> getCourseById(Long cId) {
-        return courseRepository.findById(cId)
-            .map(course -> modelMapper.map(course, CourseDTO.class));
-    }
+  // 강의 생성 메소드
+  @Override
+  public CourseDTO createCourse(CourseDTO courseDTO) {
+    Course course = modelMapper.map(courseDTO, Course.class);
 
-    // 강의 업데이트 메소드
-    @Override
-    public void updateCourse(Long cId, CourseDTO courseDTO) {
-        // 현재 로그인한 계정 정보 가져옴
-        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+    // pId를 통해 Professor 엔티티 조회
+    Professor professor = professorRepository.findById(courseDTO.getPId())
+            .orElseThrow(() -> new EntityNotFoundException("해당 ID의 교수를 찾을 수 없습니다."));
 
-        Course course = courseRepository.findById(cId)
+    course.setProfessor(professor); // 강의에 교수 설정
+
+    return CourseDTO.of(courseRepository.save(course));
+  }
+
+  @Override
+  public Optional<CourseDTO> getCourseById(Long cId) {
+    return courseRepository.findById(cId)
+            .map(course -> {
+              CourseDTO courseDTO = new CourseDTO();
+              courseDTO.setCId(course.getCId());
+              courseDTO.setCName(course.getCName());
+              courseDTO.setCredits(course.getCredits());
+              courseDTO.setMaxCapacity(course.getMaxCapacity());
+              courseDTO.setRestNum(course.getRestNum());
+              courseDTO.setPId(course.getProfessor().getPId());
+
+              return courseDTO;
+            });
+  }
+
+  @Override
+  public void updateCourse(Long cId, CourseDTO courseDTO) {
+    // 현재 로그인한 계정 정보 가져오기
+    String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    // 해당 강의 조회
+    Course course = courseRepository.findById(cId)
             .orElseThrow(() -> new EntityNotFoundException("Course not found with ID: " + cId));
 
-        // 현재 로그인한 계정이 아닌 경우 접근 제한 메시지 출력
-        if (!course.getCreatedBy().equals(currentUser)) {
-            throw new AccessDeniedException("You do not have permission to update this course.");
-        }
-
-        // 업데이트 로직
-        course.updateCourse(courseDTO);
-        courseRepository.save(course);
+    // 강의를 등록한 교수와 현재 로그인한 사용자가 동일한지 확인
+    if (!course.getProfessor().getPId().equals(currentUser)) {
+      throw new AccessDeniedException("You do not have permission to update this course.");
     }
 
-    @Override
-    public void deleteCourse(Long cId) {
-        Course course = courseRepository.findById(cId)
-            .orElseThrow(() -> new EntityNotFoundException("Course not found with ID: " + cId));
+    course.updateCourse(courseDTO);
+    courseRepository.save(course);
+  }
 
-        // 강의 삭제
-        courseRepository.deleteById(cId);
-    }
 
-    @Override
-    public String findCreatedBy(Long cId) {
-        return courseRepository.findCreatedBy(cId)
-            .orElseThrow(() -> new IllegalArgumentException("Course not found: " + cId));
-    }
+  @Override
+  public Page<CourseDTO> searchCoursesById(Long cId, Pageable pageable) {
+    return courseRepository.findBycId(cId, pageable)
+            .map(course -> {
+              CourseDTO courseDTO = modelMapper.map(course, CourseDTO.class);
+              courseDTO.setPId(course.getProfessor().getPId()); // 수동 매핑
 
-    @Override
-    public Page<CourseDTO> searchCoursesById(Long cId, Pageable pageable) {
-        return courseRepository.findBycId(cId, pageable)
-            .map(course -> modelMapper.map(course, CourseDTO.class));
-    }
+              return courseDTO;
+            });
+  }
 
-    @Override
-    public Page<CourseDTO> searchCoursesByName(String cName, Pageable pageable) {
-        return courseRepository.findBycNameContainingIgnoreCase(cName, pageable)
-            .map(course -> modelMapper.map(course, CourseDTO.class));
-    }
+  @Override
+  public Page<CourseDTO> searchCoursesByName(String cName, Pageable pageable) {
+    return courseRepository.findBycNameContainingIgnoreCase(cName, pageable)
+            .map(course -> {
+              CourseDTO courseDTO = modelMapper.map(course, CourseDTO.class);
+              courseDTO.setPId(course.getProfessor().getPId()); // 수동 매핑
 
-    @Override
-    public Page<CourseDTO> searchCourseByCreatedBy(String createdBy, Pageable pageable) {
-        return courseRepository.findByCreatedByContainingIgnoreCase(createdBy, pageable)
-            .map(course -> modelMapper.map(course, CourseDTO.class));
-    }
+              return courseDTO;
+            });
+  }
 
-    @Override
-    public Page<CourseDTO> searchCoursesByRestStatus(String status, Pageable pageable) {
-        try {
-            RestStatus rest = RestStatus.valueOf(status.toUpperCase());
+  // 교수 검색 메소드
+  @Override
+  public Page<CourseDTO> searchCourseByProfessor_pId(String pId, Pageable pageable) {
+    return courseRepository.findByProfessor_pIdContainingIgnoreCase(pId, pageable)
+            .map(course -> {
+              CourseDTO courseDTO = modelMapper.map(course, CourseDTO.class);
+              courseDTO.setPId(course.getProfessor().getPId()); // 수동 매핑
 
-            return courseRepository.findByStatus(rest, pageable)
-                .map(course -> modelMapper.map(course, CourseDTO.class));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("유효하지 않은 상태 값 입니다.");
-        }
-    }
+              return courseDTO;
+            });
+  }
 
-    // 강의 조회 메소드
-    @Override
-    public Page<CourseDTO> getAllCourses(Pageable pageable) {
-        // 강의 ID(번호) 기준으로 내림차순 정렬
-        Pageable sortedByCourseId = PageRequest.of(
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            Sort.by(Sort.Direction.DESC, "cId")
-        );
+  // 강의 조회 메소드
+  @Override
+  public Page<CourseDTO> getAllCourses(Pageable pageable) {
+    return courseRepository.findAll(pageable)
+            .map(course -> {
+              CourseDTO courseDTO = CourseDTO.of(course);
+              courseDTO.setPId(course.getProfessor().getPId());
 
-        Page<Course> courses = courseRepository.findAll(sortedByCourseId);
-
-        // 디버깅
-        courses.forEach(course -> System.out.println(course)); // 디버깅
-
-        return courseRepository.findAll(pageable)
-            .map(course -> modelMapper.map(course, CourseDTO.class));
-    }
+              return courseDTO;
+            });
+  }
 }

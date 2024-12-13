@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>My Courses</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>My Courses</h1>
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+    <tr>
+      <th>강의 아이디</th>
+      <th>강의명</th>
+      <th>학점</th>
+      <th>수강 정원</th>
+      <th>잔여 인원</th>
+      <th>수강 학생</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${courses}">
+      <td th:text="${course.cId}"></td>
+      <td th:text="${course.cName}"></td>
+      <td th:text="${course.credits}"></td>
+      <td th:text="${course.maxCapacity}"></td>
+      <td th:text="${course.restNum}"></td>
+      <td>
+        <a th:href="@{/professor/courses/studentList/{cId}(cId=${course.cId})}" class="btn btn-info btn-sm">
+          수강 학생 조회
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

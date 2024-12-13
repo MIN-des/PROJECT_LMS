@@ -11,21 +11,26 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class OrderCourse {
+public class OrderCourse extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ocId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long ocId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cId")
-    private Course cId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "cId") // item_id = course_id
+  private Course course;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "oId")
-    private Order oId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "oId") // order_id
+  private Order order;
 
-    private LocalDate regDate;
+  private int count = 1; // 강의 담을 개수(무조건 1개)
 
-    private LocalDate modDate;
+  public static OrderCourse createOrderCourse(Course course) {
+    OrderCourse orderCourse = new OrderCourse();
+    orderCourse.setCourse(course);
+
+    return orderCourse;
+  }
 }

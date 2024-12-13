@@ -1,152 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
-  <title>학생 등록금 고지서</title>
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
-  <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
-  <!-- Fonts and icons -->
-  <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
-  <script>
-    WebFont.load({
-        google: { families: ["Public Sans:300,400,500,600,700"] },
-        custom: {
-            families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-            urls: ["/assets/css/fonts.min.css"],
-        },
-        active: function () {
-            sessionStorage.fonts = true;
-        },
-    });
-  </script>
-</head>
+
+<th:block th:replace="fragments/head::headFragment"></th:block>
 <body>
-<div class="wrapper">
-  <!-- Sidebar -->
-  <div class="sidebar" data-background-color="dark">
-    <div class="sidebar-logo">
-      <a href="main.html" class="logo">
-        <img src="/assets/img/logo_light.svg" alt="Logo" class="navbar-brand" height="20"/>
-      </a>
-    </div>
-    <div class="sidebar-wrapper scrollbar-inner">
-      <div class="sidebar-content">
-        <ul class="nav">
-          <li>
-            <a th:href="@{/main}">
-              <i class="fas fa-home"></i>
-              <p>메인 페이지</p>
-            </a>
-          </li>
-          <!-- 관리자 페이지 섹션 -->
-          <li class="nav-item">
-            <a href="#adminMenu" data-bs-toggle="collapse" aria-expanded="false">
-              <i class="fas fa-user-cog"></i>
-              <p>관리자 페이지</p>
-              <span class="caret"></span>
-            </a>
-            <div class="collapse" id="adminMenu">
-              <ul class="nav nav-collapse">
-                <li>
-                  <a th:href="@{/admin/professors}">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <p>교수 리스트</p>
-                  </a>
-                </li>
-                <li>
-                  <a th:href="@{/admin/students}">
-                    <i class="fas fa-user-graduate"></i>
-                    <p>학생 리스트</p>
-                  </a>
-                </li>
-                <li>
-                  <a th:href="@{/admin/invoices}">
-                    <i class="fas fa-file-invoice"></i>
-                    <p>등록금 고지서 등록</p>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container mt-8">
+  <div class="page-inner">
+
+    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+      <div>
+        <h3 class="fw-bold mb-3">등록금 고지서</h3>
       </div>
     </div>
-  </div>
-  <!-- End Sidebar -->
 
-  <!-- Main Panel -->
-  <div class="main-panel">
-    <div class="container mt-5">
-      <div class="page-inner">
-        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-          <div>
-            <h3 class="fw-bold mb-3">등록금 고지서</h3>
+    <div th:if="${invoices != null && invoices.size() > 0}">
+      <table class="table table-bordered table-hover text-center">
+        <thead class="table-light">
+        <tr>
+          <th>파일명</th>
+          <th>학번</th>
+          <th>학생 이름</th>
+          <th>업로드 날짜</th>
+          <th>다운로드</th>
+          <th>미리보기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="invoice : ${invoices}">
+          <td th:text="${invoice.fileName}"></td>
+          <td th:text="${invoice.sId}"></td>
+          <td th:text="${invoice.sName}"></td>
+          <td th:text="${#temporals.format(invoice.uploadDate, 'yyyy-MM-dd HH:mm')}"></td>
+          <td>
+            <a th:href="@{'/student/invoices/download/' + ${invoice.tId}}" class="btn btn-label-primary btn-sm">다운로드</a>
+          </td>
+          <td>
+            <button class="btn btn-primary btn-sm" th:attr="data-id=${invoice.tId}"
+                    onclick="previewInvoiceFromData(this)">미리보기
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div th:if="${invoices == null || invoices.size() == 0}" class="alert alert-info text-center">
+      등록금 고지서가 없습니다.
+    </div>
+
+    <!-- 등록금 고지서 미리보기 -->
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div id="preview-container" class="card shadow" style="display: none;">
+          <div class="card-header bg-info-gradient text-white text-center">
+            <h5>등록금 고지서 미리보기</h5>
           </div>
-        </div>
-
-        <div th:if="${invoices != null && invoices.size() > 0}">
-          <table class="table table-bordered table-hover text-center">
-            <thead class="table-light">
-            <tr>
-              <th>파일명</th>
-              <th>학번</th>
-              <th>학생 이름</th>
-              <th>업로드 날짜</th>
-              <th>다운로드</th>
-              <th>미리보기</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="invoice : ${invoices}">
-              <td th:text="${invoice.fileName}"></td>
-              <td th:text="${invoice.sId}"></td>
-              <td th:text="${invoice.sName}"></td>
-              <td th:text="${#temporals.format(invoice.uploadDate, 'yyyy-MM-dd HH:mm')}"></td>
-              <td>
-                <a th:href="@{'/student/invoices/download/' + ${invoice.tId}}" class="btn btn-label-primary btn-sm">다운로드</a>
-              </td>
-              <td>
-                <button class="btn btn-primary btn-sm" th:attr="data-id=${invoice.tId}" onclick="previewInvoiceFromData(this)">미리보기</button>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div th:if="${invoices == null || invoices.size() == 0}" class="alert alert-info text-center">
-          등록금 고지서가 없습니다.
-        </div>
-
-        <!-- 등록금 고지서 미리보기 -->
-        <div class="row mt-4">
-          <div class="col-md-12">
-            <div id="preview-container" class="card shadow" style="display: none;">
-              <div class="card-header bg-info-gradient text-white text-center">
-                <h5>등록금 고지서 미리보기</h5>
-              </div>
-              <div class="card-body">
-                <iframe id="preview-frame" src="" style="width: 100%; height: 600px;" frameborder="0"></iframe>
-              </div>
-            </div>
+          <div class="card-body">
+            <iframe id="preview-frame" src="" style="width: 100%; height: 600px;" frameborder="0"></iframe>
           </div>
         </div>
       </div>
     </div>
 
-    <footer class="footer">
-      <div class="container-fluid d-flex justify-content-between">
-        <div>Copyright © 2024. All rights reserved.</div>
-      </div>
-    </footer>
   </div>
 </div>
-
-<script src="/assets/js/core/bootstrap.min.js"></script>
-<script src="/assets/js/kaiadmin.min.js"></script>
-
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 <script>
   function previewInvoiceFromData(button) {
     const tId = button.getAttribute('data-id'); // data-id에서 tId를 가져옴
@@ -193,7 +112,5 @@
     }
   }
 </script>
-
-<script src="/assets/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

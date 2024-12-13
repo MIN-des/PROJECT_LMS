@@ -59,26 +59,25 @@ public class EnrollServiceImpl implements EnrollService {
   }
 
 
-  @Transactional(readOnly = true)
-  public List<EnrollCourseDTO> getEnrollCourses(String studentId) {
-    Enroll enroll = enrollRepository.findByStudent_sId(studentId)
-            .orElseThrow(() -> new IllegalArgumentException("학생 ID :" + studentId + "장바구니를 찾을 수 없습니다."));
-
-    return enroll.getEnrollCourses().stream()
-            .map(item -> {
-              Course course = item.getCourse();
-              return new EnrollCourseDTO(
-                      course.getCId(),
-                      course.getCName(),
-                      enroll.getStudent().getSId(),
-                      course.getCredits(),
-                      course.getRestNum(),
-                      course.getStatus(),
-                      course.getCreatedBy()
-              );
-            })
-            .collect(Collectors.toList());
-  }
+//  @Transactional(readOnly = true)
+//  public List<EnrollCourseDTO> getEnrollCourses(String studentId) {
+//    Enroll enroll = enrollRepository.findByStudent_sId(studentId)
+//            .orElseThrow(() -> new IllegalArgumentException("학생 ID :" + studentId + "장바구니를 찾을 수 없습니다."));
+//
+//    return enroll.getEnrollCourses().stream()
+//            .map(item -> {
+//              Course course = item.getCourse();
+//              return new EnrollCourseDTO(
+//                      course.getCId(),
+//                      course.getCName(),
+//                      enroll.getStudent().getSId(),
+//                      course.getCredits(),
+//                      course.getRestNum()
+//
+//              );
+//            })
+//            .collect(Collectors.toList());
+//  }
 
   @Transactional
   public void removeCourseFromEnroll(String studentId, Long courseId) {

@@ -12,14 +12,17 @@ import javax.persistence.*;
 @ToString
 public class Files {
 
-    @Id
-    private String uuid;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id; // Primary Key
 
-    private String fName;
+  private String uuid;//id
 
-    private String fPath;
+  private String fName;//fileName
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bno", nullable = false)
-    private Board bno;
+  private String fPath;//filePath
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "bno", nullable = false)
+  private Board bno;
 }

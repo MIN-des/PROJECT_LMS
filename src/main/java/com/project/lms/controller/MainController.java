@@ -49,7 +49,7 @@ public class MainController {
     model.addAttribute("currentPage", schedulePage.getNumber());
     model.addAttribute("totalPages", schedulePage.getTotalPages());
 
-    return "main :: #schedule-list-container"; // Fragment만 반환
+    return "main :: #schedule-list"; // Fragment만 반환
   }
 
   // permit All

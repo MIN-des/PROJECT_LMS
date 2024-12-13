@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Update Course</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <title>강의 수정 페이지</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
 </head>
 
 <body>
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Update Course</h1>
+  <h1 class="text-center mb-4">강의 수정</h1>
 
-    <!-- 에러 메시지 -->
-    <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
-    <div th:if="${successMsg}" class="alert alert-success" th:text="${successMsg}"></div>
+  <!-- 에러 메시지 -->
+  <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+  <div th:if="${successMsg}" class="alert alert-success" th:text="${successMsg}"></div>
 
-    <!-- 강의 수정 폼 -->
-    <form th:action="@{/professor/courses/update/{cId}(cId=${course?.cId})}" th:object="${course}" method="post">
-        <div class="mb-3">
-            <label for="cId" class="form-label">Course ID</label>
-            <input type="text" id="cId" class="form-control" th:value="${course?.cId}" readonly/>
-        </div>
-        <div class="mb-3">
-            <label for="cName" class="form-label">Course Name</label>
-            <input type="text" id="cName" name="cName" class="form-control" th:field="*{cName}" required/>
-        </div>
-        <div class="mb-3">
-            <label for="credits" class="form-label">Credits</label>
-            <input type="number" id="credits" name="credits" class="form-control" th:field="*{credits}"
-                   min="1" max="6" required/>
-        </div>
-        <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <input type="text" id="status" class="form-control" th:value="*{status}" readonly/>
-        </div>
-        <div class="mb-3">
-            <label for="restNum" class="form-label">Remaining Seats</label>
-            <input type="number" id="restNum" name="restNum" class="form-control" th:field="*{restNum}"
-                   min="0" required/>
-        </div>
-        <div class="mb-3">
-            <label for="createdBy" class="form-label">Created By</label>
-            <input type="text" id="createdBy" class="form-control" th:value="${course?.createdBy}" readonly/>
-        </div>
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-primary">Update</button>
-            <a th:href="@{/professor/courses/list}" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+  <!-- 강의 수정 폼 -->
+  <form th:action="@{/professor/courses/update/{cId}(cId=${course?.cId})}" th:object="${course}" method="post">
+    <div class="mb-3">
+      <label for="cId" class="form-label">강의 아이디</label>
+      <input type="text" id="cId" class="form-control" th:value="${course?.cId}" readonly/>
+    </div>
+    <div class="mb-3">
+      <label for="cName" class="form-label">강의명</label>
+      <input type="text" id="cName" name="cName" class="form-control" th:field="*{cName}" required/>
+    </div>
+    <div class="mb-3">
+      <label for="credits" class="form-label">학점</label>
+      <input type="number" id="credits" name="credits" class="form-control" th:field="*{credits}"
+             min="1" max="6" required/>
+    </div>
+    <div class="mb-3">
+      <label for="maxCapacity" class="form-label">수강 정원</label>
+      <input type="text" id="maxCapacity" class="form-control" th:value="*{maxCapacity}" readonly/>
+    </div>
+    <div class="mb-3">
+      <label for="restNum" class="form-label">잔여 인원</label>
+      <input type="number" id="restNum" name="restNum" class="form-control" th:field="*{restNum}"
+             min="0" required/>
+    </div>
+    <div class="mb-3">
+      <label for="pId" class="form-label">강의 교수</label>
+      <input type="text" id="pId" class="form-control" th:value="${course.pId}" readonly/>
+    </div>
+    <div class="d-flex justify-content-between">
+      <button type="submit" class="btn btn-outline-primary">수정</button>
+      <a th:href="@{/professor/courses/list}" class="btn btn-outline-secondary">취소</a>
+    </div>
+  </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,121 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Main Page</title>
-    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
-    <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon"/>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:replace="fragments/head::headFragment"></th:block>
 
-    <!-- Fonts and icons -->
-    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
-    <script>
-        WebFont.load({
-            google: { families: ["Public Sans:300,400,500,600,700"] },
-            custom: {
-                families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-                urls: ["/assets/css/fonts.min.css"],
-            },
-            active: function () {
-                sessionStorage.fonts = true;
-            },
-        });
-    </script>
-
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
-    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
-</head>
 <body>
-<div class="wrapper">
-    <!-- Sidebar -->
-    <div class="sidebar" data-background-color="dark">
-        <div class="sidebar-logo">
-            <a href="hello.html" class="logo">
-                <img src="/assets/img/logo_light.svg" alt="Logo" class="navbar-brand" height="20"/>
-            </a>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container">
+  <div class="page-inner">
+
+    <!-- Board Section -->
+    <div class="row">
+      <h1 class="text-center my-4" style="cursor: pointer;" onclick="location.href='/board/list'">학사 게시판</h1>
+      <div class="container">
+        <div>
+          <h2>게시글 수정</h2>
         </div>
-        <div class="sidebar-wrapper scrollbar-inner">
-            <div class="sidebar-content">
-                <ul class="nav">
-                    <li class="nav-item active">
-                        <a href="hello.html">
-                            <i class="fas fa-home"></i>
-                            <p>Main Page</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#">
-                            <i class="fas fa-list"></i>
-                            <p>Boards</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#">
-                            <i class="fas fa-info-circle"></i>
-                            <p>About Us</p>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <!-- th:action을 사용하여 수정된 게시글을 서버로 보냄 -->
+        <form th:action="@{/admin/board/detail/{bno}/modify(bno=${bno})}" th:object="${registerFormDTO}"
+              method="post">
+          <div>
+            <label for="title">제목</label>
+            <input type="text" id="title" th:field="*{title}" class="form-control"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{title}"></div> <!-- 오류 메시지 -->
+          </div>
+          <div class="mb-3">
+            <label for="content">내용</label>
+            <!-- content textarea 크기 키우기 -->
+            <textarea class="form-control" rows="30" id="content" th:field="*{content}"
+                      th:text="*{content}"></textarea> <!-- rows 변경 -->
+          </div>
+          <hr class="my-4">
+          <!-- 수정 완료 버튼 -->
+          <button class="btn btn-outline-primary" type="submit">수정 완료</button>
+
+          <!-- 취소 버튼: 상세 페이지로 돌아가기 -->
+          <button class="btn btn-outline-secondary"
+                  th:onclick="|location.href='@{/board/detail/{bno}(bno=${bno})}'|"
+                  type="button">취소
+          </button>
+        </form>
+      </div>
+
     </div>
-    <!-- End Sidebar -->
-
-    <!-- Main Panel -->
-    <div class="main-panel">
-        <header class="header bg-primary text-white text-center py-4">
-            <h1>학사 게시판</h1>
-        </header>
-
-        <div class="container">
-            <div class="page-inner">
-
-                <!-- Board Section -->
-                <div class="row">
-
-                    <div class="container">
-                        <div class="py-5 text-center">
-                            <h2>게시글 수정</h2>
-                        </div>
-                        <!-- th:action을 사용하여 수정된 게시글을 서버로 보냄 -->
-                        <form th:action="@{/board/detail/{bno}/modify(bno=${bno})}" th:object="${registerFormDTO}" method="post">
-                            <div>
-                                <label for="title">제목</label>
-                                <input type="text" id="title" th:field="*{title}" class="form-control" th:errorclass="field-error">
-                                <div class="field-error" th:errors="*{title}"></div> <!-- 오류 메시지 -->
-                            </div>
-                            <div class="mb-3">
-                                <label for="content">내용</label>
-                                <!-- content textarea 크기 키우기 -->
-                                <textarea class="form-control" rows="30" id="content" th:field="*{content}" th:text="*{content}"></textarea> <!-- rows 변경 -->
-                            </div>
-                            <hr class="my-4">
-                            <!-- 수정 완료 버튼 -->
-                            <button class="btn btn-primary" type="submit">수정 완료</button>
-                            <!-- 취소 버튼: 상세 페이지로 돌아가기 -->
-                            <button class="btn btn-secondary" th:onclick="|location.href='@{/board/detail/{bno}(bno=${bno})}'|" type="button">취소</button>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <footer class="footer bg-dark text-white text-center py-3">
-            <p>© 2024 우리 대학교. All rights reserved.</p>
-        </footer>
-    </div>
-    <!-- End Main Panel -->
+  </div>
 </div>
 
-<!-- Core JS Files -->
-<script src="/assets/js/core/jquery-3.7.1.min.js"></script>
-<script src="/assets/js/core/popper.min.js"></script>
-<script src="/assets/js/core/bootstrap.min.js"></script>
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 
-<!-- Kaiadmin JS -->
-<script src="/assets/js/kaiadmin.min.js"></script>
 </body>
 </html>
