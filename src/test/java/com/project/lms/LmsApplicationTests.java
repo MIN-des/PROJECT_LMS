@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
+
 @SpringBootTest
 class LmsApplicationTests {
 
@@ -16,7 +18,7 @@ class LmsApplicationTests {
 
 	@Test
 	void testJpa() {
-		for (int z = 1; z <= 300; z++) {
+		for (int z = 1; z <= 50; z++) {
 			String title = String.format("테스트 데이터입니다:[%03d]", z);
 			String content = "1. 신청기간: 2024년 12월 4일(수) 10:00 ~ 12월 6일(금) 16:00\n" +
 					"\n" +
@@ -94,6 +96,8 @@ class LmsApplicationTests {
 					"\n" +
 					"      재입학 신청이 가능합니다.(법학과 재입학 신청자는 법학전문대학원 행정팀으로 우선 문의)\n" +
 					"\n";
+			String writer = "Admin" + z;
+			LocalDateTime regDate = LocalDateTime.now();// 테스트용 작성자 이름
 			boardService.create(title, content);
 		}
 	}

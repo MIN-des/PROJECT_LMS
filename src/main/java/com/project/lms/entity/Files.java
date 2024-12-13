@@ -13,11 +13,14 @@ import javax.persistence.*;
 public class Files {
 
     @Id
-    private String uuid;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // Primary Key
 
-    private String fName;
+    private String uuid;//id
 
-    private String fPath;
+    private String fName;//fileName
+
+    private String fPath;//filePath
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bno", nullable = false)

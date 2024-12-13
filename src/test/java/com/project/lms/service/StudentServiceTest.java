@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -50,11 +51,12 @@ class StudentServiceTest {
 
 	@Test
 	void testCreateMultipleStudents() {
-		for (int i = 1; i <= 250; i++) {
+		for (int i = 1; i <= 100; i++) {
 			StudentDTO studentDTO = new StudentDTO();
 			String studentId = String.format("S%07d", i); // S0000001, S0000002 ...
 			studentDTO.setSId(studentId);
 			studentDTO.setSName("Student " + i);
+
 			studentDTO.setSPw(studentId); // 비밀번호는 아이디와 동일
 			studentDTO.setSTel("010-" + String.format("%04d", i) + "-" + String.format("%04d", (i * 7) % 10000));
 			studentDTO.setSAdd("City " + i + ", Apt " + (i % 100 + 1));

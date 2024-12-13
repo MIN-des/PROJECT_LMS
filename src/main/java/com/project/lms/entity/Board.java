@@ -3,9 +3,10 @@ package com.project.lms.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.type.LocalDateType;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +28,9 @@ public class Board {
 
     private String writer;
 
-    private LocalDate regDate;
+    private LocalDateTime regDate;
 
-    private LocalDate modDate;
+    private LocalDateTime modDate;
 
     private int views;
 

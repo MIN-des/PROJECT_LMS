@@ -7,6 +7,7 @@ import com.project.lms.entity.Student;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,12 +17,19 @@ class StudentRepositoryTest {
 	@Autowired
 	private StudentRepository studentRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Test
 	void createStudent() {
 		Student student = new Student();
 		student.setSId("S2401001");
 		student.setSName("테스트");
-		student.setSPw("S2401001");
+
+		String rawPassword = "S2401001";
+		String encodedPassword = passwordEncoder.encode(rawPassword);
+		student.setSPw(encodedPassword);
+
 		student.setSTel("010-0000-0000");
 		student.setSAdd("서울시 구로구");
 		student.setSBirth("2004-01-01");

@@ -10,8 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class BoardInsertTest {
@@ -60,7 +61,7 @@ public class BoardInsertTest {
 				"전 모집단위\t서류평가(60) + 면접(40)\n" +
 				"  * 인문, 과학, 예체능은 실기능력을 서류평가에 반영함");
 		b1.setWriter("학사팀");
-		b1.setRegDate(LocalDate.now());
+		b1.setRegDate(LocalDateTime.now());
 		b1.setViews(0);
 		this.boardRepository.save(b1);
 
@@ -143,10 +144,18 @@ public class BoardInsertTest {
 				"      재입학 신청이 가능합니다.(법학과 재입학 신청자는 법학전문대학원 행정팀으로 우선 문의)\n" +
 				"\n");
 		b2.setWriter("학사팀");
-		b2.setRegDate(LocalDate.now());
+		b2.setRegDate(LocalDateTime.now());
 		b2.setViews(0);
 		this.boardRepository.save(b2);
 	}
+	@Test
+	public void testFindByWriter() {
+		Optional<Board> board = boardRepository.findByWriter("testWriter");
+		assertTrue(board.isPresent());
+		assertEquals("testWriter", board.get().getWriter());
+	}
+
+
 
 
 }

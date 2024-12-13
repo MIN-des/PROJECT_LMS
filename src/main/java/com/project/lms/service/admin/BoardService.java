@@ -8,11 +8,7 @@ public interface BoardService {
 
     Long register(BoardDTO BoardDto);
 
-    BoardDTO readOne(Long bno);
-
     void modify(BoardDTO BoardDto);
 
     void remove(Long bno);
-
-    Long createBoard(Board Board);
 }
