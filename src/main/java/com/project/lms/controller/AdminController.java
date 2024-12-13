@@ -2,8 +2,14 @@ package com.project.lms.controller;
 
 import com.project.lms.dto.ProfessorDTO;
 import com.project.lms.dto.StudentDTO;
+import com.project.lms.entity.Admin;
+import com.project.lms.entity.Professor;
+import com.project.lms.entity.Student;
+import com.project.lms.repository.AdminRepository;
+import com.project.lms.repository.ProfessorRepository;
+import com.project.lms.repository.StudentRepository;
 import com.project.lms.service.AdminService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,29 +18,35 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminController {
 
-	@Autowired
-	private AdminService adminService;
-
-	// 메인 페이지
-	@GetMapping
-	public String adminHome() {
-		return "admin/home";
-	}
+	private final AdminService adminService;
+	private final ProfessorRepository professorRepository;
+	private final StudentRepository studentRepository;
+	private final AdminRepository adminRepository;
 
 	// 학생 생성 폼 페이지
 	@GetMapping("/students/create")
 	public String createStudentForm(Model model) {
+
 		model.addAttribute("student", new StudentDTO());
 		return "admin/student/create";
 	}
 
 	// 학생 생성 처리
 	@PostMapping("/students/create")
-	public String createStudent(@ModelAttribute StudentDTO studentDTO, Model model) {
+	public String createStudent(@ModelAttribute StudentDTO studentDTO, Model model,
+															@RequestParam(required = false) String newSAdd) {
+		// 주소 업데이트
+		if (newSAdd != null && !newSAdd.trim().isEmpty()) {
+			studentDTO.setSAdd(newSAdd);
+		}
 		try {
 			adminService.createStudent(studentDTO);
 			return "redirect:/admin/students?page=0";
@@ -46,14 +58,32 @@ public class AdminController {
 	}
 	// 교수 생성 폼 페이지
 	@GetMapping("/professors/create")
-	public String createProfessorForm(Model model) {
+	public String createProfessorForm(Model model, Principal principal) {
+		if (principal != null) {
+			// 로그인된 사용자의 ID 가져오기
+			String userId = principal.getName(); // SecurityContext에 저장된 사용자 ID
+			model.addAttribute("userId", userId); // ID를 모델에 추가
+
+			// ID를 기반으로 사용자 정보를 DB에서 조회
+			Optional<Professor> professor = professorRepository.findById(userId);
+			professor.ifPresent(p -> model.addAttribute("userName", p.getPName())); // 교수 이름 불러오기
+			Optional<Student> student = studentRepository.findById(userId);
+			student.ifPresent(p -> model.addAttribute("userName", p.getSName())); // 학생 이름 불러오기
+			Optional<Admin> admin = adminRepository.findById(userId);
+			admin.ifPresent(p -> model.addAttribute("userName", p.getAName())); // 관리자 부서 이름 불러오기
+		}
 		model.addAttribute("professor", new ProfessorDTO());
 		return "admin/professor/create";
 	}
 
 	// 교수 생성 처리
 	@PostMapping("/professors/create")
-	public String createProfessor(@ModelAttribute ProfessorDTO professorDTO, Model model) {
+	public String createProfessor(@ModelAttribute ProfessorDTO professorDTO, Model model,
+																@RequestParam(required = false) String newPAdd) {
+		// 주소 업데이트
+		if (newPAdd != null && !newPAdd.trim().isEmpty()) {
+			professorDTO.setPAdd(newPAdd);
+		}
 		try {
 			adminService.createProfessor(professorDTO);
 			return "redirect:/admin/professors?page=0";
@@ -108,7 +138,7 @@ public class AdminController {
 		// 페이지네이션 로직
 		int currentPage = students.getNumber() + 1; // 현재 페이지 (1부터 시작)
 		int totalPages = students.getTotalPages();
-		int groupSize = 10; // 페이지 그룹 크기
+		int groupSize = 5; // 페이지 그룹 크기
 		int currentGroup = (currentPage - 1) / groupSize; // 현재 그룹 계산
 		int startPage = currentGroup * groupSize + 1; // 그룹 시작 페이지
 		int endPage = Math.min(startPage + groupSize - 1, totalPages); // 그룹 종료 페이지
@@ -155,6 +185,7 @@ public class AdminController {
 	@PostMapping("/students/{id}/edit")
 	@ExceptionHandler
 	public String updateStudent(@PathVariable String id, @ModelAttribute StudentDTO studentDTO,
+															@RequestParam(required = false) String newSAdd,
 															@RequestParam(required = false) String searchType,
 															@RequestParam(required = false) String keyword,
 															@RequestParam(required = false, defaultValue = "0") Integer page,
@@ -162,6 +193,10 @@ public class AdminController {
 															@RequestParam(defaultValue = "asc") String sortDir,  // 정렬 방향
 															@RequestParam(required = false) Boolean isSorted,   // 정렬 여부 플래그
 															Model model) {
+		// 주소 업데이트
+		if (newSAdd != null && !newSAdd.trim().isEmpty()) {
+			studentDTO.setSAdd(newSAdd);
+		}
 
 		try {
 			adminService.updateStudent(id, studentDTO);
@@ -244,7 +279,7 @@ public class AdminController {
 		// 페이지네이션 로직
 		int currentPage = professors.getNumber() + 1; // 현재 페이지 (1부터 시작)
 		int totalPages = professors.getTotalPages();
-		int groupSize = 10; // 페이지 그룹 크기
+		int groupSize = 5; // 페이지 그룹 크기
 		int currentGroup = (currentPage - 1) / groupSize; // 현재 그룹 계산
 		int startPage = currentGroup * groupSize + 1; // 그룹 시작 페이지
 		int endPage = Math.min(startPage + groupSize - 1, totalPages); // 그룹 종료 페이지
@@ -287,6 +322,7 @@ public class AdminController {
 	// 교수 수정
 	@PostMapping("/professors/{id}/edit")
 	public String updateProfessor(@PathVariable String id, @ModelAttribute ProfessorDTO professorDTO,
+																@RequestParam(required = false) String newPAdd,
 																@RequestParam(required = false) String searchType,
 																@RequestParam(required = false) String keyword,
 																@RequestParam(defaultValue = "pId") String sortField, // 정렬 필드
@@ -294,6 +330,11 @@ public class AdminController {
 																@RequestParam(required = false) Boolean isSorted,   // 정렬 여부 플래그
 																@RequestParam(required = false, defaultValue = "0") Integer page,
 																Model model) {
+		// 주소 업데이트
+		if (newPAdd != null && !newPAdd.trim().isEmpty()) {
+			professorDTO.setPAdd(newPAdd);
+		}
+
 		try {
 			adminService.updateProfessor(id, professorDTO);
 			return "redirect:/admin/professors?page=" + (page - 1) +

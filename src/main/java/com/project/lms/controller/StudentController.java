@@ -118,28 +118,6 @@ public class StudentController {
     return "student/invoices"; // 학생용 고지서 목록 뷰
   }
 
-
-//  // 등록금 고지서 다운로드
-//  @GetMapping("/invoices/{sId}/download/{tId}")
-//  public ResponseEntity<byte[]> downloadInvoice(@PathVariable String sId, @PathVariable Long tId) throws Exception {
-//    // sId와 tId의 유효성 검증
-//    if (sId == null || sId.isEmpty()) {
-//      throw new IllegalArgumentException("학생 ID가 유효하지 않습니다.");
-//    }
-//    if (tId == null || tId <= 0) {
-//      throw new IllegalArgumentException("tId가 유효하지 않습니다.");
-//    }
-//
-//    byte[] fileData = tuitionInvoiceUploadService.downloadInvoice(tId);
-//
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setContentType(MediaType.APPLICATION_PDF);
-//    headers.setContentDispositionFormData("attachment", "invoice_" + tId + ".pdf");
-//
-//    return ResponseEntity.ok()
-//        .headers(headers)
-//        .body(fileData);
-//  }
   // 등록금 고지서 다운로드
   @GetMapping("/invoices/download/{tId}")
   public ResponseEntity<byte[]> downloadInvoice(@PathVariable Long tId, Authentication authentication) throws Exception {

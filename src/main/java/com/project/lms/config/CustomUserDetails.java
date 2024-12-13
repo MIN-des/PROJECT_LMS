@@ -1,11 +1,13 @@
 package com.project.lms.config;
 
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
+@Setter
 public class CustomUserDetails implements UserDetails {
 
 	private final String id; // 교수 ID

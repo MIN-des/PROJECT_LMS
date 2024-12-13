@@ -20,7 +20,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access to preview URL");
 		} else if ("XMLHttpRequest".equals(request.getHeader("x-requested-with"))) {
 			// AJAX 요청인 경우, 401 Unauthorized 응답
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You must be logged in to perform this action.");
 		} else {
 			// 그 외 요청은 로그인 페이지로 리다이렉트
 			response.sendRedirect("/login");

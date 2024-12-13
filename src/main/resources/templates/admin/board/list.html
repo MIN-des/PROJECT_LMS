@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Main Page</title>
+    <title>학사 게시판</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
     <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon"/>
 
@@ -26,6 +27,7 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
     <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
+
 </head>
 <body>
 <div class="wrapper">
@@ -65,50 +67,144 @@
 
     <!-- Main Panel -->
     <div class="main-panel">
-        <header class="header bg-primary text-white text-center py-4">
-            <h1>학사 게시판</h1>
+        <header class="main-header">
+            <!-- Navbar -->
+            <nav class="navbar navbar-header navbar-expand-lg border-bottom bg-primary text-white">
+                <div class="container-fluid">
+                    <h1 class="text-center text-white py-2" style="flex-grow: 1; margin: 0;">학사 게시판</h1>
+                    <ul class="navbar-nav topbar-nav ms-auto align-items-center">
+                        <!-- User Info -->
+                        <li class="nav-item dropdown hidden-caret">
+                            <a class="nav-link dropdown-toggle user-dropdown" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="user-info d-flex align-items-center">
+                                    <i class="fas fa-user-circle fa-lg me-2"></i>
+                                    <span class="user-name" th:text="${userName}">로그인 이름</span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                <li>
+                                    <div class="user-box">
+                                        <div class="avatar-lg d-flex flex-column align-items-center justify-content-center">
+                                            <i class="fas fa-user-circle fa-3x text-muted d-flex flex-column align-items-center justify-content-center"></i>
+                                        </div>
+                                        <div class="u-text">
+                                            <h4 th:text="${userId}">로그인 아이디</h4>
+                                            <p class="text-muted" th:text="${userName}">로그인 이름</p>
+                                        </div>
+                                        <a th:if="${#authorization.expression('hasRole(''ROLE_STUDENT'')')}"
+                                           th:href="@{/student/info}" class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center" style="width: 80px; height: 30px;">내 정보</a>
+                                        <a th:if="${#authorization.expression('hasRole(''ROLE_PROFESSOR'')')}"
+                                           th:href="@{/professor/info}" class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center" style="width: 80px; height: 30px;">내 정보</a>
+                                        <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+                                           th:href="@{/admin/students}" class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center" style="width: 80px; height: 30px;">목록</a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/logout">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navbar -->
         </header>
+
 
         <div class="container">
             <div class="page-inner">
+
+                <div class="row mb-4 d-flex justify-content-between align-items-center">
+                    <div class="col-lg-12">
+                        <form th:action="@{/board/list}" method="get" class="d-flex justify-content-between align-items-center flex-wrap">
+                            <!-- 날짜 입력 필드 -->
+                            <div class="d-flex align-items-center mb-2 mb-md-0">
+                                <input type="date" name="startDate" class="form-control me-2" style="min-width: 150px;" placeholder="연도-월-일">
+                                <span class="mx-2">~</span>
+                                <input type="date" name="endDate" class="form-control me-2" style="min-width: 150px;" placeholder="연도-월-일">
+                            </div>
+
+                            <!-- 검색 옵션 및 버튼 -->
+                            <div class="d-flex align-items-center mb-2 mb-md-0">
+                                <select name="searchType" id="searchType" class="form-select me-2" style="min-width: 120px;">
+                                    <option value="all" th:selected="${searchType == 'all'}">전체</option>
+                                    <option value="title" th:selected="${searchType == 'title'}">제목</option>
+                                    <option value="content" th:selected="${searchType == 'content'}">내용</option>
+                                    <option value="writer" th:selected="${searchType == 'writer'}">작성자</option>
+                                </select>
+                                <input type="text" name="keyword" th:value="${keyword}" class="form-control me-2" style="min-width: 200px; flex-grow: 1;" placeholder="검색어를 입력하세요">
+<!--                                <select name="searchType" id="searchType" class="form-select me-2" style="min-width: 120px;">-->
+<!--                                    <option value="all" th:selected="${searchType == null || searchType == 'all'}">전체</option>-->
+<!--                                    <option value="title" th:selected="${searchType == 'title'}">제목</option>-->
+<!--                                    <option value="content" th:selected="${searchType == 'content'}">내용</option>-->
+<!--                                    <option value="writer" th:selected="${searchType == 'writer'}">작성자</option>-->
+<!--                                </select>-->
+
+<!--                                <input type="text" name="keyword" th:value="${keyword != null ? keyword : ''}" class="form-control me-2" style="min-width: 200px; flex-grow: 1;" placeholder="검색어를 입력하세요">-->
+
+<!--                                <input type="date" name="startDate" th:value="${startDate != null ? startDate : ''}" class="form-control me-2" style="min-width: 150px;" placeholder="연도-월-일">-->
+<!--                                <input type="date" name="endDate" th:value="${endDate != null ? endDate : ''}" class="form-control me-2" style="min-width: 150px;" placeholder="연도-월-일">-->
+                                <button type="reset" class="btn btn-outline-primary me-2 px-4"
+                                        style="min-width: 80px; height: 40px; white-space: nowrap;">초기화</button>
+                                <button type="submit" class="btn btn-outline-primary px-4" style="min-width: 80px;">검색</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
                 <!-- Board Section -->
                 <div class="row">
 
                     <div layout:fragment="content" class="container my-3">
-                        <table class="table">
-                            <thead class="table-dark">
+                        <table class="table table-hover table-bordered text-center">
+                            <thead class="table-dark align-items-center text-align-center">
                             <tr>
                                 <th>번호</th>
                                 <th>제목</th>
+                                <th>작성자</th>
                                 <th>작성일시</th>
-                                <th>작업</th> <!-- 수정 및 삭제 버튼 열 추가 -->
+                                <th th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">수정 | 삭제</th> <!-- 수정 및 삭제 버튼 열 추가 -->
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="board, loop: ${paging}">
-                                <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td><!--번호-->
+                                <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
+                                <!--번호-->
                                 <td><!--제목-->
                                     <a th:href="@{/board/detail/{bno}(bno=${board.bno})}"
                                        th:text="${board.title}"></a>
 
                                 </td>
+                                <td th:text="${board.writer}"></td>
                                 <td th:text="${#temporals.format(board.regDate, 'yyyy-MM-dd')}"></td><!--작성일시-->
-                                <td><!--작업(수정,삭제)-->
+                                <td th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><!--작업(수정,삭제)-->
                                     <!-- 수정 버튼 -->
-                                    <a th:href="@{/board/detail/{bno}/modify(bno=${board.bno})}" class="btn btn-primary mr-2">수정</a>
+                                    <a th:href="@{/admin/board/detail/{bno}/modify(bno=${board.bno})}"
+                                       class="btn btn-outline-primary mr-2">수정</a>
 
                                     <!-- 삭제 버튼 -->
-                                    <form th:action="@{/board/detail/{bno}/delete(bno=${board.bno})}" method="post" style="display:inline;">
-                                        <button class="btn btn-danger" type="submit">삭제</button>
+                                    <form th:action="@{/admin/board/detail/{bno}/delete(bno=${board.bno})}"
+                                          method="post" style="display:inline;">
+                                        <button class="btn btn-outline-danger" type="submit">삭제</button>
                                     </form>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
+
                         <!-- 페이징처리 시작 -->
-                        <div th:if="${!paging.isEmpty()}">
+                        <div th:if="${paging != null and !paging.isEmpty()}">
                             <ul class="pagination justify-content-center">
+
+                                <!-- 맨 처음 페이지로 이동 -->
+                                <li class="page-item" th:classappend="${paging.number == 0} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/board/list(page=0)}">
+                                        <<
+                                    </a>
+                                </li>
+
                                 <!-- 이전 버튼 -->
                                 <li class="page-item" th:classappend="${paging.hasPrevious()} ? '' : 'disabled'">
                                     <a class="page-link" th:href="@{/board/list(page=${paging.number - 1})}">
@@ -117,9 +213,10 @@
                                 </li>
 
                                 <!-- 페이지 번호 -->
-                                <li th:each="page : ${#numbers.sequence(startPage, endPage)}"
+                                <li th:each="page : ${#numbers.sequence(startPage != null ? startPage : 0, endPage != null ? endPage : 0)}"
                                     th:classappend="${page == paging.number} ? 'active'" class="page-item">
-                                    <a class="page-link" th:href="@{/board/list(page=${page})}" th:text="${page + 1}"></a>
+                                    <a class="page-link" th:href="@{/board/list(page=${page})}"
+                                       th:text="${page + 1}"></a>
                                 </li>
 
                                 <!-- 다음 버튼 -->
@@ -128,12 +225,21 @@
                                         다음
                                     </a>
                                 </li>
+
+                                <!-- 맨 마지막 페이지로 이동 -->
+                                <li class="page-item" th:classappend="${paging.number == paging.totalPages - 1} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/board/list(page=${paging.totalPages - 1})}">
+                                        >>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
-
                         <!-- 페이징처리 끝 -->
 
-                        <a th:href="@{/board/create}" class="btn btn-primary">게시글 등록하기</a>
+
+                        <a th:href="@{/admin/board/create}"
+                           th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+                           class="btn btn-outline-primary mt-3">게시글 등록하기</a>
                     </div>
 
                 </div>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <th:block th:fragment="headerFragment">
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+      <div class="sidebar-logo1">
+        <a th:href="@{/main}" class="logo1">
+          <img src="/assets/img/UlogoName.png" alt="Logo" class="navbar-brand1" height="20"/>
+        </a>
+      </div>
+      <div class="sidebar-wrapper scrollbar-inner">
+        <div class="sidebar-content">
+          <ul class="nav">
+            <li class="nav-item dropdown submenu">
+              <a th:href="@{/main}">
+                <i class="fas fa-home"></i>
+                <p>메인 페이지</p>
+              </a>
+            </li>
+
+            <!-- 학생 페이지 섹션 -->
+            <li class="nav-item dropdown">
+              <a th:if="${#authorization.expression('hasRole(''ROLE_STUDENT'')')}"
+                 href="#studentMenu" data-bs-toggle="collapse" aria-expanded="false">
+                <i class="fas fa-user-graduate"></i>
+                <p>학생 페이지</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="studentMenu">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a th:href="@{/student/info}">
+                      <i class="fas fa-id-card-alt"></i>
+                      <p>내 정보</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/student/courses/list}">
+                      <i class="fas fa-list-alt"></i>
+                      <p>수강 신청</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/student/courses/subList}">
+                      <i class="far fa-list-alt"></i>
+                      <p>수강 신청 내역</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/student/invoices}">
+                      <i class="fas fa-file-invoice-dollar"></i>
+                      <p>등록금 고지서 조회</p>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <!-- 교수 페이지 섹션 -->
+            <li class="nav-item dropdown">
+              <a th:if="${#authorization.expression('hasRole(''ROLE_PROFESSOR'')')}"
+                 href="#professorMenu" data-bs-toggle="collapse" aria-expanded="false">
+                <i class="fas fa-user-tie"></i>
+                <p>교수 페이지</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="professorMenu">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a th:href="@{/professor/info}">
+                      <i class="fas fa-id-card"></i>
+                      <p>내 정보</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/professor/courses/list}">
+                      <i class="fas fa-th-list"></i>
+                      <p>강의 조회</p>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <!-- 관리자 페이지 섹션 -->
+            <li class="nav-item dropdown">
+              <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+                 href="#adminMenu" data-bs-toggle="collapse" aria-expanded="false">
+                <i class="fas fa-users-cog"></i>
+                <p>관리자 페이지</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="adminMenu">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a th:href="@{/admin/professors}">
+                      <i class="fas fa-user-tie"></i>
+                      <p>교수 리스트</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/admin/students}">
+                      <i class="fas fa-user-graduate"></i>
+                      <p>학생 리스트</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/admin/invoices}">
+                      <i class="fas fa-file-invoice-dollar"></i>
+                      <p>등록금 고지서 등록</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/admin/board/list}">
+                      <i class="fas fa-clipboard-list"></i>
+                      <p>공지 게시판 관리</p>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- End Sidebar -->
+    </div>
+    <!-- Main Panel -->
+    <div class="main-panel">
+      <!-- Header -->
+      <header class="main-header">
+        <!-- Navbar -->
+        <nav class="navbar navbar-header navbar-expand-lg border-bottom">
+          <div class="container-fluid">
+            <!-- 가운데 로고 이미지 추가 -->
+            <div class="navbar-brand mx-auto">
+              <a href="/main">
+                <img src="/assets/img/UName.png" alt="Logo" class="navbar-logo">
+              </a>
+            </div>
+            <ul class="navbar-nav topbar-nav ms-auto align-items-center">
+              <!-- User Info -->
+              <li class="nav-item dropdown hidden-caret">
+                <a class="nav-link dropdown-toggle user-dropdown" href="#" id="navbarDropdown" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                  <div class="user-info d-flex align-items-center">
+                    <i class="fas fa-user-circle fa-lg me-2"></i>
+                    <span class="user-name" th:text="${userName}">로그인 이름</span>
+                  </div>
+                </a>
+                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                  <li>
+                    <div class="user-box">
+                      <div class="avatar-lg d-flex flex-column align-items-center justify-content-center">
+                        <i class="fas fa-user-circle fa-3x text-muted d-flex flex-column align-items-center justify-content-center"></i>
+                      </div>
+                      <div class="u-text">
+                        <h4 th:text="${userId}">로그인 아이디</h4>
+                        <p class="text-muted" th:text="${userName}">로그인 이름</p>
+                      </div>
+                      <a th:if="${#authorization.expression('hasRole(''ROLE_STUDENT'')')}"
+                         th:href="@{/student/info}" class="btn btn-outline-primary custom-btn d-flex align-items-center justify-content-center">내 정보</a>
+                      <a th:if="${#authorization.expression('hasRole(''ROLE_PROFESSOR'')')}"
+                         th:href="@{/professor/info}" class="btn btn-outline-primary custom-btn d-flex align-items-center justify-content-center">내 정보</a>
+                      <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+                         th:href="@{/admin/students}" class="btn btn-outline-primary custom-btn d-flex align-items-center justify-content-center">목록</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+      </header>
+
+  </th:block>
+</html>

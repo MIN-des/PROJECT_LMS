@@ -1,81 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>학생 리스트</title>
+<th:block th:replace="fragments/head::headFragment"></th:block>
 
-  <!-- Fonts and icons -->
-  <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
-  <script>
-    WebFont.load({
-        google: { families: ["Public Sans:300,400,500,600,700"] },
-        custom: {
-            families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-            urls: ["/assets/css/fonts.min.css"],
-        },
-        active: function () {
-            sessionStorage.fonts = true;
-        },
-    });
-  </script>
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
-  <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
-</head>
 <body>
-<div class="wrapper">
-    <!-- Sidebar -->
-    <div class="sidebar" data-background-color="dark">
-        <div class="logo">
-            <a href="#" class="simple-text logo-mini">LMS</a>
-        </div>
-        <div class="sidebar-wrapper scrollbar-inner">
-            <div class="sidebar-content">
-                <ul class="nav">
-                    <li>
-                        <a th:href="@{/main}">
-                            <i class="fas fa-home"></i>
-                            <p>메인 페이지</p>
-                        </a>
-                    </li>
-                    <!-- 관리자 페이지 섹션 -->
-                    <li class="nav-item dropdown">
-                        <a href="#adminMenu" data-bs-toggle="collapse" aria-expanded="false">
-                            <i class="fas fa-user-cog"></i>
-                            <p>관리자 페이지</p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse" id="adminMenu">
-                            <ul class="nav nav-collapse">
-                                <li>
-                                    <a th:href="@{/admin/professors}">
-                                        <i class="fas fa-chalkboard-teacher"></i>
-                                        <p>교수 리스트</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a th:href="@{/admin/students}">
-                                        <i class="fas fa-user-graduate"></i>
-                                        <p>학생 리스트</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a th:href="@{/admin/invoices}">
-                                        <i class="fas fa-file-invoice"></i>
-                                        <p>등록금 고지서 등록</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <!--End Sidebar-->
+<th:block th:replace="fragments/header::headerFragment"></th:block>
 
-  <div class="main-panel">
     <div class="container">
       <div class="page-inner">
         <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -83,9 +12,6 @@
             <h3 class="fw-bold mb-3">
               <a th:href="@{/admin/students}" class="text-decoration-none text-dark">학생 리스트</a>
             </h3>
-          </div>
-          <div class="ms-md-auto py-2 py-md-0">
-            <a th:href="@{/admin/students/create}" class="btn btn-primary btn-round">학생 추가</a>
           </div>
         </div>
 
@@ -95,48 +21,52 @@
 
         <form th:action="@{/admin/students}" method="get" class="mb-3">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-1">
               <select name="searchType" id="searchType" class="form-select">
                 <option value="id" th:selected="${searchType == 'id'}">ID</option>
                 <option value="name" th:selected="${searchType == 'name'}">이름</option>
                 <option value="dept" th:selected="${searchType == 'dept'}">학부</option>
               </select>
             </div>
-            <div class="col-md-6">
-              <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}" class="form-control">
+            <div class="col-md-4">
+              <input type="text" name="keyword" id="searchForm" placeholder="검색어 입력" th:value="${keyword}" class="form-control">
             </div>
-            <div class="col-md-3">
-              <button type="submit" class="btn btn-primary w-100">검색</button>
+            <div class="col-md-1">
+              <button type="submit" class="btn btn-outline-primary custom-btn">검색</button>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-2 d-flex justify-content-end">
+              <a th:href="@{/admin/students/create}" class="btn btn-outline-primary">학생 추가</a>
             </div>
           </div>
         </form>
 
         <div class="table-responsive">
           <table class="table table-bordered table-hover text-center">
-            <thead class="table-light">
+            <thead class="table-dark">
             <tr>
               <th>
-                <a th:href="@{/admin/students(sortField='sId', sortDir=${sortField == 'sId' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                <a class="custom-a" th:href="@{/admin/students(sortField='sId', sortDir=${sortField == 'sId' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
                    th:text="'학번' + (${isSorted and sortField == 'sId' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
               <th>
-                <a th:href="@{/admin/students(sortField='sName', sortDir=${sortField == 'sName' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                <a class="custom-a" th:href="@{/admin/students(sortField='sName', sortDir=${sortField == 'sName' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
                    th:text="'이름' + (${isSorted and sortField == 'sName' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
               <th>
-                <a th:href="@{/admin/students(sortField='sDept', sortDir=${sortField == 'sDept' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                <a class="custom-a" th:href="@{/admin/students(sortField='sDept', sortDir=${sortField == 'sDept' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
                    th:text="'학부' + (${isSorted and sortField == 'sDept' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
               <th>
-                <a th:href="@{/admin/students(sortField='sEmail', sortDir=${sortField == 'sEmail' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                <a class="custom-a" th:href="@{/admin/students(sortField='sEmail', sortDir=${sortField == 'sEmail' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
                    th:text="'이메일' + (${isSorted and sortField == 'sEmail' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
               <th>
-                <a th:href="@{/admin/students(sortField='grade', sortDir=${sortField == 'grade' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
+                <a class="custom-a" th:href="@{/admin/students(sortField='grade', sortDir=${sortField == 'grade' and sortDir == 'asc' ? 'desc' : 'asc'}, searchType=${searchType}, keyword=${keyword}, isSorted=true)}"
                    th:text="'학년' + (${isSorted and sortField == 'grade' ? ' ' + (sortDir == 'asc' ? '▼' : '▲') : ''})">
                 </a>
               </th>
@@ -152,7 +82,7 @@
               <td th:text="${student.grade}"></td>
               <td>
                 <a th:href="@{'/admin/students/' + ${student.sId} + '?page=' + ${currentPage} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + '&isSorted=' + ${isSorted}}"
-                   class="btn btn-primary btn-sm">보기</a>
+                   class="btn btn-outline-primary custom-btn">정보</a>
               </td>
             </tr>
             </tbody>
@@ -162,7 +92,7 @@
         <nav th:if="${totalPages > 0}">
           <ul class="pagination justify-content-center">
             <li class="page-item" th:if="${startPage > 1}">
-              <a class="page-link" th:href="@{|/admin/students?page=${startPage - groupSize - 1}&size=${pageSize}&searchType=${searchType}&keyword=${keyword}&sortField=${sortField}&sortDir=${sortDir}&isSorted=${isSorted}|}">이전</a>
+              <a class="page-link" th:href="@{|/admin/students?page=${startPage - 2}&size=${pageSize}&searchType=${searchType}&keyword=${keyword}&sortField=${sortField}&sortDir=${sortDir}&isSorted=${isSorted}|}">이전</a>
             </li>
 
             <li class="page-item" th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
@@ -182,16 +112,7 @@
         </div>
       </div>
     </div>
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 
-    <footer class="footer">
-      <div class="container-fluid d-flex justify-content-between">
-        <div>Copyright © 2024. All rights reserved.</div>
-      </div>
-    </footer>
-  </div>
-</div>
-
-<script src="/assets/js/core/bootstrap.min.js"></script>
-<script src="/assets/js/kaiadmin.min.js"></script>
 </body>
 </html>
