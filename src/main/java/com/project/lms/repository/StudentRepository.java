@@ -5,7 +5,11 @@ import com.project.lms.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, String> {
@@ -16,4 +20,6 @@ public interface StudentRepository extends JpaRepository<Student, String> {
 
 	boolean existsById(String sId);
 	boolean existsBysEmail(String sEmail);
+  boolean existsBysTel(String sTel);
+//  boolean existsBysAdd(String sAdd);
 }

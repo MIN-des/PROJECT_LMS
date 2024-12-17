@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/head::headFragment"></th:block>
+
+<body>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container mt-8">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary custom-card text-white text-center ">
+                    <h5>강의 수정</h5>
+                </div>
+                <div class="card-body">
+
+                    <!-- 에러 메시지 -->
+                    <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+                    <div th:if="${successMsg}" class="alert alert-success" th:text="${successMsg}"></div>
+
+                    <!-- 강의 수정 폼 -->
+                    <form th:action="@{/professor/courses/update/{cId}(cId=${course?.cId})}" th:object="${course}"
+                          method="post">
+                        <div class="mb-3">
+                            <label for="cId" class="form-label">강의 아이디</label>
+                            <input type="text" id="cId" class="form-control" th:value="${course?.cId}" readonly/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cName" class="form-label">강의명</label>
+                            <input type="text" id="cName" name="cName" class="form-control" th:field="*{cName}"
+                                   required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="credits" class="form-label">학점</label>
+                            <input type="number" id="credits" name="credits" class="form-control" th:field="*{credits}"
+                                   min="1" max="6" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="maxCapacity" class="form-label">수강 정원</label>
+                            <input type="text" id="maxCapacity" class="form-control" th:value="*{maxCapacity}"
+                                   readonly/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="restNum" class="form-label">잔여 인원</label>
+                            <input type="number" id="restNum" name="restNum" class="form-control" th:field="*{restNum}"
+                                   min="0" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pId" class="form-label">강의 교수</label>
+                            <input type="text" id="pId" class="form-control" th:value="${course.pId}" readonly/>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-outline-primary">수정</button>
+                            <a th:href="@{/professor/courses/list}" class="btn btn-outline-secondary">취소</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
+</body>
+</html>

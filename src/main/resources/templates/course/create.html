@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/head::headFragment"></th:block>
+
+<body>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container mt-8">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary custom-card text-white text-center ">
+                    <h5>강의 등록</h5>
+                </div>
+                <div class="card-body">
+
+                    <!-- Error Message -->
+                    <div th:if="${errorMsg}" class="alert alert-danger" role="alert">
+                        <span th:text="${errorMsg}"></span>
+                    </div>
+
+                    <form th:action="@{/professor/courses/create}" th:object="${course}" method="post">
+                        <!-- 강의명 -->
+                        <div class="mb-3">
+                            <label for="cName" class="form-label">강의 이름</label>
+                            <input type="text" id="cName" th:field="*{cName}" class="form-control"
+                                   placeholder="강의 이름을 입력하세요" required>
+                        </div>
+
+                        <!-- 학점 -->
+                        <div class="mb-3">
+                            <label for="credits" class="form-label">학점</label>
+                            <input type="number" id="credits" th:field="*{credits}" class="form-control"
+                                   placeholder="학점을 입력하세요" min="1"
+                                   max="6" required>
+                        </div>
+
+                        <!-- 수강 정원 -->
+                        <div class="mb-3">
+                            <label for="maxCapacity" class="form-label">수강 정원</label>
+                            <input type="number" id="maxCapacity" th:field="*{maxCapacity}" class="form-control"
+                                   placeholder="수강 정원을 입력하세요"
+                                   min="0" required>
+                        </div>
+
+                        <!-- 잔여 인원 -->
+                        <div class="mb-3">
+                            <label for="restNum" class="form-label">잔여 인원</label>
+                            <input type="number" id="restNum" th:field="*{restNum}" class="form-control"
+                                   placeholder="잔여 인원을 입력하세요"
+                                   min="0" required>
+                        </div>
+
+                        <!-- 등록한 사람 -->
+                        <div class="mb-3">
+                            <label for="pId" class="form-label">강의 교수</label>
+                            <input type="text" id="pId" th:value="*{pId}" class="form-control" readonly>
+                        </div>
+
+                        <!-- 에러 메시지 -->
+                        <div th:if="${errorMsg != null}" class="error">
+                            <p th:text="${errorMsg}"></p>
+                        </div>
+
+                        <!-- 등록 버튼 -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-outline-primary">등록</button>
+                            <a th:href="@{/professor/courses/list}" class="btn btn-outline-danger">취소</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const maxCapacityInput = document.getElementById("maxCapacity");
+        const restNumInput = document.getElementById("restNum");
+
+        // 수강 정원 입력 시 잔여 인원 자동 동기화
+        maxCapacityInput.addEventListener("input", function () {
+            const maxCapacity = parseInt(maxCapacityInput.value, 10);
+            if (!isNaN(maxCapacity) && maxCapacity >= 0) {
+                restNumInput.value = maxCapacity;
+            }
+        });
+    });
+</script>
+
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
+
+</body>
+</html>

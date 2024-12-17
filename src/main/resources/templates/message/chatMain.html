@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>채팅 메인 페이지</title>
+</head>
+<body>
+<h1>채팅 메인 페이지</h1>
+
+<!-- 수강한 교수 (학생만 볼 수 있음) -->
+<h2 sec:authorize="hasRole('ROLE_STUDENT')">수강한 교수</h2>
+<ul sec:authorize="hasRole('ROLE_STUDENT')">
+    <li th:each="professor : ${professors}">
+        <a th:href="@{/message/chat(receiverId=${professor.pId}, receiverName=${professor.pName})}"
+           th:text="${professor.pName + ' (' + professor.pId + ')'}"></a>
+    </li>
+</ul>
+
+<!-- 신청한 학생 (교수만 볼 수 있음) -->
+<h2 sec:authorize="hasRole('ROLE_PROFESSOR')">신청한 학생</h2>
+<ul sec:authorize="hasRole('ROLE_PROFESSOR')">
+    <li th:each="student : ${students}">
+        <a th:href="@{/message/chat(receiverId=${student.sId}, receiverName=${student.sName})}"
+           th:text="${student.sName + ' (' + student.sId + ')'}"></a>
+    </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="fragments/head::headFragment"></th:block>
+
+<body>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container">
+    <div class="page-inner">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+            <div>
+                <h3 class="fw-bold mb-3">
+                    <a th:href="@{/professor/courses/myCourses}" class="text-decoration-none text-dark">내 강의 리스트</a>
+                </h3>
+            </div>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" role="alert">
+            <p th:text="${successMessage}"></p>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <!-- 검색 폼 -->
+        <form th:action="@{/professor/courses/myCourses}" method="get" class="mb-3">
+            <div class="row">
+                <div class="col-md-1">
+                    <select name="searchType" id="searchType" class="form-select" required>
+                        <option th:selected="${searchType == 'id'}" value="id">강의 ID</option>
+                        <option th:selected="${searchType == 'name'}" value="name">강의명</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="searchQuery" class="form-control" id="searchForm"
+                           placeholder="검색어 입력" th:value="${searchQuery}"/>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-outline-primary custom-btn">검색</button>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </form>
+
+        <!-- 강의 목록 -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th>강의 ID</th>
+                    <th>개설 학과</th>
+                    <th>강의명</th>
+                    <th>학점</th>
+                    <th>수강 정원</th>
+                    <th>잔여 인원</th>
+                    <th>수강 학생 조회</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="course : ${page.content}">
+                    <td th:text="C + ${course.cId}"></td>
+                    <td th:text="${course.pDept.koreanName}"></td>
+                    <td th:text="${course.cName}"></td>
+                    <td th:text="${course.credits}"></td>
+                    <td th:text="${course.maxCapacity}"></td>
+                    <td th:text="${course.restNum}"></td>
+                    <td>
+                        <a th:href="@{/professor/courses/studentList/{cId}(cId=${course.cId})}"
+                           class="btn btn-outline-primary custom-btn">
+                            조회하기
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <!-- 페이징 -->
+            <nav th:if="${page.totalPages > 0}">
+                <ul class="pagination justify-content-center">
+                    <!-- 이전 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage > 1} ? '' : 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/professor/courses/myCourses(page=${currentPage - 1}, searchType=${searchType}, searchQuery=${searchQuery})}">
+                            이전
+                        </a>
+                    </li>
+
+                    <!-- 페이지 번호 -->
+                    <li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                        th:classappend="${currentPage == i} ? 'active' : ''">
+                        <a class="page-link"
+                           th:href="@{/professor/courses/myCourses(page=${i}, searchType=${searchType}, searchQuery=${searchQuery})}"
+                           th:text="${i}"></a>
+                    </li>
+
+                    <!-- 다음 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage < page.totalPages} ? '' : 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/professor/courses/myCourses(page=${currentPage + 1}, searchType=${searchType}, searchQuery=${searchQuery})}">
+                            다음
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- 페이징 숨기기 -->
+            <div th:if="${page.totalPages == 0}" class="text-center mt-4">
+                <p>페이지가 없습니다.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
+
+</body>
+</html>

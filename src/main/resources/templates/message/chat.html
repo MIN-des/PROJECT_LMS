@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>채팅 페이지</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>채팅</h1>
+
+<!-- 채팅 상대방 정보 출력 -->
+<h3 th:text="'채팅 상대: ' + ${receiverName} + ' (' + ${receiverId} + ')'">채팅 상대</h3>
+
+<!-- 채팅 내역 출력 -->
+<h4>채팅 내역</h4>
+<ul id="chatHistory">
+    <li th:each="message : ${chatHistory}">
+        <span th:text="|${message.senderName} (${message.senderId}): ${message.content}|"></span>
+    </li>
+</ul>
+
+<!-- 메시지 전송 폼 -->
+<form id="chatForm">
+    <input type="hidden" id="receiverId" name="receiverId" th:value="${receiverId}" />
+    <input type="hidden" id="receiverName" name="receiverName" th:value="${receiverName}" />
+
+    <textarea id="content" name="content" placeholder="메시지를 입력하세요" required></textarea>
+    <button type="submit">전송</button>
+</form>
+
+<!-- 채팅 내역 자동 새로고침 -->
+<script>
+    $(document).ready(function () {
+        // 메시지 전송
+        $("#chatForm").on("submit", function (event) {
+            event.preventDefault(); // 기본 폼 제출 방지
+
+            const data = {
+                receiverId: $("#receiverId").val(),
+                content: $("#content").val()
+            };
+
+            $.post("/message/api/send", data, function () {
+                $("#content").val(""); // 입력 필드 초기화
+                loadChatHistory(); // 채팅 내역 갱신
+            }).fail(function () {
+                alert("메시지 전송에 실패했습니다.");
+            });
+        });
+
+        // 채팅 내역 불러오기
+        function loadChatHistory() {
+            const receiverId = $("#receiverId").val();
+            $.get(`/message/api/history/${receiverId}`, function (chatHistory) {
+                const chatList = $("#chatHistory");
+                chatList.empty(); // 기존 내역 삭제
+                chatHistory.forEach(function (message) {
+                    const chatLine = `<li>${message.senderName} (${message.senderId}): ${message.content}</li>`;
+                    chatList.append(chatLine);
+                });
+            }).fail(function () {
+                alert("채팅 내역을 불러오지 못했습니다.");
+            });
+        }
+
+        // 일정 시간마다 채팅 내역 새로고침 (0.5초마다)
+        setInterval(loadChatHistory, 500);
+    });
+</script>
+
+<a href="/message/main">메인 페이지로 돌아가기</a>
+</body>
+</html>

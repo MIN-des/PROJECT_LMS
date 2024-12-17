@@ -1,7 +1,7 @@
 package com.project.lms.constant;
 
 public enum Role {
-    STUDENT,
-    PROFESSOR,
-    ADMIN
+  ROLE_ADMIN,
+  ROLE_STUDENT,
+  ROLE_PROFESSOR;
 }

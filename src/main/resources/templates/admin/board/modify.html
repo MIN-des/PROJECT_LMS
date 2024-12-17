@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:replace="fragments/head::headFragment"></th:block>
+
+<body>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container">
+  <div class="page-inner">
+
+    <!-- Board Section -->
+    <div class="row">
+      <h1 class="text-center my-4" style="cursor: pointer;" onclick="location.href='/board/list'">학사 게시판</h1>
+      <div class="container">
+        <div>
+          <h2>게시글 수정</h2>
+        </div>
+        <!-- th:action을 사용하여 수정된 게시글을 서버로 보냄 -->
+        <form th:action="@{/admin/board/detail/{bno}/modify(bno=${bno})}" th:object="${registerFormDTO}"
+              method="post">
+          <div>
+            <label for="title">제목</label>
+            <input type="text" id="title" th:field="*{title}" class="form-control"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{title}"></div> <!-- 오류 메시지 -->
+          </div>
+          <div class="mb-3">
+            <label for="content">내용</label>
+            <!-- content textarea 크기 키우기 -->
+            <textarea class="form-control" rows="30" id="content" th:field="*{content}"
+                      th:text="*{content}"></textarea> <!-- rows 변경 -->
+          </div>
+          <hr class="my-4">
+          <!-- 수정 완료 버튼 -->
+          <button class="btn btn-outline-primary" type="submit">수정 완료</button>
+
+          <!-- 취소 버튼: 상세 페이지로 돌아가기 -->
+          <button class="btn btn-outline-secondary"
+                  th:onclick="|location.href='@{/board/detail/{bno}(bno=${bno})}'|"
+                  type="button">취소
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
+
+</body>
+</html>

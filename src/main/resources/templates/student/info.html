@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/head::headFragment"></th:block>
+<body>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container mt-8">
+  <div class="page-inner">
+
+    <div class="row">
+      <!-- Profile Card -->
+      <div class="col-md-4">
+        <div class="card text-center shadow">
+          <div class="card-body">
+            <!--<img src="/assets/img/profile.jpg" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 150px;"/>-->
+            <i class="fas fa-user-circle fa-10x text-muted d-flex flex-column align-items-center justify-content-center"></i>
+            <h4 th:text="${student.sName}" class="card-title"></h4>
+            <p class="text-muted mb-1" th:text="${student.sEmail}"></p>
+            <p class="text-muted" th:text="'학번 : ' + ${student.sId}"></p>
+            <a th:href="@{/student/modify/{sId}(sId=${student.sId})}" class="btn btn-outline-primary mt-3">
+              수정하기
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Section -->
+      <div class="col-md-8">
+        <div class="card shadow">
+          <div class="card-header bg-primary custom-card text-white text-center">
+            <h5>나의 정보</h5>
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered text-center">
+              <tbody>
+              <tr>
+                <th>학년</th>
+                <td th:text="${student.grade}"></td>
+              </tr>
+              <tr>
+                <th>연락처</th>
+                <td th:text="${student.sTel}"></td>
+              </tr>
+              <tr>
+                <th>생년월일</th>
+                <td th:text="${student.sBirth}"></td>
+              </tr>
+              <tr>
+                <th>주소</th>
+                <td th:text="${student.sAdd}"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card shadow">
+          <div class="card-header bg-secondary custom-purple text-white text-center">
+            <h5>추가 정보</h5>
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered text-center">
+              <tbody>
+              <tr>
+                <th>단과</th>
+                <td th:text="${student.sDept.koreanName}"></td>
+              </tr>
+              <tr>
+                <th>성별</th>
+                <td th:text="${student.sGen.koreanName}"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
+</body>
+</html>

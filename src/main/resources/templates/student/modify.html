@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/head::headFragment"></th:block>
+<body>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+    <div class="container mt-8">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card shadow">
+            <div class="card-header bg-primary custom-card text-white text-center">
+              <h5>학생 정보 수정</h5>
+            </div>
+            <div class="card-body">
+              <form th:action="@{/student/modify/{sId}(sId=${student.sId})}" th:object="${student}" method="post">
+                <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                  <span th:text="${errorMessage}"></span>
+                </div>
+                <div class="mb-3">
+                  <label for="sId" class="form-label">학번</label>
+                  <input type="text" class="form-control" id="sId" th:field="*{sId}" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="sName" class="form-label">이름</label>
+                  <input type="text" class="form-control" id="sName" th:field="*{sName}" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="pPw" class="form-label">비밀번호</label>
+                  <div class="input-group">
+                    <input type="password" id="pPw" value="******" class="form-control" readonly/>
+                    <button type="button" class="btn btn-outline-primary" onclick="toggleEdit('newPw')">수정
+                    </button>
+                  </div>
+                  <input type="password" id="newPw" name="newPw" class="form-control mt-2"
+                         placeholder="새 비밀번호 입력"
+                         style="display: none;">
+                </div>
+                <div class="mb-3">
+                  <label for="sTel" class="form-label">전화번호</label>
+                  <div class="input-group">
+                    <input type="text" id="sTel" th:value="${student.sTel}" class="form-control"
+                           readonly/>
+                    <button type="button" class="btn btn-outline-primary" onclick="toggleEdit('newSTel')">수정
+                    </button>
+                  </div>
+                  <input type="text" id="newSTel" name="newSTel" class="form-control mt-2"
+                         placeholder="새 전화번호 입력"
+                         style="display: none;">
+                </div>
+                <div class="mb-3">
+                  <label for="sAdd" class="form-label">주소</label>
+                  <div class="input-group">
+                    <input type="text" id="sAdd" th:value="${student.sAdd}" class="form-control"
+                           readonly/>
+                    <button type="button" class="btn btn-outline-primary" onclick="toggleAddressEdit()">수정
+                    </button>
+                  </div>
+                  <div id="newAddressContainer" style="display: none;" class="mt-2">
+                    <div class="input-group">
+                      <input type="text" id="newSAdd" name="newSAdd" class="form-control"
+                             placeholder="새 주소 입력"/>
+                      <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                              data-bs-target="#addressModal">주소 검색
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="sBirth" class="form-label">생년월일</label>
+                  <input type="date" class="form-control" id="sBirth" th:field="*{sBirth}" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="sEmail" class="form-label">이메일</label>
+                  <input type="email" class="form-control" id="sEmail" th:field="*{sEmail}" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="grade" class="form-label">학년</label>
+                  <input type="number" class="form-control" id="grade" th:field="*{grade}" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="sDept" class="form-label">단과</label>
+                  <input type="text" class="form-control" id="sDept" th:value="${student.sDept.koreanName}" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="sGen" class="form-label">성별</label>
+                  <input type="text" class="form-control" id="sGen" th:value="${student.sGen.koreanName}" readonly>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <button type="submit" class="btn btn-outline-primary">저장</button>
+                  <a th:href="@{/student/info}" class="btn btn-outline-danger">취소</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addressModalLabel">주소 검색</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <input type="text" id="addressSearchInput" class="form-control"
+                     placeholder="도로명 또는 지번 주소를 입력하세요">
+              <button type="button" class="btn btn-primary" onclick="searchAddress()">검색</button>
+            </div>
+            <div id="addressResult" class="list-group"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
+<script>
+  function toggleEdit(fieldId) {
+      const inputField = document.getElementById(fieldId);
+      if (inputField) {
+          inputField.style.display = "block";
+          inputField.focus();
+      }
+  }
+
+  function toggleAddressEdit() {
+      const newAddressContainer = document.getElementById("newAddressContainer");
+      if (newAddressContainer.style.display === "none") {
+          newAddressContainer.style.display = "block";
+      } else {
+          newAddressContainer.style.display = "none";
+      }
+  }
+
+</script>
+
+</body>
+<script>
+  function searchAddress() {
+     const query = document.getElementById('addressSearchInput').value;
+     if (!query) {
+         alert('주소를 입력하세요!');
+         return;
+     }
+
+     // Kakao 주소 검색 API 요청
+     const apiUrl = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}`;
+     const apiKey = ''; // 자신의 Kakao API 키로 변경
+
+     fetch(apiUrl, {
+         method: 'GET',
+         headers: { 'Authorization': `KakaoAK ${apiKey}` }
+     })
+         .then(response => response.json())
+         .then(data => {
+             const results = data.documents;
+             const resultContainer = document.getElementById('addressResult');
+             resultContainer.innerHTML = '';
+
+             if (results.length === 0) {
+                 resultContainer.innerHTML = '<div class="text-danger">검색 결과가 없습니다.</div>';
+                 return;
+             }
+
+             results.forEach(result => {
+                 const address = result.address_name;
+                 const item = document.createElement('button');
+                 item.classList.add('list-group-item', 'list-group-item-action');
+                 item.textContent = address;
+
+                 // 검색된 주소를 'newPAdd' 필드에 입력
+                 item.onclick = () => {
+                     document.getElementById('newSAdd').value = address;
+                     const modal = bootstrap.Modal.getInstance(document.getElementById('addressModal'));
+                     modal.hide(); // 모달 닫기
+                 };
+                 resultContainer.appendChild(item);
+             });
+         })
+         .catch(error => {
+             console.error('Error:', error);
+             alert('주소 검색 중 오류가 발생했습니다.');
+         });
+ }
+</script>
+</html>
