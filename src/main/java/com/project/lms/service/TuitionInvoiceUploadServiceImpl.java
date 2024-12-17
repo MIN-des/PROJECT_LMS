@@ -153,4 +153,9 @@ public class TuitionInvoiceUploadServiceImpl implements TuitionInvoiceUploadServ
 		// 데이터베이스에서 고지서 삭제
 		uploadRepository.delete(invoice);
 	}
+
+	public TuitionInvoiceUpload getInvoiceById(Long tId) {
+		return uploadRepository.findById(tId)
+				.orElseThrow(() -> new IllegalArgumentException("해당 등록금 고지서를 찾을 수 없습니다."));
+	}
 }

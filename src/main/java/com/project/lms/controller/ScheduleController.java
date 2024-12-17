@@ -18,13 +18,6 @@ import java.util.List;
 public class ScheduleController {
   private final ScheduleService scheduleService;
 
-//  @GetMapping("/list")
-//  public String scheduleList(Model model) {
-//    List<Schedule> schedules = scheduleService.getAllSchedules();
-//    model.addAttribute("schedules", schedules);
-//    return "schedule/list";
-//  }
-
   @GetMapping("/create")
   public String createScheduleForm(Model model) {
     model.addAttribute("schedule", new Schedule());
@@ -66,6 +59,4 @@ public class ScheduleController {
       model.addAttribute("totalPages", schedules.getTotalPages());
       return "schedule/list";
   }
-
-
 }

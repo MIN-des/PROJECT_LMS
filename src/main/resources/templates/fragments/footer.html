@@ -15,5 +15,64 @@
 
 <!-- Kaiadmin JS -->
 <script src="/assets/js/kaiadmin.min.js"></script>
+<script>
+  let currentDate = new Date().toISOString().split('T')[0]; // 오늘 날짜 초기값
+  let isMenuOpen = false; // 메뉴 열림 상태
+
+  function toggleMealMenu() {
+    const panel = document.getElementById('mealMenuPanel');
+    const button = document.getElementById('mealToggleBtn');
+
+    if (!isMenuOpen) {
+      // 슬라이드 창 열기
+      panel.style.right = '0';
+      button.style.right = '520px'; // 버튼도 함께 이동 (슬라이드 창 너비만큼)
+
+      // 데이터 로드 (메뉴 열릴 때 실행)
+      loadMealMenu(currentDate);
+    } else {
+      // 슬라이드 창 숨기기
+      panel.style.right = '-520px';
+      button.style.right = '0'; // 버튼 원래 위치로 돌아가기
+    }
+
+    isMenuOpen = !isMenuOpen; // 상태 반전
+  }
+
+  // 급식 데이터를 AJAX로 가져와서 테이블에 출력
+  function loadMealMenu(date) {
+    $.ajax({
+      url: '/meals',
+      type: 'GET',
+      data: { date: date },
+      success: function (data) {
+        const mealMenus = data.mealMenus;
+        const tableBody = document.getElementById('mealTableBody');
+        tableBody.innerHTML = ''; // 기존 데이터를 초기화
+
+        // 급식 데이터 테이블에 추가
+        mealMenus.forEach(meal => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${meal.mealType}</td>
+            <td>${meal.menu.replace(/<br\/>/g, '<br>')}</td>
+            <td>${meal.calories}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+        // 날짜 표시 업데이트
+        document.getElementById('mealDateDisplay').textContent = data.currentDate;
+
+        // 이전/다음 날짜 버튼 설정
+        document.getElementById('prevDayBtn').onclick = () => loadMealMenu(data.previousDate);
+        document.getElementById('nextDayBtn').onclick = () => loadMealMenu(data.nextDate);
+      },
+      error: function () {
+        alert('급식 정보를 불러오는 중 오류가 발생했습니다.');
+      }
+    });
+  }
+</script>
 </th:block>
 </html>

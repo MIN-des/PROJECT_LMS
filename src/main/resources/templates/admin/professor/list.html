@@ -32,11 +32,11 @@
           <input type="text" name="keyword" id="searchForm" placeholder="검색어 입력" th:value="${keyword}" class="form-control">
         </div>
         <div class="col-md-1">
-          <button type="submit" class="btn btn-outline-primary custom-btn">검색</button>
+          <button type="submit" class="btn btn-label-primary custom-btn">검색</button>
         </div>
         <div class="col-md-4"></div>
         <div class="col-md-2 d-flex justify-content-end">
-          <a th:href="@{/admin/professors/create}" class="btn btn-outline-primary">교수 추가</a>
+          <a th:href="@{/admin/professors/create}" class="btn btn-label-primary">교수 추가</a>
         </div>
       </div>
     </form>
@@ -82,7 +82,7 @@
           <td th:text="${professor.year}"></td>
           <td>
             <a th:href="@{'/admin/professors/' + ${professor.pId} + '?page=' + ${currentPage} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + '&isSorted=' + ${isSorted}}"
-               class="btn btn-outline-primary custom-btn">정보</a>
+               class="btn btn-label-primary custom-btn">정보</a>
           </td>
         </tr>
         </tbody>
@@ -111,6 +111,7 @@
     </div>
   </div>
 </div>
+<th:block th:replace="fragments/meal::mealFragment"></th:block>
 <th:block th:replace="fragments/footer::footerFragment"></th:block>
 
 </body>

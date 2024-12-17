@@ -16,7 +16,7 @@
 
     <div th:if="${invoices != null && invoices.size() > 0}">
       <table class="table table-bordered table-hover text-center">
-        <thead class="table-light">
+        <thead class="table-dark">
         <tr>
           <th>파일명</th>
           <th>학번</th>
@@ -36,7 +36,7 @@
             <a th:href="@{'/student/invoices/download/' + ${invoice.tId}}" class="btn btn-label-primary btn-sm">다운로드</a>
           </td>
           <td>
-            <button class="btn btn-primary btn-sm" th:attr="data-id=${invoice.tId}"
+            <button class="btn btn-label-secondary btn-sm" th:attr="data-id=${invoice.tId}"
                     onclick="previewInvoiceFromData(this)">미리보기
             </button>
           </td>
@@ -53,7 +53,7 @@
     <div class="row mt-4">
       <div class="col-md-12">
         <div id="preview-container" class="card shadow" style="display: none;">
-          <div class="card-header bg-info-gradient text-white text-center">
+          <div class="card-header bg-info custom-purple text-white text-center">
             <h5>등록금 고지서 미리보기</h5>
           </div>
           <div class="card-body">

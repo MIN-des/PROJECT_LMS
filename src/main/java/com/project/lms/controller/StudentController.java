@@ -3,6 +3,7 @@ package com.project.lms.controller;
 import com.project.lms.dto.StudentDTO;
 import com.project.lms.dto.TuitionInvoiceUploadDTO;
 import com.project.lms.entity.Student;
+import com.project.lms.entity.TuitionInvoiceUpload;
 import com.project.lms.repository.StudentRepository;
 import com.project.lms.service.StudentService;
 import com.project.lms.service.TuitionInvoiceUploadService;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.util.List;
@@ -145,13 +148,21 @@ public class StudentController {
       log.warn("Unauthorized access attempt by student ID: {} for invoice ID: {}", sId, tId);
       throw new AccessDeniedException("접근 권한이 없습니다.");
     }
+    // 등록금 고지서 엔티티 가져오기
+    TuitionInvoiceUpload invoice = tuitionInvoiceUploadService.getInvoiceById(tId);
+
+    // 엔티티에서 파일 이름 가져오기
+    String originalFileName = invoice.getFileName();
+
+    // 파일 이름 UTF-8로 인코딩
+    String encodedFileName = URLEncoder.encode(originalFileName, StandardCharsets.UTF_8.toString()).replace("+", "%20");
 
     byte[] fileData = tuitionInvoiceUploadService.downloadInvoice(tId);
     log.info("File downloaded successfully for invoice ID: {}", tId);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_PDF);
-    headers.setContentDispositionFormData("attachment", "invoice_" + tId + ".pdf");
+    headers.setContentDispositionFormData("attachment", encodedFileName);
 
     return ResponseEntity.ok()
         .headers(headers)

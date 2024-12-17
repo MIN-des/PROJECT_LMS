@@ -144,7 +144,9 @@
                 <a class="nav-link dropdown-toggle user-dropdown" href="#" id="navbarDropdown" role="button"
                    data-bs-toggle="dropdown" aria-expanded="false">
                   <div class="user-info d-flex align-items-center">
-                    <i class="fas fa-user-circle fa-lg me-2"></i>
+                    <i th:if="${#authorization.expression('hasRole(''ROLE_STUDENT'')')}" class="fa-solid fa-user-pen fa-lg me-2"></i>
+                    <i th:if="${#authorization.expression('hasRole(''ROLE_PROFESSOR'')')}" class="fa-solid fa-user-tie fa-lg me-2"></i>
+                    <i th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="fa-solid fa-user-gear fa-lg me-2"></i>
                     <span class="user-name" th:text="${userName}">로그인 이름</span>
                   </div>
                 </a>
@@ -152,18 +154,21 @@
                   <li>
                     <div class="user-box">
                       <div class="avatar-lg d-flex flex-column align-items-center justify-content-center">
-                        <i class="fas fa-user-circle fa-3x text-muted d-flex flex-column align-items-center justify-content-center"></i>
+                        <i th:if="${#authorization.expression('hasRole(''ROLE_STUDENT'')')}" class="fa-solid fa-user-pen fa-3x text-muted d-flex flex-column align-items-center justify-content-center"></i>
+                        <i th:if="${#authorization.expression('hasRole(''ROLE_PROFESSOR'')')}" class="fa-solid fa-user-tie fa-3x text-muted d-flex flex-column align-items-center justify-content-center"></i>
+                        <i th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="fa-solid fa-user-gear fa-3x text-muted d-flex flex-column align-items-center justify-content-center"></i>
                       </div>
                       <div class="u-text">
                         <h4 th:text="${userId}">로그인 아이디</h4>
                         <p class="text-muted" th:text="${userName}">로그인 이름</p>
                       </div>
                       <a th:if="${#authorization.expression('hasRole(''ROLE_STUDENT'')')}"
-                         th:href="@{/student/info}" class="btn btn-outline-primary custom-btn d-flex align-items-center justify-content-center">내 정보</a>
+                         th:href="@{/student/info}" class="btn btn-label-primary custom-btn d-flex align-items-center justify-content-center">내 정보</a>
                       <a th:if="${#authorization.expression('hasRole(''ROLE_PROFESSOR'')')}"
-                         th:href="@{/professor/info}" class="btn btn-outline-primary custom-btn d-flex align-items-center justify-content-center">내 정보</a>
+                         th:href="@{/professor/info}" class="btn btn-label-primary custom-btn d-flex align-items-center justify-content-center">내 정보</a>
                       <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
-                         th:href="@{/admin/students}" class="btn btn-outline-primary custom-btn d-flex align-items-center justify-content-center">목록</a>
+                         th:href="@{/admin/students}" class="btn btn-label-primary custom-btn d-flex align-items-center justify-content-center" data-bs-toggle="modal"
+                         data-bs-target="#adminInfoModal">정보</a>
                     </div>
                   </li>
                   <li>
@@ -177,6 +182,68 @@
         </nav>
         <!-- End Navbar -->
       </header>
+      <!-- Modal -->
+      <div class="modal fade" id="adminInfoModal" tabindex="-1" aria-labelledby="adminInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content custom-modal">
+            <div class="modal-header custom-modal-header">
+              <h5 class="modal-title" id="adminInfoModalLabel">관리자 정보</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body custom-modal-body">
+              <!-- 관리자 기본 정보 -->
+              <div class="admin-info">
+                <p class="admin-id">
+                  <i class="fas fa-user-shield"></i>
+                  <strong>관리자 ID </strong>
+                  <span th:text="${userId}" class="admin-detail">admin_id</span>
+                </p>
+                <p class="admin-dept">
+                  <i class="fas fa-tags"></i>
+                  <strong>관리자 부서 </strong>
+                  <span th:text="${userName}" class="admin-detail">admin_name</span>
+                </p>
+              </div>
+              <hr>
+              <h6>부서 연락처</h6>
+              <ul class="department-list">
+                <li>
+                  <i class="fas fa-cogs"></i>
+                  총무처 <span>02-123-4567</span>
+                </li>
+                <li>
+                  <i class="fas fa-chalkboard-teacher"></i>
+                  교무처 <span>02-234-5678</span>
+                </li>
+                <li>
+                  <i class="fas fa-handshake"></i>
+                  대외협력처 <span>02-345-6789</span>
+                </li>
+                <li>
+                  <i class="fas fa-bullhorn"></i>
+                  홍보처 <span>02-456-7890</span>
+                </li>
+              </ul>
+              <hr>
+              <!-- 시스템 오류 연락처 -->
+              <div class="error-contact-section">
+                <h6 class="section-title">
+                  <i class="fas fa-exclamation-circle"></i>
+                  시스템 오류 시 연락처
+                </h6>
+                <div class="facility-contact">
+                  <i class="fas fa-tools"></i>
+                  <span class="contact-label">시설팀</span>
+                  <strong class="contact-number">02-789-0123</strong>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer custom-modal-footer">
+              <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
   </th:block>
 </html>

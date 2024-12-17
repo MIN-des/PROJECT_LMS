@@ -1,6 +1,7 @@
 package com.project.lms.controller;
 
 import com.project.lms.dto.TuitionInvoiceUploadDTO;
+import com.project.lms.entity.TuitionInvoiceUpload;
 import com.project.lms.service.TuitionInvoiceUploadService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -12,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -51,26 +54,26 @@ public class TuitionInvoiceController {
 		return "redirect:/admin/invoices/student?sId=" + sId;
 	}
 
-	// 학생 아이디에 저장된 고지서 목록 가져오기
-//	@GetMapping("/student/{sId}")
-//	@ResponseBody
-//	public List<TuitionInvoiceUploadDTO> getStudentInvoices(@PathVariable String sId) {
-//		return uploadService.getInvoicesByStudentId(sId);
-//	}
-
 	// 등록금 고지서 다운로드
 	@GetMapping("/download/{tId}")
 	public ResponseEntity<byte[]> downloadInvoice(@PathVariable Long tId) throws Exception {
 
-		// 서비스 계층 메소드 downloadInvoice 를 호출해 파일 데이터를 byte 배열로 읽어옴
-		byte[] fileData = uploadService.downloadInvoice(tId);
+		// 등록금 고지서 엔티티와 파일 데이터 가져오기
+		TuitionInvoiceUpload invoice = uploadService.getInvoiceById(tId);
+		byte[] fileData = uploadService.downloadInvoice(tId); // 파일 데이터 가져오기
+
+		// 엔티티에 저장된 파일 이름 가져오기
+		String originalFileName = invoice.getFileName();
+
+		// 파일 이름 UTF-8로 인코딩
+		String encodedFileName = URLEncoder.encode(originalFileName, StandardCharsets.UTF_8.toString()).replace("+", "%20");
 
 		// 응답 헤더 설정을 위한 객체 생성
 		HttpHeaders headers = new HttpHeaders();
 		//응답 본문의 컨텐츠 타입을 application/pdf 로 설정, 이를 보고 클라이언트는 응답 데이터가 pdf 파일임을 인식
 		headers.setContentType(MediaType.APPLICATION_PDF);
 		// ContentDisposition 헤더를 설정하여 파일 다운로드, "등록금고지서.pdf" 클라이언트가 다운로드할 때 표시될 파일 이름
-		headers.setContentDispositionFormData("attachment", "등록금고지서.pdf");
+		headers.setContentDispositionFormData("attachment", encodedFileName);
 
 		return ResponseEntity.ok()
 				.headers(headers)

@@ -12,6 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class MainController {
@@ -35,6 +39,14 @@ public class MainController {
       CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
       model.addAttribute("userName", userDetails.getUsername());
     }
+    // 날짜 리스트 생성 (오늘 날짜부터 7일)
+    List<LocalDate> dateList = new ArrayList<>();
+    LocalDate today = LocalDate.now();
+    for (int i = 0; i <= 7; i++) {
+      dateList.add(today.plusDays(i));
+    }
+    model.addAttribute("dateList", dateList); // 날짜 리스트 추가
+
     return "main";  // main.html 파일을 찾아 반환
   }
 
