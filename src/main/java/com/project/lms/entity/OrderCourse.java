@@ -27,9 +27,6 @@ public class OrderCourse extends BaseEntity {
   @JoinColumn(name = "oId") // order_id
   private Order order;
 
-  private int count = 1; // 강의 담을 개수(무조건 1개)
-  private Dept pDept;
-
   public static OrderCourse createOrderCourse(Course course) {
     OrderCourse orderCourse = new OrderCourse();
     orderCourse.setCourse(course);

@@ -58,8 +58,7 @@ public class ProfessorServiceImpl implements ProfessorService {
             .orElseThrow(() -> new EntityNotFoundException("Professor with id " + pId + " not found"));
 
     // 교직원 번호 중복 확인
-    if (!professor.getPId().equals(professorDTO.getPId()) &&
-            professorRepository.existsById(professorDTO.getPId())) {
+    if (!professor.getPId().equals(professorDTO.getPId()) && professorRepository.existsById(professorDTO.getPId())) {
       throw new IllegalArgumentException("이미 중복된 교직원 번호가 존재합니다: " + professorDTO.getPId());
     }
 

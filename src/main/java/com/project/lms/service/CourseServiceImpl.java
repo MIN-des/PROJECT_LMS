@@ -40,7 +40,6 @@ public class CourseServiceImpl implements CourseService {
               courseDTO.setCredits(course.getCredits());
               courseDTO.setMaxCapacity(course.getMaxCapacity());
               courseDTO.setRestNum(course.getRestNum());
-              courseDTO.setPName(course.getProfessor().getPName());
 
               return courseDTO;
             });
@@ -57,8 +56,6 @@ public class CourseServiceImpl implements CourseService {
               courseDTO.setCredits(course.getCredits());
               courseDTO.setMaxCapacity(course.getMaxCapacity());
               courseDTO.setRestNum(course.getRestNum());
-              courseDTO.setPName(course.getProfessor().getPName());
-
 
               return courseDTO;
             });
@@ -76,8 +73,6 @@ public class CourseServiceImpl implements CourseService {
               courseDTO.setCredits(course.getCredits());
               courseDTO.setMaxCapacity(course.getMaxCapacity());
               courseDTO.setRestNum(course.getRestNum());
-              courseDTO.setPName(course.getProfessor().getPName());
-
 
               return courseDTO;
             });
@@ -164,6 +159,19 @@ public class CourseServiceImpl implements CourseService {
   @Override
   public Page<CourseDTO> searchCourseByProfessor_pId(String pId, Pageable pageable) {
     return courseRepository.findByProfessor_pIdContainingIgnoreCase(pId, pageable)
+            .map(course -> {
+              CourseDTO courseDTO = modelMapper.map(course, CourseDTO.class);
+              courseDTO.setPId(course.getProfessor().getPId()); // 수동 매핑
+              courseDTO.setPDept(course.getProfessor().getPDept());
+              courseDTO.setPName(course.getProfessor().getPName());
+
+              return courseDTO;
+            });
+  }
+
+  @Override
+  public Page<CourseDTO> searchCourseByProfessor_pName(String pName, Pageable pageable) {
+    return courseRepository.findByProfessor_pNameContainingIgnoreCase(pName, pageable)
             .map(course -> {
               CourseDTO courseDTO = modelMapper.map(course, CourseDTO.class);
               courseDTO.setPId(course.getProfessor().getPId()); // 수동 매핑

@@ -1,16 +1,17 @@
 package com.project.lms.entity;
 
-import com.project.lms.constant.Dept;
 import com.project.lms.dto.CourseDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -43,12 +44,11 @@ public class Course extends BaseEntity {
 
   // 강의 생성 시 초기화 메서드
   @PrePersist
-  public void initializeMaxCapacity() {
-    // 처음 강의 생성 시 maxCapacity를 restNum과 동기화
-    if (this.restNum > 0) {
-      this.maxCapacity = this.restNum;
+  public void initializeMaxCapacityAndRestNum() {
+    if (this.maxCapacity > 0) {
+      this.restNum = this.maxCapacity;
     } else {
-      throw new IllegalArgumentException("잔여 인원(restNum)은 0보다 커야 합니다.");
+      throw new IllegalArgumentException("수강 정원(maxCapacity)은 0보다 커야 합니다.");
     }
   }
 

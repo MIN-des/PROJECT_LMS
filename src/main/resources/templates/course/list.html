@@ -1,92 +1,87 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <title>Course List</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
-  <style>
-    table th, table td {
-        text-align: center;
-        vertical-align: middle;
-    }
-  </style>
 
-  <!-- CSS Files -->
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="/assets/css/plugins.min.css"/>
-  <link rel="stylesheet" href="/assets/css/kaiadmin.min.css"/>
-
-  <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link rel="stylesheet" href="/assets/css/demo.css"/>
-</head>
+<th:block th:replace="fragments/head::headFragment"></th:block>
 
 <body>
-<div class="container mt-5">
+<th:block th:replace="fragments/header::headerFragment"></th:block>
 
-  <div th:if="${successMessage}" class="alert alert-success" role="alert">
-    <p th:text="${successMessage}"></p>
-  </div>
-
-  <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-    <p th:text="${errorMessage}"></p>
-  </div>
-
-  <h1 class="text-center mb-4">Course List</h1>
-
-  <div class="container mt-4">
-    <form th:action="@{/professor/courses/list}" method="get" class="row g-3">
-      <div class="col-auto">
-        <select class="form-select" name="searchType" required>
-          <option th:selected="${searchType == 'id'}" value="id">강의 ID</option>
-          <option th:selected="${searchType == 'name'}" value="name">강의명</option>
-          <option th:selected="${searchType == 'pId'}" value="pId">교수명</option>
-        </select>
+<div class="container">
+  <div class="page-inner">
+    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+      <div>
+        <h3 class="fw-bold mb-3">
+          <a th:href="@{/professor/courses/list}" class="text-decoration-none text-dark">전체 강의 리스트</a>
+        </h3>
       </div>
-      <div class="col-auto">
-        <input type="text" class="form-control" name="searchQuery" th:value="${searchQuery}"
-               placeholder="검색어 입력" required/>
-      </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-outline-primary">검색</button>
-      </div>
+    </div>
 
-      <!-- 오른쪽 정렬 -->
-      <div class="col-auto ms-auto">
-        <a th:href="@{/professor/courses/create}" class="btn btn-label-info"><b>New</b></a>
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+      <p th:text="${successMessage}"></p>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+      <p th:text="${errorMessage}"></p>
+    </div>
+
+    <form th:action="@{/professor/courses/list}" method="get" class="mb-3">
+      <div class="row">
+        <div class="col-md-1">
+          <select class="form-select" id="searchType" name="searchType" required>
+            <option th:selected="${searchType == 'id'}" value="id">강의 ID</option>
+            <option th:selected="${searchType == 'name'}" value="name">강의명</option>
+            <option th:selected="${searchType == 'pId'}" value="pId">교수번호</option>
+            <option th:selected="${searchType == 'pName'}" value="pName">교수명</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <input type="text" class="form-control" id="searchForm" name="searchQuery" th:value="${searchQuery}"
+                 placeholder="검색어 입력"/>
+        </div>
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-outline-primary custom-btn">검색</button>
+        </div>
+
+        <div class="col-md-4"></div>
+        <div class="col-md-2 d-flex justify-content-end">
+          <a th:href="@{/professor/courses/create}" class="btn btn-outline-primary"><b>강의 등록</b></a>
+        </div>
       </div>
     </form>
-    <br>
 
     <!-- Courses Table -->
     <div class="table-responsive">
-      <table class="table table-bordered table-hover">
-        <thead class="table-light">
+      <table class="table table-bordered table-hover text-center">
+        <thead class="table-dark">
         <tr>
-          <th>ID</th>
+          <th>강의 ID</th>
+          <th>개설 학과</th>
+          <th>교수번호</th>
+          <th>교수명</th>
           <th>강의명</th>
           <th>학점</th>
           <th>수강 정원</th>
           <th>잔여 인원</th>
-          <th>강의 교수</th>
           <th>수정 | 삭제</th>
         </tr>
         </thead>
         <tbody>
+
         <tr th:each="course : ${page.content}">
-          <td th:text="${course.cId}"></td>
+          <td th:text="C + ${course.cId}"></td>
+          <td th:text="${course.pDept.koreanName}"></td>
+          <td th:text="${course.pId}"></td>
+          <td th:text="${course.pName}"></td>
           <td th:text="${course.cName}"></td>
           <td th:text="${course.credits}"></td>
           <td th:text="${course.maxCapacity}"></td>
           <td th:text="${course.restNum}"></td>
-          <td th:text="${course.pId}"></td> <!-- 교수 이름으로 표시 -->
           <td>
             <a th:href="@{/professor/courses/update/{cId}(cId=${course.cId})}"
-               class="btn btn-sm btn-outline-primary">수정</a>
+               class="btn btn-sm btn-outline-primary custom-btn">수정</a>
             <form th:action="@{/professor/courses/delete}" method="post" style="display: inline;">
               <input type="hidden" name="cId" th:value="${course.cId}"/>
-              <button type="submit" class="btn btn-sm btn-outline-danger"
+              <button type="submit" class="btn btn-sm btn-outline-danger custom-btn"
                       onclick="return confirm('해당 강의를 삭제하시겠습니까?')">
                 삭제
               </button>
@@ -98,31 +93,43 @@
     </div>
 
     <div>
-      <nav>
-        <ul class="pagination">
+      <!-- 페이징 -->
+      <nav th:if="${page.totalPages > 0}">
+        <ul class="pagination justify-content-center">
           <!-- 이전 버튼 -->
-          <li class="page-item" th:classappend="${page.hasPrevious()} ? '' : 'disabled'">
-            <a class="page-link" th:href="@{/professor/courses/list(page=${page.number - 1})}"
-               tabindex="-1">이전</a>
+          <li class="page-item" th:classappend="${currentPage > 1} ? '' : 'disabled'">
+            <a class="page-link"
+               th:href="@{/professor/courses/list(page=${currentPage - 1}, searchType=${searchType}, searchQuery=${searchQuery})}">
+              이전
+            </a>
           </li>
 
-          <!-- 페이지 번호 버튼 -->
-          <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
-              th:classappend="${page.number == i} ? 'active' : ''">
-            <!-- 페이지 번호는 i+1로 표시, URL은 i를 사용 -->
-            <a class="page-link" th:href="@{/professor/courses/list(page=${i})}" th:text="${i+1}"></a>
+          <!-- 페이지 번호 -->
+          <li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage)}"
+              th:classappend="${currentPage == i} ? 'active' : ''">
+            <a class="page-link"
+               th:href="@{/professor/courses/list(page=${i}, searchType=${searchType}, searchQuery=${searchQuery})}"
+               th:text="${i}"></a>
           </li>
 
           <!-- 다음 버튼 -->
-          <li class="page-item" th:classappend="${page.hasNext()} ? '' : 'disabled'">
-            <a class="page-link" th:href="@{/professor/courses/list(page=${page.number + 1})}">이전</a>
+          <li class="page-item" th:classappend="${currentPage < page.totalPages} ? '' : 'disabled'">
+            <a class="page-link"
+               th:href="@{/professor/courses/list(page=${currentPage + 1}, searchType=${searchType}, searchQuery=${searchQuery})}">
+              다음
+            </a>
           </li>
         </ul>
       </nav>
+
+      <!-- 페이징 숨기기 -->
+      <div th:if="${page.totalPages == 0}" class="text-center mt-4">
+        <p>페이지가 없습니다.</p>
+      </div>
     </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 </body>
 </html>

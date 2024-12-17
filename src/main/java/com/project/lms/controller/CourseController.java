@@ -107,6 +107,7 @@ public class CourseController { // 강의 조회(권한 전체), 생성/수정/�
             if (!searchQuery.matches("\\d+")) {
               throw new IllegalArgumentException("강의 ID는 숫자만 입력 가능합니다.");
             }
+
             coursePage = courseService.searchCoursesById(Long.parseLong(searchQuery), pageable);
             break;
           case "name":
@@ -114,6 +115,9 @@ public class CourseController { // 강의 조회(권한 전체), 생성/수정/�
             break;
           case "pId":
             coursePage = courseService.searchCourseByProfessor_pId(searchQuery, pageable);
+            break;
+          case "pName":
+            coursePage = courseService.searchCourseByProfessor_pName(searchQuery, pageable);
             break;
           default:
             throw new IllegalArgumentException("유효하지 않은 검색 유형입니다.");
@@ -254,6 +258,7 @@ public class CourseController { // 강의 조회(권한 전체), 생성/수정/�
             if (!searchQuery.matches("\\d+")) {
               throw new IllegalArgumentException("강의 ID는 숫자만 입력 가능합니다.");
             }
+
             coursePage = courseService.searchMyCoursesById(pId, Long.parseLong(searchQuery), pageable);
             break;
           case "name":

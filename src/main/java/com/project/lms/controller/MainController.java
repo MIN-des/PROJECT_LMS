@@ -2,6 +2,9 @@ package com.project.lms.controller;
 
 import com.project.lms.config.CustomUserDetails;
 import com.project.lms.entity.Schedule;
+import com.project.lms.repository.AdminRepository;
+import com.project.lms.repository.ProfessorRepository;
+import com.project.lms.repository.StudentRepository;
 import com.project.lms.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor

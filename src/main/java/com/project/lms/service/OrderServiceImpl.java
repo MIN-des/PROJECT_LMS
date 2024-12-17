@@ -7,15 +7,12 @@ import com.project.lms.repository.CourseRepository;
 import com.project.lms.repository.OrderRepository;
 import com.project.lms.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +23,16 @@ public class OrderServiceImpl implements OrderService {
   private final StudentRepository studentRepository;
   private final CourseRepository courseRepository;
   private final OrderRepository orderRepository;
+
+  // 학생이 수강 신청한 교수 목록 가져오기
+  public List<Professor> getProfessorsByStudent(String sId) {
+    return orderRepository.findProfessorsByStudent_sId(sId);
+  }
+
+  // 교수가 담당하는 강의를 수강 신청한 학생 목록 가져오기
+  public List<Student> getStudentsByProfessor(String pId) {
+    return orderRepository.findStudentsByProfessor_pId(pId);
+  }
 
   public void updateScore(Long oId, Integer score) {
     if (oId == null) {
