@@ -1,5 +1,6 @@
 package com.project.lms.dto;
 
+import com.project.lms.constant.Dept;
 import com.project.lms.constant.RestStatus;
 import com.project.lms.entity.Course;
 import com.project.lms.entity.Professor;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -33,7 +35,13 @@ public class CourseDTO {
 
     private int maxCapacity; // 최대 정원 수
 
+    private LocalDateTime regTime;
+
     private String pId; // 교수 ID
+
+    private Dept pDept;
+
+    private String pName;
 
     private List<String> studentIds; // 강의를 신청한 학생 ID 목록
 

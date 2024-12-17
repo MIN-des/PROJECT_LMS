@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="mealFragment">
+  <div class="card shadow-lg border-0 rounded-3" id="mealMenuPanel">
+    <div class="card-header custom-card text-white text-center py-3 rounded-top">
+      <h4 class="mb-0 fw-bold">학식 메뉴</h4>
+    </div>
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- 이전날 버튼 -->
+        <button id="prevDayBtn" class="btn btn-label-primary1 btn-sm d-flex align-items-center">
+          <i class="fas fa-chevron-left me-1"></i>
+        </button>
+
+        <!-- 날짜 표시 -->
+        <span id="mealDateDisplay" class="fw-bold fs-5 text-primary" style="color: #2a2f5b !important;">오늘</span>
+
+        <!-- 다음날 버튼 -->
+        <button id="nextDayBtn" class="btn btn-label-primary1 btn-sm d-flex align-items-center">
+          <i class="fas fa-chevron-right ms-1"></i>
+        </button>
+      </div>
+
+      <!-- 급식 메뉴 테이블 -->
+      <div class="table-responsive">
+        <table id="mealTable" class="table table-hover table-bordered text-center align-middle fixed-table">
+          <thead class="table-primary">
+          <tr>
+            <th class="fw-bold" style="width: 20%;">식사</th>
+            <th class="fw-bold" style="width: 60%;">메뉴</th>
+            <th class="fw-bold" style="width: 20%;">칼로리</th>
+          </tr>
+          </thead>
+          <tbody id="mealTableBody" class="table-light">
+          <!-- JavaScript가 데이터를 삽입합니다 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 급식 메뉴 토글 버튼 (슬라이드 창 테두리에 붙임) -->
+  <div id="mealToggleBtn">
+    <button onclick="toggleMealMenu()" class="custom-toggle-btn">
+      <img src="/assets/img/meal.png" alt="아이콘" style="
+      width: 24px;
+      height: 24px;
+      transition: transform 0.2s ease; /* 부드러운 회전 효과 */">
+    </button>
+  </div>
+
+</th:block>
+</html>

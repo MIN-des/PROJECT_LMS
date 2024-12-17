@@ -6,6 +6,8 @@ import com.project.lms.entity.Files;
 import com.project.lms.service.admin.BoardServiceImpl;
 import com.project.lms.service.admin.FileServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -20,14 +22,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
 import javax.validation.Valid;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -147,10 +150,15 @@ public class BoardController {
     if (bindingResult.hasErrors()) {
       return "admin/board/register";
     }
+
     // Spring Security를 사용하여 현재 로그인된 사용자 ID 가져오기
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String writer = authentication.getName(); // 로그인된 사용자의 ID
 
+    // XSS 공격 방지를 위한 필터링 적용 (이미지 태그 허용)
+//    String sanitizedContent = Jsoup.clean(registerFormDto.getContent(),
+//            Safelist.relaxed().addTags("img").addAttributes("img", "src", "alt", "title")); // 수정: 이미지 태그와 속성 허용
+//    registerFormDto.setContent(sanitizedContent);
 
     //게시글 생성
     Board newBoard = this.boardServiceImpl.create(registerFormDto.getTitle(), registerFormDto.getContent());
@@ -184,6 +192,30 @@ public class BoardController {
 
     return "redirect:/board/list";
   }
+
+  // 이미지 업로드 API
+  @PostMapping("/board/upload/image")
+  @ResponseBody
+  public Map<String, String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+    // 파일 저장 경로 설정
+    String originalFilename = file.getOriginalFilename();
+    String uuid = UUID.randomUUID().toString();
+    String savedFileName = uuid + "_" + originalFilename;
+
+    File targetFile = new File(uploadDir, savedFileName);
+    if (!targetFile.getParentFile().exists()) {
+      targetFile.getParentFile().mkdirs();
+    }
+
+    // 파일 저장
+    file.transferTo(targetFile);
+
+    // 업로드된 파일 URL 반환
+    String fileUrl = "/uploaded-images/" + savedFileName;
+    return Map.of("url", fileUrl); // 클라이언트에 URL을 반환
+  }
+
+
 
   // 게시글 수정 폼
   @GetMapping("/admin/board/detail/{bno}/modify")
@@ -260,8 +292,9 @@ public class BoardController {
     }
 
     return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFName() + "\"")
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + UriUtils.encode(file.getFName(), "UTF-8"))
             .body(resource);
   }
+
 
 }

@@ -21,7 +21,7 @@ class AdminServiceTest {
 	@Test
 	void testCreateMultipleStudents() {
 		Random random = new Random();
-		for (int i = 1; i <= 250; i++) {
+		for (int i = 1; i <= 2; i++) {
 			StudentDTO studentDTO = new StudentDTO();
 			String studentId = String.format("S%07d", i); // P0000001, P0000002 ...
 			studentDTO.setSId(studentId);

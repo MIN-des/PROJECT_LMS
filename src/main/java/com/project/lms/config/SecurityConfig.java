@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/");
 
         http.authorizeRequests()
-                .antMatchers("/", "/login", "/board","/board/**", "/student/invoices/preview/**", "/invoices/download/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
+                .antMatchers("/", "/login", "/board","/board/**","schedule/**", "/student/invoices/preview/**", "/invoices/download/**", "/meals/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
                 .antMatchers("/dashboard", "/dashboard/**").permitAll()
 
             // 정적 자원에 대한 접근 허용(주로 쓰는 건 assets 안에 있음)
@@ -65,6 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/admin/**").hasAuthority(Role.ROLE_ADMIN.name()) // "ROLE_ADMIN"
             .antMatchers("/student/**").hasAuthority(Role.ROLE_STUDENT.name()) // "ROLE_STUDENT"
             .antMatchers("/professor/**").hasAuthority(Role.ROLE_PROFESSOR.name()) // "ROLE_PROFESSOR"
+            // 채팅 접근 허용: 학생과 교수 권한
+            .antMatchers("/message/**").hasAnyAuthority(Role.ROLE_STUDENT.name(), Role.ROLE_PROFESSOR.name())
             .anyRequest().authenticated();
 
         http.exceptionHandling()

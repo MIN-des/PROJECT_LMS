@@ -11,7 +11,14 @@ import java.util.Optional;
 
 public interface CourseService {
 
-  List<Course> getCoursesByProfessorId(String pId);
+  // 특정 교수의 모든 강의 조회 (페이징 포함)
+  Page<CourseDTO> getMyCourses(String pId, Pageable pageable);
+
+  // 특정 교수의 강의를 ID로 검색
+  Page<CourseDTO> searchMyCoursesById(String pId, Long cId, Pageable pageable);
+
+  // 특정 교수의 강의를 이름으로 검색
+  Page<CourseDTO> searchMyCoursesByName(String pId, String cName, Pageable pageable);
 
   CourseDTO createCourse(CourseDTO courseDTO);
 
@@ -25,6 +32,8 @@ public interface CourseService {
   Page<CourseDTO> searchCoursesById(Long cId, Pageable pageable);
 
   Page<CourseDTO> searchCourseByProfessor_pId(String pId, Pageable pageable);
+
+  Page<CourseDTO> searchCourseByProfessor_pName(String pName, Pageable pageable);
 
   Page<CourseDTO> searchCoursesByName(String cName, Pageable pageable);
 

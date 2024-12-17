@@ -1,5 +1,7 @@
 package com.project.lms.entity;
 
+import com.project.lms.constant.Dept;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,8 +26,6 @@ public class OrderCourse extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "oId") // order_id
   private Order order;
-
-  private int count = 1; // 강의 담을 개수(무조건 1개)
 
   public static OrderCourse createOrderCourse(Course course) {
     OrderCourse orderCourse = new OrderCourse();

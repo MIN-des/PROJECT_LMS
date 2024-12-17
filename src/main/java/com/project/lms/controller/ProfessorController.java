@@ -41,8 +41,19 @@ public class ProfessorController {
     return "professor/info";
   }
 
-  // 교수 자신의 정보 업데이트 (주소, 전화번호, 비밀번호)
-  @PostMapping("/info")
+  // 교수 내정보 수정 페이지 이동
+  @GetMapping("/modify")
+  public String modifyProfessorInfo(Model model, Principal principal) {
+    String pId = principal.getName(); // 로그인된 교수의 ID 가져오기
+    Professor professor = professorRepository.findById(pId)
+            .orElseThrow(() -> new IllegalArgumentException("Professor not found for ID: " + pId));
+
+    model.addAttribute("professor", professor); // 교수 정보 전달
+    return "professor/modify"; // modify.html 렌더링
+  }
+
+  // 교수 내정보 수정 처리
+  @PostMapping("/modify/{pId}")
   public String updateProfessorInfo(
           @Valid @ModelAttribute("professor") Professor updatedProfessor,
           BindingResult bindingResult,
@@ -53,10 +64,10 @@ public class ProfessorController {
           RedirectAttributes redirectAttributes) {
 
     if (bindingResult.hasErrors()) {
-      return "professor/info";
+      return "professor/modify"; // 에러 발생 시 다시 수정 페이지로 이동
     }
 
-    String pId = principal.getName();
+    String pId = principal.getName(); // 로그인된 교수 ID
     Professor professor = professorRepository.findById(pId)
             .orElseThrow(() -> new IllegalArgumentException("Professor not found for ID: " + pId));
 
@@ -75,11 +86,12 @@ public class ProfessorController {
       professor.setPAdd(newPAdd);
     }
 
-    // 변경된 정보를 저장
+    // 변경된 정보 저장
     professorRepository.save(professor);
 
-    redirectAttributes.addFlashAttribute("successMessage", "정보가 수정되었습니다.");
+    // 성공 메시지 추가
+    redirectAttributes.addFlashAttribute("successMessage", "내 정보가 성공적으로 수정되었습니다.");
 
-    return "redirect:/professor/info";
+    return "redirect:/professor/modify"; // 수정 페이지로 리다이렉트
   }
 }

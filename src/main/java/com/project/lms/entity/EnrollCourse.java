@@ -17,11 +17,10 @@ public class EnrollCourse {
   private Long ceId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "enroll_id", nullable = false)
+  @JoinColumn(name = "eId", nullable = false)
   private Enroll enroll;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "course_id", nullable = false)
+  @JoinColumn(name = "cId", nullable = false)
   private Course course;
-
 }

@@ -1,51 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student List</title>
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/assets/css/custom.css">
-</head>
+
+<th:block th:replace="fragments/head::headFragment"></th:block>
+
 <body>
-<div class="container mt-5">
-  <h2 class="mb-4">Student List for Course</h2>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
 
-  <div class="card-body">
-    <table class="table table-bordered">
-      <thead class="thead-light">
-      <tr>
-        <th>학번</th>
-        <th>이름</th>
-        <th>이메일</th>
-        <th>학점 입력</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="order : ${orders}">
-        <td th:text="${order.student.sId}"></td>
-        <td th:text="${order.student.sName}"></td>
-        <td th:text="${order.student.sEmail}"></td>
-        <td>
-          <form th:action="@{/professor/courses/studentList/score}" method="post" class="d-flex">
-            <input type="hidden" name="oId" th:value="${order.oId}"/>
-            <input type="hidden" name="cId" th:value="${order.course.cId}"/>
-            <input type="number" name="score" class="form-control me-2" min="0" max="100"
-                   th:value="${order.score != null ? order.score : ''}"/>
-            <button type="submit" class="btn btn-primary btn-sm">저장</button>
-          </form>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
-    <div th:if="${#lists.isEmpty(orders)}" class="text-center">
-      <p>수강한 학생 정보가 없습니다.</p>
+<div class="container">
+  <div class="page-inner">
+    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+      <div>
+        <h3 class="fw-bold mb-3">
+          <a th:href="@{/professor/courses/studentList/{cId}}" class="text-decoration-none text-dark">내 강의
+            리스트</a>
+        </h3>
+      </div>
     </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover text-center">
+        <thead class="table-dark">
+        <tr>
+          <th>학번</th>
+          <th>이름</th>
+          <th>이메일</th>
+          <th>학과</th>
+          <th>학점 입력</th>
+          <th>쪽지 보내기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+          <td th:text="${order.student.sId}"></td>
+          <td th:text="${order.student.sName}"></td>
+          <td th:text="${order.student.sEmail}"></td>
+          <td th:text="${order.student.sDept.koreanName}"></td>
+          <td>
+            <form th:action="@{/professor/courses/studentList/score}" method="post" class="d-flex">
+              <input type="hidden" name="oId" th:value="${order.oId}"/>
+              <input type="hidden" name="cId" th:value="${order.course.cId}"/>
+              <input type="number" name="score" class="form-control custom-input" min="0" max="100"
+                     th:value="${order.score != null ? order.score : ''}"/>
+              <style>
+                .custom-input {
+                    width: 80px; /* 입력칸 가로 크기 */
+                    height: 30px; /* 입력칸 높이 */
+                    padding: 5px; /* 내부 여백 */
+                    font-size: 14px; /* 글자 크기 */
+                }
+
+                td {
+                    vertical-align: middle; /* 테이블 셀 내에서 수직 정렬 */
+                }
+              </style>
+
+              <button type="submit" class="btn btn-outline-primary">저장</button>
+            </form>
+          </td>
+          <td>
+            <form th:action="@{/message/chat}" method="get">
+              <input type="hidden" name="receiverId" th:value="${order.student.sId}"/>
+              <button type="submit" class="btn btn-outline-success">쪽지 보내기</button>
+            </form>
+
+          </td>
+
+        </tr>
+        </tbody>
+      </table>
+
+      <div th:if="${#lists.isEmpty(orders)}" class="text-center">
+        <p>수강한 학생 정보가 없습니다.</p>
+      </div>
+    </div>
+    <a href="/professor/courses/myCourses" class="btn btn-outline-primary">내 강의로 돌아가기</a>
   </div>
-  <a href="/professor/courses/myCourses" class="btn btn-primary mt-3">내 강의로 돌아가기</a>
 </div>
-<script src="/assets/js/jquery.min.js"></script>
-<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 </body>
 </html>

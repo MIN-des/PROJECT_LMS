@@ -18,13 +18,6 @@ import java.util.List;
 public class ScheduleController {
   private final ScheduleService scheduleService;
 
-//  @GetMapping("/list")
-//  public String scheduleList(Model model) {
-//    List<Schedule> schedules = scheduleService.getAllSchedules();
-//    model.addAttribute("schedules", schedules);
-//    return "schedule/list";
-//  }
-
   @GetMapping("/create")
   public String createScheduleForm(Model model) {
     model.addAttribute("schedule", new Schedule());
@@ -65,6 +58,16 @@ public class ScheduleController {
       model.addAttribute("currentPage", schedules.getNumber());
       model.addAttribute("totalPages", schedules.getTotalPages());
       return "schedule/list";
+  }
+  @GetMapping("/calendar")
+  public String getCalendarSchedules(@RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "5") int size,
+                                     Model model) {
+    Page<Schedule> schedules = scheduleService.getSchedules(page, size);
+    model.addAttribute("schedules", schedules.getContent()); // 동적 데이터 전달
+    model.addAttribute("currentPage", schedules.getNumber());
+    model.addAttribute("totalPages", schedules.getTotalPages());
+    return "schedule/calendar"; // 수정된 HTML 파일 경로
   }
 
 

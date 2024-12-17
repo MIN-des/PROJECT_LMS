@@ -87,33 +87,63 @@ public class CourseController { // 강의 조회(권한 전체), 생성/수정/�
   // 강의 목록 조회 (페이징 포함)
   @GetMapping("/list")
   public String listCourses(
-          @RequestParam(defaultValue = "0") int page,
+          @RequestParam(defaultValue = "1") int page,
           @RequestParam(required = false) String searchType,
           @RequestParam(required = false) String searchQuery,
           Model model) {
 
-    Page<CourseDTO> coursePage;
+    Page<CourseDTO> coursePage = Page.empty(); // init
 
-    // 검색 조건에 따른 데이터 검색
-    if ("id".equals(searchType)) {
-      coursePage = courseService.searchCoursesById(
-              Long.parseLong(searchQuery), PageRequest.of(page, 10));
-    } else if ("name".equals(searchType)) {
-      coursePage = courseService.searchCoursesByName(
-              searchQuery, PageRequest.of(page, 10));
-    } /*else if ("status".equals(searchType)) {
-            coursePage = courseService.searchCoursesByRestStatus(
-                    searchQuery, PageRequest.of(page, 10));
-        }*/ else if ("pId".equals(searchType)) {
-      coursePage = courseService.searchCourseByProfessor_pId(
-              searchQuery, PageRequest.of(page, 10));
-    } else {
-      // 검색 조건이 없을 경우 기본 전체 목록 조회
-      coursePage = courseService.getAllCourses(PageRequest.of(page, 10));
+    // JPA 페이징은 0부터 시작하므로, page 값이 1 미만이면 0으로 설정
+    int pageIndex = (page > 0) ? page - 1 : 0;
+
+    // 기본 정렬 조건: 최신 등록 순
+    Pageable pageable = PageRequest.of(pageIndex, 10, Sort.by(Sort.Direction.DESC, "regTime"));
+
+    try {
+      if (searchType != null && !searchType.isBlank() && searchQuery != null && !searchQuery.isBlank()) {
+        switch (searchType) {
+          case "id":
+            if (!searchQuery.matches("\\d+")) {
+              throw new IllegalArgumentException("강의 ID는 숫자만 입력 가능합니다.");
+            }
+
+            coursePage = courseService.searchCoursesById(Long.parseLong(searchQuery), pageable);
+            break;
+          case "name":
+            coursePage = courseService.searchCoursesByName(searchQuery, pageable);
+            break;
+          case "pId":
+            coursePage = courseService.searchCourseByProfessor_pId(searchQuery, pageable);
+            break;
+          case "pName":
+            coursePage = courseService.searchCourseByProfessor_pName(searchQuery, pageable);
+            break;
+          default:
+            throw new IllegalArgumentException("유효하지 않은 검색 유형입니다.");
+        }
+      } else {
+        coursePage = courseService.getAllCourses(pageable);
+      }
+
+      if (coursePage.getTotalElements() == 0) {
+        model.addAttribute("errorMessage", "검색 결과가 없습니다.");
+      }
+
+    } catch (IllegalArgumentException e) {
+      model.addAttribute("errorMessage", e.getMessage());
     }
 
+    // 페이징 정보 계산
+    int totalPages = coursePage.getTotalPages();
+    int startPage = (totalPages > 0) ? Math.max(1, page - 2) : 1;
+    int endPage = (totalPages > 0) ? Math.min(totalPages, page + 2) : 1;
+
+    // 모델에 추가
     model.addAttribute("page", coursePage);
-    model.addAttribute("currentPage", page + 1);
+    model.addAttribute("currentPage", totalPages > 0 ? page : 0);
+    model.addAttribute("startPage", startPage);
+    model.addAttribute("endPage", endPage);
     model.addAttribute("searchType", searchType);
     model.addAttribute("searchQuery", searchQuery);
 
@@ -200,14 +230,72 @@ public class CourseController { // 강의 조회(권한 전체), 생성/수정/�
     return "redirect:/professor/courses/list"; // 목록 페이지로 리다이렉트
   }
 
-  // 내 강의 조회
+  // 내 강의 조회 (페이징 및 검색 포함)
   @GetMapping("/myCourses")
-  public String getMyCourses(Principal principal, Model model) {
-    String pId = principal.getName(); // 로그인된 교수의 ID 가져오기
-    List<Course> courses = courseService.getCoursesByProfessorId(pId);
-    model.addAttribute("courses", courses);
+  public String getMyCourses(
+          Principal principal,
+          @RequestParam(defaultValue = "1") int page,
+          @RequestParam(required = false) String searchType,
+          @RequestParam(required = false) String searchQuery,
+          Model model) {
 
-    return "professor/myCourses";
+    String pId = principal.getName(); // 로그인된 교수의 ID 가져오기
+
+    Page<CourseDTO> coursePage = Page.empty(); // init
+
+    // JPA 페이징은 0부터 시작하므로, page 값이 1 미만이면 0으로 설정
+    int pageIndex = (page > 0) ? page - 1 : 0;
+
+    // 기본 정렬 조건: 최신 등록 순
+    Pageable pageable = PageRequest.of(pageIndex, 10, Sort.by(Sort.Direction.DESC, "regTime"));
+
+    try {
+      // 검색 조건이 있는 경우
+      if (searchType != null && !searchType.isBlank() && searchQuery != null && !searchQuery.isBlank()) {
+        switch (searchType) {
+          case "id":
+            // 강의 ID 검색: 숫자인지 확인
+            if (!searchQuery.matches("\\d+")) {
+              throw new IllegalArgumentException("강의 ID는 숫자만 입력 가능합니다.");
+            }
+
+            coursePage = courseService.searchMyCoursesById(pId, Long.parseLong(searchQuery), pageable);
+            break;
+          case "name":
+            // 강의명 검색
+            coursePage = courseService.searchMyCoursesByName(pId, searchQuery, pageable);
+            break;
+          default:
+            throw new IllegalArgumentException("유효하지 않은 검색 유형입니다.");
+        }
+      } else {
+        // 검색 조건이 없으면 전체 강의 조회
+        coursePage = courseService.getMyCourses(pId, pageable);
+      }
+
+      // 검색 결과가 없을 경우 메시지 추가
+      if (coursePage.getTotalElements() == 0) {
+        model.addAttribute("errorMessage", "검색 결과가 없습니다.");
+      }
+
+    } catch (IllegalArgumentException e) {
+      model.addAttribute("errorMessage", e.getMessage());
+    }
+
+    // 페이징 정보 계산
+    int totalPages = coursePage.getTotalPages();
+    int startPage = totalPages > 0 ? Math.max(1, page - 2) : 1;
+    int endPage = totalPages > 0 ? Math.min(totalPages, page + 2) : 1;
+
+    // 모델에 필요한 정보 추가
+    model.addAttribute("page", coursePage);
+    model.addAttribute("currentPage", totalPages > 0 ? page : 1);
+    model.addAttribute("startPage", startPage);
+    model.addAttribute("endPage", endPage);
+    model.addAttribute("searchType", searchType);
+    model.addAttribute("searchQuery", searchQuery);
+
+    return "professor/myCourses"; // 내 강의 조회 템플릿
   }
 
   // 내 강의 수강 신청한 학생 조회

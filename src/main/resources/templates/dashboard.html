@@ -1,84 +1,610 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Main Page</title>
-    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
-    <link rel="icon" th:href="@{/assets/img/favicon.ico}" type="image/x-icon"/>
-
-    // 이미지 스타일
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우리대학교 메인 페이지</title>
     <style>
-        .cropped-img {
-          height: 400px; /* 원하는 높이 설정 */
-          object-fit: cover; /* 위아래를 잘라내고 꽉 차게 표시 */
-          object-position: center; /* 이미지의 중앙을 기준으로 자르기 */
+        body {
+                margin: 0;
+                font-family: 'Arial', sans-serif;
+                background-color: #202830;
+                color: #FFFFFF;
+                overflow-x: hidden; /* 좌우 스크롤 제거 */
+            }
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            /* 상단 배경 */
+            .top-background {
+                background: url('yale-university-1604159_1920.jpg') no-repeat center center/cover;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                position: relative;
+                width: 100%;
+            }
+
+            /* 로그인 링크 수정 */
+            .topLink {
+                position: absolute;
+                top: 10px;
+                right: 2rem;
+                font-size: 0.9rem;
+                z-index: 20; /* 화면 상단에 위치하도록 z-index 조정 */
+            }
+
+            /* 네비게이션 바 스타일 */
+            .head_container {
+                display: flex;
+                justify-content: center; /* 중앙 정렬 */
+                align-items: center;
+                position: absolute;
+                top: 2.5rem; /* topLink 아래 위치 */
+                width: 100%;
+                padding: 0.5rem 2rem;
+                box-sizing: border-box;
+                z-index: 10;
+            }
+
+            .head_logo {
+                position: absolute;
+                left: 2rem; /* 로고를 화면 좌측에 배치 */
+            }
+
+            .head_logo img {
+                height: 60px;
+            }
+
+            .head_navi {
+                display: flex;
+                justify-content: center; /* 메뉴 중앙 정렬 */
+                gap: 2rem; /* 메뉴 간격 */
+            }
+
+            .head_navi a {
+                font-size: 1rem;
+                font-weight: bold;
+                transition: color 0.3s ease-in-out;
+            }
+
+            .head_navi a:hover {
+                color: #FFD700; /* 마우스 오버 시 색상 변경 */
+            }
+
+            /* 반응형 스타일 */
+            @media (max-width: 768px) {
+                .head_container {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .head_navi {
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                }
+            }
+
+            /* 중앙 이미지 및 문구 */
+            .center-image {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                height: 80vh;
+                width: 100%;
+                overflow: hidden; /* 넘치는 부분 제거 */
+            }
+
+            .center-image img {
+                height: 100%;
+                width: 100%; /* 화면 너비에 맞춤 */
+                object-fit: cover; /* 비율을 유지하면서 컨테이너에 맞춤 */
+            }
+
+            .logo-and-slogan {
+                position: absolute;
+                top: 55%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                z-index: 2;
+                width: 100%;
+                max-width: 800px;
+            }
+
+            .logo-and-slogan .logo-image {
+                width: 150px;
+                margin-bottom: 20px;
+            }
+
+            .logo-and-slogan .slogan {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #FFFFFF;
+                text-align: center;
+                line-height: 1.3;
+                padding: 10px 20px;
+                max-width: 700px;
+                margin: 0 auto;
+                box-sizing: border-box;
+            }
+
+                /* 화살표 버튼 스타일 */
+                .arrow {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 3rem;
+                    color: #FFFFFF;
+                    cursor: pointer;
+                    z-index: 2;
+                    padding: 0.5rem;
+                    border: none; /* 테두리 제거 */
+                    background-color: transparent; /* 투명한 배경색 */
+                    }
+
+                    .arrow:hover {
+                      background: none; /* hover 상태에서도 배경색 제거 */
+                      background-color: transparent; /* 투명한 배경색 유지 */
+                    }
+
+                    .arrow-left {
+                        left: 2%;
+                    }
+
+                    .arrow-right {
+                        right: 2%;
+                    }
+        /* 캘린더 섹션 스타일 */
+        .multipleDiv {
+            position: relative;
+            background: url('yale-university-1604159_1920.jpg') no-repeat center center/cover;
+            background-attachment: fixed;
+            padding: 3rem 2rem;
+            color: #333;
         }
+        .multipleContentsDiv {
+            background-color: rgba(255, 255, 255, 0.9); /* 투명한 배경 박스 */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .main_title {
+            font-size: 2.5rem;
+            color:  rgba(58, 76, 90, 0.8); /* 포인트 색상 */
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .sliderEvent li {
+            list-style: none;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .sliderEvent .date strong {
+            font-size: 2.5rem;
+            color: #7A0000;
+            display: block;
+        }
+        .sliderEvent .title a {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: RGB(26, 32, 53);
+            transition: color 0.3s;
+        }
+        .sliderEvent .title a:hover {
+            color: #7A0000;
+        }
+        .sliderEvent .info {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .full_view {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .full_view a {
+            display: inline-block;
+            background: RGB(26, 32, 53);
+            color: #FFF;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        .full_view a:hover {
+            background: #9A0000;
+        }
+
+
+          /* 풀팝업 스타일 */
+        .main_full_popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            color: #FFFFFF;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .main_full_popup.active {
+            display: flex;
+        }
+        .main_full_popup_wrap {
+            background: rgba(32, 40, 48, 0.7);
+            width: 100%; /* 수정: 팝업 너비를 페이지 전체로 확대 */
+    height: 100%; /* 수정: 팝업 높이를 페이지 전체로 확대 */
+    position: absolute; /* 화면 전체를 덮기 위한 설정 */
+        display: flex; /* 내부 콘텐츠 중앙 정렬 */
+    top: 0; /* 수정: 상단에 맞춤 */
+    left: 0; /* 수정: 좌측에 맞춤 */
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 배치 */
+    justify-content: center; /* 모든 콘텐츠를 세로 중앙으로 정렬 */
+    align-items: center; /* 가로 중앙으로 정렬 */
+ padding: 0;
+    overflow: hidden;
+              text-align: center;
+        }
+        /* h2 제목 스타일 - 상단에 배치 */
+.main_full_popup_wrap h2 {
+    position: absolute;
+    top: 8%; /* 상단에서 10% 위치 */
+    margin: 0;
+    font-size: 2rem;
+    color: #FFFFFF;
+}
+.popupButton {
+    display: flex;
+    justify-content: center; /* 버튼을 가로로 정렬 */
+    gap: 10px; /* 버튼 사이 간격 */
+    margin-top: 20px; /* 상단과 간격 */
+}
+
+.popupButton button {
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #333333; /* 버튼 배경색 */
+    border: none; /* 테두리 제거 */
+    border-radius: 20px; /* 버튼을 둥글게 만듦 */
+    padding: 10px 20px; /* 안쪽 여백 */
+    display: flex;
+    align-items: center; /* 텍스트와 아이콘 수직 중앙 정렬 */
+    gap: 5px; /* 아이콘과 텍스트 간격 */
+}
+
+.popupButton button:hover {
+    background-color: #555555; /* 마우스 호버 시 색상 변경 */
+}
+
+.popupButton .closePopup::after,
+.popupButton .dontShowToday::after {
+    content: "×"; /* 닫기 아이콘 */
+    margin-left: 5px; /* 텍스트와의 간격 */
+    font-size: 16px;
+    color: #FFFFFF;
+}
+        /* 팝업 이미지 슬라이드 컨테이너 스타일 */
+.popup_slide {
+    position: relative;
+    width: 100%; /* 전체 너비 */
+    max-width: 1200px; /* 최대 너비 설정 */
+    height: 70vh; /* 높이 화면의 70% */
+    margin: 0 auto; /* 중앙 정렬 */
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    overflow: hidden; /* 넘치는 이미지 제거 */
+}
+
+/* 팝업 이미지 스타일 */
+.popup_slide img {
+    width: 48%; /* 두 개의 이미지가 나란히 표시되도록 설정 */
+    height: 100%; /* 부모 컨테이너 높이에 맞춤 */
+    object-fit: contain; /* 비율 유지하며 잘리지 않도록 설정 */
+    display: none; /* 기본적으로 이미지 숨김 */
+    border: 1px solid #ccc; /* 이미지 테두리 추가 (옵션) */
+    background-color: #f8f8f8; /* 이미지가 없을 때 배경 추가 (옵션) */
+}
+
+/* 첫 번째와 두 번째 이미지는 기본적으로 보이도록 설정 */
+.popup_slide img:first-child,
+.popup_slide img:nth-child(2) {
+    display: block;
+}
+
+
+        /* 화살표 스타일 */
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 2rem;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 10;
+        }
+
+        .arrow-left {
+            left: 10px;
+        }
+
+        .arrow-right {
+            right: 10px;
+        }
+
+        #popupSlideImages {
+            display: flex; /* 이미지들을 가로로 정렬 */
+            justify-content: center;
+            gap: 30px; /* 이미지 간격 */
+
+}
+
+        #popupSlideImages img {
+     width: 48%; /* 화면 너비에 맞게 2개씩 표시 */
+    height: 800px; /* 고정된 높이 설정 */
+            object-fit: contain;
+                display: block; /* 항상 표시되도록 설정 */
+
     </style>
-
-    <!-- Fonts and icons -->
-    <script th:src="@{/assets/js/plugin/webfont/webfont.min.js}"></script>
-    <script>
-        WebFont.load({
-            google: { families: ["Public Sans:300,400,500,600,700"] },
-            custom: {
-                families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-                urls: ["/assets/css/fonts.min.css"],
-            },
-            active: function () {
-                sessionStorage.fonts = true;
-            },
-        });
-    </script>
-
-    <!-- CSS Files -->
-    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/plugins.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/kaiadmin.min.css}"/>
 </head>
-
 <body>
-<div class="wrapper">
-    <!-- Sidebar -->
-    <div class="sidebar" data-background-color="dark">
-        <div class="logo-header" data-background-color="dark">
-            <a th:href="@{icon-menu.html}" class="logo">
-                <img th:src="@{/assets/img/logo_light.svg}" alt="Logo" class="navbar-brand" height="20"/>
+<!-- 상단 배경 -->
+<div class="top-background">
+    <!--     상단 링크-->
+    <div class="topLink">
+        <a href="/login" title="로그인 페이지 이동">로그인</a>
+    </div>
+
+    <!-- 네비게이션 바 -->
+    <div class="head_container">
+        <!-- 로고 -->
+        <div class="head_logo">
+            <a href="#">
+                <img src="/assets/img/UlogoName.png" alt="우리대학교 로고">
             </a>
         </div>
-        <div class="sidebar-wrapper scrollbar-inner">
-            <div class="sidebar-content">
-                <ul class="nav">
-                    <li>
-                        <div>대시보드</div>
-                    </li>
-                    <li>
-                        <a th:href="@{/dashboard/greetings}">
-                            인사말 & 총장 프로필
-                        </a>
-                    </li>
-                    <li>
-                        <div>찾아오시는 길</div>
+        <!-- 주메뉴 -->
+        <div class="head_navi">
+            <a href="/dashboard/greetings">학교소개</a>
+            <a href="#">캠퍼스 안내</a>
+            <a href="/board/list">공지사항</a>
+            <a href="/schedule/list">학사 일정</a>
+            <a href="#">연구/산학</a>
+            <a href="#">우리 소식</a>
+        </div>
+
+    </div>
+
+    <!-- 중앙 이미지 및 문구 -->
+    <div class="center-image">
+        <div class="arrow arrow-left" onclick="prevImage()">&#8249;</div>
+        <img id="slideshow"
+             src="/assets/img/examples/school1.jpg"
+             alt="우리대학교 이미지"
+             style="width: 100%; height: 80vh; object-fit: cover;">
+
+        <!-- 추가한 로고 이미지 -->
+        <div class="logo-and-slogan">
+            <img src="/assets/img/UlogoWhite.png" alt="우리대학교 로고" class="logo-image">
+            <div class="slogan">WE ARE THE NEXT <br> KOREA UNIVERSITY</div>
+        </div>
+
+        <div class="arrow arrow-right" onclick="nextImage()">&#8250;</div>
+    </div>
+</div>
+<!-- 캘린더 섹션 -->
+<div class="multipleDiv" id="multipleDiv_ko_9">
+    <div class="multipleContentsDiv clear-fix" id="multipleContentsDiv_ko_9">
+        <div class="_obj _objHtml" id="menu348_obj4080">
+            <h2 class="main_title">Calendar</h2>
+        </div>
+        <div class="_fnctWrap main_event">
+            <div id="recentSchdul1" class="container">
+                <ul class="sliderEvent">
+                    <!-- Thymeleaf를 사용하여 스케줄 동적 출력 -->
+                    <li th:each="schedule : ${schedules}">
+                        <div class="date">
+                            <strong th:text="${#temporals.format(schedule.startDay, 'dd')}"></strong>
+                            <span th:text="${#temporals.format(schedule.startDay, 'MMM.yyyy')}"></span>
+                        </div>
+                        <div class="title">
+                            <a th:href="@{/schedule/detail/{sno}(sno=${schedule.sno})}"
+                               th:text="${schedule.content}">일정 내용</a>
+                        </div>
+                        <div class="info">
+                            <p>시작일: <span th:text="${schedule.startDay}"></span></p>
+                            <p>종료일: <span th:text="${schedule.endDay}"></span></p>
+                        </div>
                     </li>
                 </ul>
+            </div>
+        </div>
+        <div class="_obj _objHtml" id="menu348_obj4151">
+            <div class="full_view">
+                <a href="/schedule/list" title="행사캘린더 전체보기">행사일정</a>
+                &nbsp;&nbsp;
+                <a href="#" title="학사일정">학사일정</a>
             </div>
         </div>
     </div>
 </div>
 
-<div>
-    <footer class="footer bg-dark text-white text-center py-3">
-        <p>© 2024 우리 대학교. All rights reserved.</p>
-    </footer>
+<!-- 풀팝업 -->
+<div class="main_full_popup" id="fullPopup">
+    <div class="main_full_popup_wrap">
+        <h2>WOORI POPUP</h2>
+        <div class="popup_slide">
+            <!-- 화살표 버튼 -->
+            <button class="arrow arrow-left" onclick="prevPopupImage()">&#8249;</button>
+            <div id="popupSlideImages" class="slider">
+                <img class="popupImage" src="/assets/img/popup/ex.jpg" alt="2025 HAPPY NEW YEAR">
+                <img class="popupImage" src="/assets/img/popup/ex1.jpg" alt="겨울방학">
+                <img class="popupImage" src="/assets/img/popup/ex2.jpg" alt="국가 장학금">
+                <img class="popupImage" src="/assets/img/popup/ex3.jpg" alt="취업박람회">
+            </div>
+            <!-- 화살표 버튼 -->
+            <button class="arrow arrow-right" onclick="nextPopupImage()">&#8250;</button>
+        </div>
+        <div class="popupButton">
+            <button class="dontShowToday" onclick="dontShowToday()">오늘 그만 보기</button>
+            <button class="closePopup" onclick="closePopup()">닫기</button>
+        </div>
+    </div>
 </div>
-<!-- End Main Panel -->
 
-<!-- Core JS Files -->
-<script src="@{/assets/js/core/jquery-3.7.1.min.js}"></script>
-<script src="@{/assets/js/core/popper.min.js}"></script>
-<script src="@{/assets/js/core/bootstrap.min.js}"></script>
 
-<!-- Kaiadmin JS -->
-<script src="@{/assets/js/kaiadmin.min.js}"></script>
+<script>
+    const images = [
+       "/assets/img/examples/school1.jpg",
+       "/assets/img/uni1.png",
+       "/assets/img/examples/school3.jpg"
+     ];
+
+     let currentIndex = 0;
+     const slideshowElement = document.getElementById("slideshow");
+
+     function changeImage() {
+       currentIndex = (currentIndex + 1) % images.length; // 이미지 인덱스 순환
+       slideshowElement.src = images[currentIndex]; // 이미지 변경
+     }
+
+     setInterval(changeImage, 4000); // 4초마다 이미지 변경
+
+     // 이전/다음 이미지 변경
+    function prevImage() {
+      changeImage(currentIndex - 1); // 이전 이미지
+    }
+
+    function nextImage() {
+      changeImage(currentIndex + 1); // 다음 이미지
+    }
+
+     // 팝업 열기 기능
+    function openPopup() {
+    const popup = document.getElementById('fullPopup');
+    popup.classList.add('active'); // active 클래스 추가
+    showPopupImage(currentPopupIndex); // 팝업 첫 이미지 표시
+}
+
+    // 팝업 닫기 기능
+    function closePopup() {
+    const popup = document.getElementById('fullPopup');
+    popup.classList.remove('active'); // active 클래스 제거
+    clearInterval(popupSlideInterval); // 팝업 자동 슬라이드 정지
+    }
+     // 쿠키 설정 함수 (유효 기간은 하루)
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = name + "=" + value + ";expires=" + date.toUTCString() + ";path=/";
+    }
+
+    // 쿠키 가져오기 함수
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // 오늘 하루 열지 않기 버튼 클릭 시
+    function dontShowToday() {
+        setCookie('popupClosed', 'true', 1); // 쿠키 설정 (유효 기간: 1일)
+        closePopup(); // 팝업 닫기
+    }
+
+
+    // 페이지 로딩 시 팝업 자동으로 열기
+    document.addEventListener("DOMContentLoaded", () => {
+        const popupClosed = getCookie('popupClosed'); // 쿠키 확인
+        if (!popupClosed) {
+            openPopup(); // 쿠키가 없으면 팝업 열기
+                    popupSlideInterval = setInterval(nextPopupImage, 3000); // 팝업 자동 슬라이드 시작
+        }
+    });
+    // 팝업 이미지 슬라이드 설정
+const popupImages = document.querySelectorAll('.popupImage'); // 모든 이미지 가져오기
+let currentPopupIndex = 0;
+let popupSlideInterval; // 슬라이드 타이머
+
+// 팝업 이미지 슬라이드 표시 함수 (두 개씩 표시되도록 설정)
+function showPopupImages(index) {
+    popupImages.forEach((img) => {
+        img.style.display = 'none'; // 모든 이미지 숨김
+    });
+
+    // 두 개의 이미지를 순차적으로 표시
+    const firstImage = index % popupImages.length; // 첫 번째 이미지 인덱스
+    const secondImage = (index + 1) % popupImages.length; // 두 번째 이미지 인덱스
+
+    popupImages[firstImage].style.display = 'block';
+    popupImages[secondImage].style.display = 'block';
+}
+
+// 다음 이미지로 이동 (두 개씩 바뀌도록 설정)
+function nextPopupImage() {
+    currentPopupIndex = (currentPopupIndex + 2) % popupImages.length; // 인덱스 두 칸 이동
+    showPopupImages(currentPopupIndex);
+}
+
+// 이전 이미지로 이동 (두 개씩 바뀌도록 설정)
+function prevPopupImage() {
+    currentPopupIndex = (currentPopupIndex - 2 + popupImages.length) % popupImages.length; // 인덱스 두 칸 이동
+    showPopupImages(currentPopupIndex);
+}
+
+// 슬라이드 시작
+function startAutoSlide() {
+    popupSlideInterval = setInterval(nextPopupImage, 3000); // 3초마다 자동 이동
+}
+
+// 슬라이드 멈춤
+function stopAutoSlide() {
+    clearInterval(popupSlideInterval);
+}
+
+// 팝업 열기
+function openPopup() {
+    const popup = document.getElementById('fullPopup');
+    popup.classList.add('active');
+    showPopupImages(currentPopupIndex);
+    startAutoSlide();
+}
+
+// 팝업 닫기
+function closePopup() {
+    const popup = document.getElementById('fullPopup');
+    popup.classList.remove('active');
+    stopAutoSlide();
+}
+
+// 페이지 로드 시 첫 번째 이미지 표시
+document.addEventListener("DOMContentLoaded", () => {
+    showPopupImages(currentPopupIndex); // 첫 이미지 표시
+    startAutoSlide(); // 자동 슬라이드 시작
+});
+</script>
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 </body>
 </html>

@@ -2,11 +2,14 @@ package com.project.lms.service;
 
 import com.project.lms.dto.StudentDTO;
 import com.project.lms.dto.TuitionInvoiceUploadDTO;
+import com.project.lms.entity.TuitionInvoiceUpload;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface TuitionInvoiceUploadService {
+
+	TuitionInvoiceUpload getInvoiceById(Long tId);
 
 	void uploadInvoice(String sId, MultipartFile file) throws Exception; // 관리자: 파일 업로드
 

@@ -59,7 +59,6 @@ public class CourseServiceTests {
         Course course = new Course();
         course.setCName("조회 테스트 강의");
         course.setCredits(2);
-        course.setStatus(RestStatus.AVAILABLE);
         course.setRestNum(20);
         course = courseRepository.save(course);
 
@@ -79,7 +78,6 @@ public class CourseServiceTests {
         Course course = new Course();
         course.setCName("업데이트 전 강의");
         course.setCredits(1);
-        course.setStatus(RestStatus.FULL);
         course.setRestNum(10);
         course = courseRepository.save(course);
 

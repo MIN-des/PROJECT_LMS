@@ -56,6 +56,10 @@ public class BoardServiceImpl implements BoardService {
     }
   }
 
+  public Page<Board> getList(Pageable pageable) {
+    return boardRepository.findAll(pageable); // Pageable 객체로 요청된 페이징 처리
+  }
+
   // 게시글 등록
   @Override
   public Long register(BoardDTO boardDTO) {
@@ -107,6 +111,8 @@ public class BoardServiceImpl implements BoardService {
   @Override
   public void remove(Long bno) {
   }
+
+
 
   // 게시글 수정 처리
   public void modify(Long bno, @NotEmpty(message = "제목은 필수 항목입니다.") @Size(max = 200) String title, @NotEmpty(message = "내용은 필수 항목입니다.") String content) {

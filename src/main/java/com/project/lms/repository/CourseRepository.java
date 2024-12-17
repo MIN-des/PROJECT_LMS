@@ -11,7 +11,17 @@ import java.util.List;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
-  List<Course> findCoursesByProfessor_pId(String pId);
+  // 특정 교수의 모든 강의 조회 (페이징)
+  Page<Course> findByProfessor_pId(/*@Param("pId")*/ String pId, Pageable pageable);
+
+  // 특정 교수의 강의 ID로 검색
+  @Query("SELECT c FROM Course c WHERE c.professor.pId = :pId AND c.cId = :cId")
+  Page<Course> findCoursesByProfessorAndId(@Param("pId") String pId, @Param("cId") Long cId, Pageable pageable);
+
+  // 특정 교수의 강의 이름으로 검색
+  @Query("SELECT c FROM Course c WHERE c.professor.pId = :pId AND LOWER(c.cName) LIKE LOWER(CONCAT('%', :cName, '%'))")
+  Page<Course> findByProfessor_PIdAndCNameContainingIgnoreCase(
+          @Param("pId") String pId, @Param("cName") String cName, Pageable pageable);
 
   // 모든 강의 목록 조회
   Page<Course> findAll(Pageable pageable);
@@ -23,4 +33,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
   Page<Course> findBycNameContainingIgnoreCase(String cName, Pageable pageable);
 
   Page<Course> findByProfessor_pIdContainingIgnoreCase(String pId, Pageable pageable);
+
+  Page<Course> findByProfessor_pNameContainingIgnoreCase(String pName, Pageable pageable);
 }

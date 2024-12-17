@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>우리대학교 로그인</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
   <style>
@@ -55,9 +55,14 @@
     }
 
     .form__title {
-      font-weight: 300;
-      margin: 0;
-      margin-bottom: 1.25rem;
+      font-weight: bold; /* 텍스트 굵기 조정 */
+      font-size: 2rem; /* 텍스트 크기 증가 */
+      color: #1f56a1; /* 텍스트 색상 (파란색 계열) */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* 가벼운 그림자 */
+      letter-spacing: 0.1rem; /* 글자 간격 */
+      margin-bottom: 1.5rem; /* 하단 여백 */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 폰트 변경 */
+      text-transform: uppercase; /* 텍스트 대문자 */
     }
 
     .link {
@@ -68,7 +73,7 @@
     }
 
     .container {
-      background-color: var(--white);
+      background-color: rgba(255, 255, 255, 0.9); /* 흰색 반투명 */
       border-radius: var(--button-radius);
       box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.25),
         0 0.7rem 0.7rem rgba(0, 0, 0, 0.22);
@@ -151,7 +156,7 @@
     }
     .foreground-image {
       position: absolute; /* 부모 기준으로 절대 위치 설정 */
-      top: 25%;
+      top: 18%;
       left: 25%;
       transform: translate(-50%, -50%); /* 정확히 가운데 정렬 */
       width: 250px; /* 겹칠 이미지의 너비 */
@@ -195,25 +200,37 @@
     }
 
     .btn {
-      background-color: var(--blue);
-      border-radius: 20px;
-      border: 1px solid var(--blue);
-      color: var(--white);
+      background: linear-gradient(135deg, #3a7bd5, #3a6073); /* 부드러운 파란색 계열 그라데이션 */
+      border: none;
+      border-radius: 10px; /* 버튼을 더욱 부드럽게 */
+      color: #fff;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 1rem; /* 적당한 크기 */
       font-weight: bold;
-      letter-spacing: 0.1rem;
-      padding: 0.9rem 4rem;
+      padding: 0.8rem 2rem;
       text-transform: uppercase;
-      transition: transform 80ms ease-in;
+      letter-spacing: 0.05rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 가벼운 그림자 효과 */
+      transition: all 0.4s ease-in-out; /* 모든 스타일에 부드러운 전환 적용 */
+      background-size: 200%; /* 그라데이션 전환을 위한 배경 크기 */
+      background-position: right; /* 초기 배경 위치 */
+    }
+
+    .btn:hover {
+      background-position: left; /* 배경 위치 이동으로 색상 변경 효과 */
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* 강조된 그림자 */
+      color: #fff;
+      transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+    }
+
+    .btn:active {
+      background: linear-gradient(135deg, #2a5b6f, #2a4462); /* 클릭 시 약간 어두운 톤 */
+      transform: translateY(2px); /* 살짝 눌리는 효과 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .form > .btn {
       margin-top: 1.5rem;
-    }
-
-    .btn:active {
-      transform: scale(0.95);
     }
 
     .btn:focus {
@@ -233,10 +250,17 @@
 
     .input {
       background-color: #fff;
+      border-radius: 5px;
       border: none;
       padding: 0.9rem 0.9rem;
       margin: 0.5rem 0;
       width: 100%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+    }
+    .input:focus {
+      border-color: #3a7bd5; /* 포커스 시 버튼 색상과 동일 */
+      outline: none;
+      box-shadow: 0 0 6px rgba(58, 123, 213, 0.5); /* 약간의 빛나는 효과 */
     }
 
     @keyframes show {
@@ -252,6 +276,85 @@
         z-index: 5;
       }
     }
+    .error-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    background-color: rgba(255, 0, 0, 0.1); /* 연한 빨간색 배경 */
+    color: #d9534f; /* 부트스트랩 danger 색상 */
+    font-size: 0.9rem;
+    padding: 0.75rem;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: var(--button-radius);
+    text-align: center;
+  }
+
+  .error-message i {
+    margin-right: 0.5rem;
+    color: #d9534f; /* 아이콘 색상 */
+    font-size: 1rem;
+  }
+    /* 전체 컨테이너 스타일 */
+  .custom-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    margin-right: 300px;
+  }
+
+  /* 숨겨진 기본 체크박스 */
+  .custom-checkbox input[type="checkbox"] {
+    display: none; /* 기본 체크박스를 숨깁니다 */
+  }
+
+  /* 라벨 스타일 */
+  .custom-checkbox label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  /* 커스텀 체크박스 아이콘 */
+  .checkbox-icon {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #3a7bd5; /* 테두리 색상 */
+    border-radius: 4px; /* 둥근 모서리 */
+    margin-right: 8px; /* 라벨과 간격 */
+    position: relative;
+    transition: all 0.3s ease-in-out; /* 부드러운 전환 */
+  }
+
+  /* 체크박스가 선택되었을 때 */
+  .custom-checkbox input[type="checkbox"]:checked + label .checkbox-icon {
+    background-color: #3a7bd5; /* 체크박스 배경 색상 */
+    border-color: #3a7bd5; /* 테두리 색상 변경 */
+  }
+
+  /* 체크 표시 추가 */
+  .custom-checkbox input[type="checkbox"]:checked + label .checkbox-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 10px;
+    border: solid #fff; /* 체크 표시 색상 */
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -50%) rotate(45deg); /* 체크 표시 모양 */
+  }
+
+  /* 라벨 텍스트 스타일 */
+  .custom-checkbox label {
+    color: #333;
+  }
+
+  .custom-checkbox label:hover {
+    color: #3a7bd5; /* 호버 시 텍스트 색상 변경 */
+  }
   </style>
 </head>
 <body>
@@ -260,8 +363,18 @@
   <div class="container__form container--signup">
     <form action="/login" class="form" id="form1" method="POST">
       <h2 class="form__title">학사관리시스템</h2>
-      <input type="text" name="username" placeholder="아이디" class="input" required/>
+      <!-- 로그인 오류 메시지 -->
+      <div th:if="${error}" class="alert alert-danger error-message">
+        <i class="fas fa-exclamation-circle"></i> 아이디 또는 비밀번호를 확인해주세요.
+      </div>
+      <input type="text" name="username" id="username" placeholder="아이디" class="input" required/>
       <input type="password" name="password" placeholder="비밀번호" class="input" />
+      <div class="custom-checkbox">
+        <input type="checkbox" id="rememberMe">
+        <label for="rememberMe">
+          <span class="checkbox-icon"></span> 아이디 저장
+        </label>
+      </div>
       <button class="btn">로그인</button>
     </form>
   </div>
@@ -292,5 +405,48 @@
   fistForm.addEventListener("submit", (e) => e.preventDefault());
   secondForm.addEventListener("submit", (e) => e.preventDefault());
 </script>
+<script>
+  // 쿠키 설정 함수
+  function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // 유효기간 설정
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+  }
+
+  // 쿠키 읽기 함수
+  function getCookie(name) {
+    const cookieArr = document.cookie.split("; ");
+    for (let i = 0; i < cookieArr.length; i++) {
+      const cookiePair = cookieArr[i].split("=");
+      if (cookiePair[0] === name) {
+        return decodeURIComponent(cookiePair[1]);
+      }
+    }
+    return null;
+  }
+
+  // 페이지 로드 시 쿠키에서 아이디 불러오기
+  document.addEventListener("DOMContentLoaded", function () {
+    const usernameInput = document.getElementById("username");
+    const rememberMeCheckbox = document.getElementById("rememberMe");
+
+    const savedUsername = getCookie("savedUsername");
+    if (savedUsername) {
+      usernameInput.value = savedUsername; // 쿠키에 저장된 아이디를 입력란에 설정
+      rememberMeCheckbox.checked = true; // 체크박스 활성화
+    }
+
+    // 로그인 버튼 클릭 시 쿠키 설정/삭제
+    document.querySelector("form").addEventListener("submit", function (e) {
+      if (rememberMeCheckbox.checked) {
+        setCookie("savedUsername", usernameInput.value, 30); // 30일 동안 저장
+      } else {
+        setCookie("savedUsername", "", -1); // 쿠키 삭제
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
