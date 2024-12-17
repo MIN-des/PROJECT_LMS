@@ -1,119 +1,151 @@
 package com.project.lms.service;
 
+import com.project.lms.dto.EnrollDTO;
+import com.project.lms.dto.CourseDTO;
 import com.project.lms.dto.EnrollCourseDTO;
 import com.project.lms.entity.*;
 import com.project.lms.repository.CourseRepository;
 import com.project.lms.repository.EnrollRepository;
+import com.project.lms.repository.OrderRepository;
 import com.project.lms.repository.StudentRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class EnrollServiceImpl implements EnrollService {
 
-  private final StudentRepository studentRepository;
   private final EnrollRepository enrollRepository;
+  private final StudentRepository studentRepository;
   private final CourseRepository courseRepository;
+  private final OrderRepository orderRepository;
 
-  @Transactional
-  public Enroll getOrCreateEnroll(String studentId) {
-    Student student = studentRepository.findById(studentId)
-            .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
-
-    Enroll enroll = student.getEnroll();
-    if (enroll == null) {
-      enroll = new Enroll();
-      enroll.setStudent(student);
-      student.setEnroll(enroll);
-      enroll = enrollRepository.save(enroll); // 새로 생성된 경우에만 저장
-    }
-
-    return enroll;
+  public EnrollServiceImpl(EnrollRepository enrollRepository, StudentRepository studentRepository, CourseRepository courseRepository, OrderRepository orderRepository) {
+    this.enrollRepository = enrollRepository;
+    this.studentRepository = studentRepository;
+    this.courseRepository = courseRepository;
+    this.orderRepository = orderRepository;
   }
 
-  @Transactional
-  public void addCourseToEnroll(String studentId, Long courseId) {
-    Enroll enroll = getOrCreateEnroll(studentId);
+  // 공통 로직 추출: 학생 및 장바구니 조회
+  private Enroll findOrCreateEnroll(String sId) {
+    Student student = studentRepository.findById(sId)
+            .orElseThrow(() -> new IllegalArgumentException("학생 정보를 찾을 수 없습니다."));
 
-    Course course = courseRepository.findById(courseId)
-            .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
+    return enrollRepository.findByStudent(student)
+            .orElseGet(() -> {
+              Enroll newEnroll = new Enroll();
+              newEnroll.setStudent(student);
+              return enrollRepository.save(newEnroll);
+            });
+  }
 
-    synchronized (enroll) { // 동기화 블록 추가 (멀티 스레딩 환경 대비)
-      // 중복 강의 확인
-      boolean isCourseAlreadyInEnroll = enroll.getEnrollCourses().stream()
-              .anyMatch(item -> item.getCourse().getCId().equals(courseId));
+  public EnrollDTO createEnrollOnLogin(String sId) {
+    Enroll enroll = findOrCreateEnroll(sId);
+    return convertToDTO(enroll);
+  }
 
-      if (isCourseAlreadyInEnroll) {
-        throw new IllegalArgumentException("이미 장바구니에 추가된 강의입니다.");
-      }
+  public EnrollDTO addCourseToEnroll(String sId, Long cId) {
+    Enroll enroll = findOrCreateEnroll(sId);
 
-      enroll.addCourse(course);
-      enrollRepository.save(enroll);
+    Course course = courseRepository.findById(cId)
+            .orElseThrow(() -> new IllegalArgumentException("강의 정보를 찾을 수 없습니다."));
+
+    // 중복 확인
+    boolean isAlreadyAdded = enroll.getEnrollCourses().stream()
+            .anyMatch(enrollCourse -> enrollCourse.getCourse().getCId().equals(cId));
+
+    if (isAlreadyAdded) {
+      throw new IllegalArgumentException("이미 추가된 강의입니다.");
     }
+
+    // 강의 추가
+    EnrollCourse enrollCourse = new EnrollCourse();
+    enrollCourse.setEnroll(enroll);
+    enrollCourse.setCourse(course);
+    enroll.getEnrollCourses().add(enrollCourse);
+
+    // 강의 정원 감소
+//    course.decreaseRestNum();
+
+    enrollRepository.save(enroll);
+    return convertToDTO(enroll);
+  }
+
+  public EnrollDTO convertToDTO(Enroll enroll) {
+    EnrollDTO enrollDTO = new EnrollDTO();
+    enrollDTO.setEId(enroll.getEId());
+    enrollDTO.setStudentId(enroll.getStudent().getSId());
+
+    // Lazy 로딩 방지: DTO 변환 전에 필요한 데이터만 로드
+    List<EnrollCourseDTO> courseDTOs = enroll.getEnrollCourses().stream()
+            .map(enrollCourse -> {
+              Course course = enrollCourse.getCourse(); // Lazy 로딩 발생 가능
+              EnrollCourseDTO dto = new EnrollCourseDTO();
+              dto.setCeId(enrollCourse.getCeId());
+              dto.setEId(enroll.getEId());
+              dto.setCId(course.getCId());
+              dto.setCName(course.getCName());
+              dto.setCredits(course.getCredits());
+              dto.setMaxCapacity(course.getMaxCapacity());
+              dto.setRestNum(course.getRestNum());
+              dto.setPId(course.getCreatedBy());
+              dto.setDept(course.getProfessor().getPDept());
+              dto.setPName(course.getProfessor().getPName());
+              return dto;
+            })
+            .collect(Collectors.toList());
+
+    enrollDTO.setEnrollCourses(courseDTOs);
+    return enrollDTO;
   }
 
 
-//  @Transactional(readOnly = true)
-//  public List<EnrollCourseDTO> getEnrollCourses(String studentId) {
-//    Enroll enroll = enrollRepository.findByStudent_sId(studentId)
-//            .orElseThrow(() -> new IllegalArgumentException("학생 ID :" + studentId + "장바구니를 찾을 수 없습니다."));
+  public void removeCourseFromEnroll(String sId, Long cId) {
+    Enroll enroll = findOrCreateEnroll(sId);
+
+    // 강의 제거
+    EnrollCourse enrollCourse = enroll.getEnrollCourses().stream()
+            .filter(ec -> ec.getCourse().getCId().equals(cId))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("장바구니에 해당 강의가 없습니다."));
+
+    enroll.getEnrollCourses().remove(enrollCourse);
+
+    // 강의 정원 복구
+//    enrollCourse.getCourse().increaseRestNum();
+
+    enrollRepository.save(enroll);
+  }
+
+//  @Override
+//  public Map<String, Object> getOrdersWithScores(String sId) {
+//    // 학생 확인
+//    Student student = studentRepository.findById(sId)
+//            .orElseThrow(() -> new IllegalArgumentException("해당 학생 정보를 찾을 수 없습니다."));
 //
-//    return enroll.getEnrollCourses().stream()
-//            .map(item -> {
-//              Course course = item.getCourse();
-//              return new EnrollCourseDTO(
-//                      course.getCId(),
-//                      course.getCName(),
-//                      enroll.getStudent().getSId(),
-//                      course.getCredits(),
-//                      course.getRestNum()
+//    // 학생의 수강신청 내역 조회
+//    List<Order> orders = orderRepository.findByStudent_sId(sId);
 //
-//              );
-//            })
-//            .collect(Collectors.toList());
+//    // 결과를 Map 형태로 구성
+//    Map<String, Object> result = new HashMap<>();
+//    result.put("student", student.getSName()); // 학생 이름
+//    result.put("orders", orders.stream().map(order -> {
+//      Map<String, Object> orderDetails = new HashMap<>();
+//      orderDetails.put("courseName", order.getCourse().getCName()); // 강의 이름
+//      orderDetails.put("score", order.getScore() != null ? order.getScore() : "미부여"); // 성적
+//      orderDetails.put("courseId", order.getCourse().getCId()); // 강의 ID
+//      orderDetails.put("credits", order.getCourse().getCredits());  // 총 학점
+//      orderDetails.put("professorName", order.getCourse().getProfessor().getPName());  // 교수 이름
+//      orderDetails.put("dept", order.getCourse().getProfessor().getPDept());
+//      return orderDetails;
+//    }).collect(Collectors.toList()));
+//
+//    return result;
 //  }
-
-  @Transactional
-  public void removeCourseFromEnroll(String studentId, Long courseId) {
-    Enroll enroll = getOrCreateEnroll(studentId);
-
-    boolean removed = enroll.getEnrollCourses().removeIf(item -> item.getCourse().getCId().equals(courseId));
-    if (!removed) {
-      throw new IllegalArgumentException("장바구니에 강의 ID: " + courseId + "가 존재하지 않습니다.");
-    }
-
-    enrollRepository.save(enroll);
-  }
-
-  @Transactional
-  public void confirmEnrollment(String studentId) {
-    Enroll enroll = enrollRepository.findByStudent_sId(studentId)
-            .orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
-
-    if (enroll.getEnrollCourses().isEmpty()) {
-      throw new IllegalStateException("장바구니에 담긴 강의가 없습니다.");
-    }
-
-    for (EnrollCourse enrollCourse : enroll.getEnrollCourses()) {
-      Course course = enrollCourse.getCourse();
-
-      // 잔여 정원 확인
-      if (course.getRestNum() <= 0) {
-        throw new IllegalStateException("강의 [" + course.getCName() + "]의 잔여 정원이 부족합니다.");
-      }
-
-//      course.removeStock(1); // 잔여 인원 감소
-      courseRepository.save(course);
-    }
-
-    enroll.getEnrollCourses().clear(); // 장바구니 비우기
-    enrollRepository.save(enroll);
-  }
-
 }

@@ -1,5 +1,6 @@
 package com.project.lms.dto;
 
+import com.project.lms.constant.Dept;
 import com.project.lms.constant.OrderStatus;
 import com.project.lms.entity.Course;
 import com.project.lms.entity.Order;
@@ -34,6 +35,10 @@ public class OrderDTO {
 
     private OrderStatus orderStatus;
 
+    private Dept pDept;
+
+    private String pName;
+
     private static ModelMapper modelMapper = new ModelMapper();
 
     public static OrderDTO of(Order order) {
@@ -44,7 +49,9 @@ public class OrderDTO {
             orderDTO.setCId(order.getCourse().getCId());
             orderDTO.setCName(order.getCourse().getCName());
             orderDTO.setCredits(order.getCourse().getCredits());
-            orderDTO.setPId(order.getCourse().getCreatedBy()); // 교수 정보 가져옴
+            orderDTO.setPId(order.getCourse().getProfessor().getPId()); // 교수 정보 가져옴
+            orderDTO.setPDept(order.getCourse().getProfessor().getPDept());
+            orderDTO.setPName(order.getCourse().getProfessor().getPName());
         }
 
         return orderDTO;

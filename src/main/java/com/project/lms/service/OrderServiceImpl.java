@@ -2,10 +2,7 @@ package com.project.lms.service;
 
 import com.project.lms.constant.OrderStatus;
 import com.project.lms.dto.OrderDTO;
-import com.project.lms.entity.Course;
-import com.project.lms.entity.Order;
-import com.project.lms.entity.OrderCourse;
-import com.project.lms.entity.Student;
+import com.project.lms.entity.*;
 import com.project.lms.repository.CourseRepository;
 import com.project.lms.repository.OrderRepository;
 import com.project.lms.repository.StudentRepository;

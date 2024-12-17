@@ -11,9 +11,12 @@ import java.util.Optional;
 
 public interface CourseService {
 
-  List<Course> getCoursesByProfessorId(String pId);
+//  List<Course> getCoursesByProfessorId(String pId);
 
   CourseDTO createCourse(CourseDTO courseDTO);
+  Page<CourseDTO> getMyCourses(String pId, Pageable pageable);
+  Page<CourseDTO> searchMyCoursesById(String pId, Long cId, Pageable pageable);
+  Page<CourseDTO> searchMyCoursesByName(String pId, String cName, Pageable pageable);
 
   // 강의 상세 정보 조회
   // Optional: Null 값도 불러옴

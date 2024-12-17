@@ -17,4 +17,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
   List<Order> findByStudent_sId(String sId);
 
   boolean existsByStudentAndCourse(Student student, Course course);
+
 }

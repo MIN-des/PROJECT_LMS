@@ -1,5 +1,6 @@
 package com.project.lms.entity;
 
+import com.project.lms.constant.Dept;
 import com.project.lms.dto.CourseDTO;
 import lombok.Getter;
 import lombok.Setter;

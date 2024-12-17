@@ -4,6 +4,8 @@ import com.project.lms.dto.StudentDTO;
 import com.project.lms.dto.TuitionInvoiceUploadDTO;
 import com.project.lms.entity.Student;
 import com.project.lms.repository.StudentRepository;
+import com.project.lms.service.EnrollService;
+import com.project.lms.service.OrderService;
 import com.project.lms.service.StudentService;
 import com.project.lms.service.TuitionInvoiceUploadService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -26,6 +29,7 @@ import javax.validation.Valid;
 import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,41 +41,58 @@ public class StudentController {
   private final TuitionInvoiceUploadService tuitionInvoiceUploadService;
   private final StudentRepository studentRepository;
   private final PasswordEncoder passwordEncoder;
+  private final EnrollService enrollService;
 
   @GetMapping("/info")
   public String getStudentInfo(Model model, Principal principal) {
-    String sId = principal.getName(); // Principal에서 pId 가져오기
-    System.out.println("Logged-in professor ID: " + sId);
+    String sId = principal.getName(); // Principal에서 sId 가져오기
+    System.out.println("Logged-in student ID: " + sId);
 
     Student student = studentRepository.findById(sId)
-            .orElseThrow(() -> new IllegalArgumentException("Professor not found for ID: " + sId));
+            .orElseThrow(() -> new IllegalArgumentException("Student not found for ID: " + sId));
 
     model.addAttribute("student", student);
 
     return "student/info";
   }
 
-  // 교수 자신의 정보 업데이트 (주소, 전화번호, 비밀번호)
   @PostMapping("/info")
-  public String updateStudentInfo(@Valid @ModelAttribute("student") Student updatedStudent,
-                                    BindingResult bindingResult,
-                                    Principal principal, RedirectAttributes redirectAttributes) {
+  public String updateStudentInfo(
+          @Valid @ModelAttribute("student") Student updatedStudent,
+          BindingResult bindingResult,
+          @RequestParam(required = false) String newPw,
+          @RequestParam(required = false) String newSTel,
+          @RequestParam(required = false) String newSAdd,
+          Principal principal,
+          RedirectAttributes redirectAttributes) {
+
     if (bindingResult.hasErrors()) {
       return "student/info"; // 에러 발생 시 원래 페이지로
     }
 
-    String sId = principal.getName(); // 로그인된 교수의 ID 가져오기
+    String sId = principal.getName();
     Student student = studentRepository.findById(sId)
-            .orElseThrow(() -> new IllegalArgumentException("Professor not found for ID: " + sId));
+            .orElseThrow(() -> new IllegalArgumentException("Student not found for ID: " + sId));
+
+    // 비밀번호 업데이트
+    if (newPw != null && !newPw.trim().isEmpty()) {
+      student.setSPw(passwordEncoder.encode(newPw));
+    }
+
+    // 전화번호 업데이트
+    if (newSTel != null && !newSTel.trim().isEmpty()) {
+      student.setSTel(newSTel);
+    }
+
+    // 주소 업데이트
+    if (newSAdd != null && !newSAdd.trim().isEmpty()) {
+      student.setSAdd(newSAdd);
+    }
 
     // 비밀번호가 업데이트되었을 경우 암호화 처리
     if (updatedStudent.getSPw() != null && !updatedStudent.getSPw().isEmpty()) {
       student.setSPw(passwordEncoder.encode(updatedStudent.getSPw()));
     }
-
-    // 업데이트 가능한 필드 업데이트
-    student.setSTel(updatedStudent.getSTel());
-    student.setSAdd(updatedStudent.getSAdd());
 
     studentRepository.save(student);
 
@@ -81,7 +102,7 @@ public class StudentController {
   }
 
   @GetMapping("/modify/{sId}")
-  public String updateInfoForm(@PathVariable String sId,Model model) {
+  public String updateInfoForm(@PathVariable String sId, Model model) {
     Student student = studentService.getStudentInfo(sId);
     model.addAttribute("student", student);
     return "student/modify";
@@ -89,11 +110,11 @@ public class StudentController {
 
   @PostMapping("/modify/{sId}")
   public String updateInfo(@PathVariable String sId, @Valid @ModelAttribute StudentDTO studentDTO, BindingResult bindingResult, Model model) {
-    if(bindingResult.hasErrors()) {
+    if (bindingResult.hasErrors()) {
       model.addAttribute("student", studentDTO);
       return "student/modify"; // 유효성 검사 실패 시 폼으로 돌아가기
     }
-    try{
+    try {
       studentService.updateInfo(sId, studentDTO);
     } catch (IllegalArgumentException e) {
       model.addAttribute("errorMessage", e.getMessage());
@@ -154,8 +175,8 @@ public class StudentController {
     headers.setContentDispositionFormData("attachment", "invoice_" + tId + ".pdf");
 
     return ResponseEntity.ok()
-        .headers(headers)
-        .body(fileData);
+            .headers(headers)
+            .body(fileData);
   }
 
   // 등록금 고지서 미리보기
@@ -169,7 +190,22 @@ public class StudentController {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_PDF); // 브라우저가 PDF로 렌더링하도록 Content-Type 설정
     return ResponseEntity.ok()
-        .headers(headers)
-        .body(fileData);
+            .headers(headers)
+            .body(fileData);
+  }
+
+  @GetMapping("/grades")
+  public String getStudentGrades(Principal principal, Model model) {
+    // 로그인한 학생 ID
+    String sId = principal.getName();
+
+    // 학생의 수강 내역과 성적 가져오기
+    Map<String, Object> studentData = studentService.getOrdersWithScores(sId);
+
+    // 모델에 데이터 추가
+    model.addAttribute("student", studentData.get("student"));
+    model.addAttribute("orders", studentData.get("orders"));
+
+    return "student/grades"; // 성적 확인 화면으로 이동
   }
 }

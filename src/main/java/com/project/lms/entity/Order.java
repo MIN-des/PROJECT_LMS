@@ -1,5 +1,6 @@
 package com.project.lms.entity;
 
+import com.project.lms.constant.Dept;
 import com.project.lms.constant.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;

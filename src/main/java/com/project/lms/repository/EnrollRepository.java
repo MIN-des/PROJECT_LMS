@@ -1,11 +1,17 @@
 package com.project.lms.repository;
 
+import com.project.lms.entity.Course;
 import com.project.lms.entity.Enroll;
+import com.project.lms.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface EnrollRepository extends JpaRepository<Enroll, Long> {
-//  @Query("SELECT e FROM enroll e WHERE e.student.sId = :studentId")
-  Optional<Enroll> findByStudent_sId(/*@Param("studentId")*/ String studentId);
+  Optional<Enroll> findByStudent(Student student);
+
+
 }

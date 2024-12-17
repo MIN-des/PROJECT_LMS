@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:replace="fragments/head::headFragment"></th:block>
+<body>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container">
+  <div class="page-inner">
+    <div layout:fragment="content" class="container my-3">
+      <h3 style="text-align: center;"><strong>내 성적 조회</strong></h3>
+      <table class="table table-striped table-hover table-bordered align-middle text-center">
+        <thead class="table-dark">
+        <tr>
+          <th style="background-color: #343a40; color: #ffffff;">강의 ID</th>
+          <th style="background-color: #343a40; color: #ffffff;">개설 학과</th>
+          <th style="background-color: #343a40; color: #ffffff;">교수 번호</th>
+          <th style="background-color: #343a40; color: #ffffff;">교수 명</th>
+          <th style="background-color: #343a40; color: #ffffff;">강의 명</th>
+          <th style="background-color: #343a40; color: #ffffff;">총 학점</th>
+          <th style="background-color: #343a40; color: #ffffff;">내 성적</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+          <td th:text="C + ${order.cId}" style="background-color: #f2f2f2;"></td> <!-- 강의 ID -->
+          <td th:text="${order.pDept.koreanName}"></td> <!-- 학과 -->
+          <td th:text="${order.pId}"></td> <!-- 교수 번호 -->
+          <td th:text="${order.pName}"></td> <!-- 교수명 -->
+          <td th:text="${order.cName}"></td> <!-- 강의명 -->
+          <td th:text="${order.credits}"></td> <!-- 학점 -->
+          <!--<td th:text="${order.score != null ? order.score : '미부여'}"
+              th:style="${order.score != null} ? 'font-weight: bold; color: #198754;' : 'color: #dc3545;'">
+          </td> &lt;!&ndash; 성적 &ndash;&gt;-->
+          <td th:text="${order.grade}"></td> <!-- 학점 -->
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
+</body>
+</html>

@@ -27,23 +27,60 @@ public class CourseServiceImpl implements CourseService {
 
   private final ProfessorRepository professorRepository;
   private final CourseRepository courseRepository;
-  private final OrderRepository orderRepository;
   private final ModelMapper modelMapper;
 
-  // 강의 담당 교수 조회
   @Override
-  public List<Course> getCoursesByProfessorId(String pId) {
+  public Page<CourseDTO> getMyCourses(String pId, Pageable pageable) {
+    return courseRepository.findByProfessor_pId(pId, pageable)
+            .map(course -> {
+              CourseDTO courseDTO = CourseDTO.of(course);
+              courseDTO.setPId(course.getProfessor().getPId());
+              courseDTO.setPDept(course.getProfessor().getPDept());
+              courseDTO.setCName(course.getCName());
+              courseDTO.setCredits(course.getCredits());
+              courseDTO.setMaxCapacity(course.getMaxCapacity());
+              courseDTO.setRestNum(course.getRestNum());
+              courseDTO.setPName(course.getProfessor().getPName());
 
-    // 교수 ID로 강의 리스트 가져오기
-    List<Course> courses = courseRepository.findCoursesByProfessor_pId(pId);
+              return courseDTO;
+            });
+  }
 
-    // 각 강의의 수강 신청한 학생 정보를 로드
-    for (Course course : courses) {
-      for (Order order : course.getOrders()) {
-        Hibernate.initialize(order.getStudent());
-      }
-    }
-    return courses;
+  @Override
+  public Page<CourseDTO> searchMyCoursesById(String pId, Long cId, Pageable pageable) {
+    return courseRepository.findCoursesByProfessorAndId(pId, cId, pageable)
+            .map(course -> {
+              CourseDTO courseDTO = CourseDTO.of(course);
+              courseDTO.setPId(course.getProfessor().getPId());
+              courseDTO.setPDept(course.getProfessor().getPDept());
+              courseDTO.setCName(course.getCName());
+              courseDTO.setCredits(course.getCredits());
+              courseDTO.setMaxCapacity(course.getMaxCapacity());
+              courseDTO.setRestNum(course.getRestNum());
+              courseDTO.setPName(course.getProfessor().getPName());
+
+
+              return courseDTO;
+            });
+  }
+
+  @Override
+  public Page<CourseDTO> searchMyCoursesByName(String pId, String cName, Pageable pageable) {
+    return courseRepository.findByProfessor_PIdAndCNameContainingIgnoreCase(
+                    pId, cName, pageable)
+            .map(course -> {
+              CourseDTO courseDTO = CourseDTO.of(course);
+              courseDTO.setPId(course.getProfessor().getPId());
+              courseDTO.setPDept(course.getProfessor().getPDept());
+              courseDTO.setCName(course.getCName());
+              courseDTO.setCredits(course.getCredits());
+              courseDTO.setMaxCapacity(course.getMaxCapacity());
+              courseDTO.setRestNum(course.getRestNum());
+              courseDTO.setPName(course.getProfessor().getPName());
+
+
+              return courseDTO;
+            });
   }
 
   // 강의 생성 메소드
@@ -71,6 +108,8 @@ public class CourseServiceImpl implements CourseService {
               courseDTO.setMaxCapacity(course.getMaxCapacity());
               courseDTO.setRestNum(course.getRestNum());
               courseDTO.setPId(course.getProfessor().getPId());
+              courseDTO.setPDept(course.getProfessor().getPDept());
+              courseDTO.setPName(course.getProfessor().getPName());
 
               return courseDTO;
             });
@@ -101,6 +140,8 @@ public class CourseServiceImpl implements CourseService {
             .map(course -> {
               CourseDTO courseDTO = modelMapper.map(course, CourseDTO.class);
               courseDTO.setPId(course.getProfessor().getPId()); // 수동 매핑
+              courseDTO.setPDept(course.getProfessor().getPDept());
+              courseDTO.setPName(course.getProfessor().getPName());
 
               return courseDTO;
             });
@@ -112,6 +153,8 @@ public class CourseServiceImpl implements CourseService {
             .map(course -> {
               CourseDTO courseDTO = modelMapper.map(course, CourseDTO.class);
               courseDTO.setPId(course.getProfessor().getPId()); // 수동 매핑
+              courseDTO.setPDept(course.getProfessor().getPDept());
+              courseDTO.setPName(course.getProfessor().getPName());
 
               return courseDTO;
             });
@@ -124,6 +167,8 @@ public class CourseServiceImpl implements CourseService {
             .map(course -> {
               CourseDTO courseDTO = modelMapper.map(course, CourseDTO.class);
               courseDTO.setPId(course.getProfessor().getPId()); // 수동 매핑
+              courseDTO.setPDept(course.getProfessor().getPDept());
+              courseDTO.setPName(course.getProfessor().getPName());
 
               return courseDTO;
             });
@@ -136,6 +181,8 @@ public class CourseServiceImpl implements CourseService {
             .map(course -> {
               CourseDTO courseDTO = CourseDTO.of(course);
               courseDTO.setPId(course.getProfessor().getPId());
+              courseDTO.setPDept(course.getProfessor().getPDept());
+              courseDTO.setPName(course.getProfessor().getPName());
 
               return courseDTO;
             });
