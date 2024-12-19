@@ -4,12 +4,11 @@ import com.project.lms.dto.ProfessorDTO;
 import com.project.lms.dto.StudentDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 
 public interface AdminService {
-	// 교수 관련 메서드
+	// 교수 관련 메소드
 	ProfessorDTO createProfessor(ProfessorDTO professorDTO);
 	Optional<ProfessorDTO> getProfessorById(String pId);
 	ProfessorDTO updateProfessor(String pId, ProfessorDTO professorDTO);
@@ -19,7 +18,7 @@ public interface AdminService {
 	Page<ProfessorDTO> searchProfessorsByDept(String pDept, Pageable pageable);
 	Page<ProfessorDTO> getAllProfessors(Pageable pageable);
 
-	// 학생 관련 메서드
+	// 학생 관련 메소드
 	StudentDTO createStudent(StudentDTO studentDTO);
 	Optional<StudentDTO> getStudentById(String sId);
 	StudentDTO updateStudent(String sId, StudentDTO studentDTO);

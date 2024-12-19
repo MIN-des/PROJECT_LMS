@@ -35,7 +35,7 @@ public class Student {
   @Enumerated(EnumType.STRING)
   private Role role = Role.ROLE_STUDENT; // 독립적인 테이블이므로 필요없음
 
-  @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(mappedBy = "student", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private Enroll enroll;
 
 }

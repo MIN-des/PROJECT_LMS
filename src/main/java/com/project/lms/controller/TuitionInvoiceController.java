@@ -113,6 +113,4 @@ public class TuitionInvoiceController {
 		}
 		return "redirect:/admin/invoices/student?sId=" + sId;
 	}
-
-
 }

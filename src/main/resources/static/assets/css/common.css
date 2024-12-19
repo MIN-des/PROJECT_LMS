@@ -4,7 +4,7 @@
         object-position: center !important; /* 이미지의 중앙을 기준으로 자르기 */
     }
     #promoCarousel .carousel-inner .carousel-item img {
-        height: 400px !important; /* 이걸로 조정 가능 원하는 높이 설정 */
+        height: 570px !important; /* 이걸로 조정 가능 원하는 높이 설정 */
         object-fit: cover !important;
     }
     .user-box {
@@ -407,3 +407,96 @@
           border-top-right-radius: 10px;
       }
 
+        /*형민 추가*/
+      .sidebar .nav>.nav-item a p,
+      .sidebar[data-background-color=white] .nav>.nav-item a p {
+          font-size: 1.07rem;
+          margin-bottom: 0;
+          margin-right: 5px;
+          white-space: nowrap;
+          font-weight: 600;
+      }
+
+      .sidebar[data-background-color=dark] .nav>.nav-item a:focus p, .sidebar[data-background-color=dark] .nav>.nav-item a:hover p, .sidebar[data-background-color=dark] .nav>.nav-item a[data-toggle=collapse][aria-expanded=true] p {
+          color: #5195bf !important;
+      }
+
+      .sidebar .nav>.nav-item a i, .sidebar[data-background-color=white] .nav>.nav-item a i {
+          color: #8d9498;
+          margin-right: 15px;
+          width: 25px;
+          text-align: center;
+          vertical-align: middle;
+          float: left;
+          font-size: 16px;
+          line-height: 30px;
+          transition: transform 0.3s ease, color 0.3s ease; /* 부드러운 전환 효과 추가 */
+      }
+
+      .sidebar .nav>.nav-item a:focus i, .sidebar .nav>.nav-item a:hover i, .sidebar[data-background-color=white] .nav>.nav-item a:focus i, .sidebar[data-background-color=white] .nav>.nav-item a:hover i {
+          color: #4d7cfe !important;
+          transform: rotate(-10deg); /* 살짝 기울임 효과 */
+      }
+
+      .hover-rotate i {
+          transition: transform 0.3s ease; /* 부드러운 전환 효과 */
+      }
+
+      .hover-rotate:hover i {
+          transform: rotate(45deg);
+      }
+      .image-container {
+        position: relative;
+      }
+
+      .image-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(200, 200, 200, 0.2); /* 밝은 흰색 반투명 */
+        pointer-events: none; /* 클릭 이벤트 방해 방지 */
+      }
+      #map_div {
+          width: 100%;
+          max-width: 1200px;
+          height: 500px;
+          border: 1px solid #ddd;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+    .map-page-info-panel {
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-title {
+        margin-bottom: 15px;
+        color: #333;
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .info-card {
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-card p {
+        margin: 10px 0;
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.8;
+    }
+
+    .info-card i {
+        margin-right: 8px;
+        color: #007BFF; /* 아이콘 색상 */
+    }
+       /*형민 추가*/

@@ -3,11 +3,9 @@ package com.project.lms.service;
 import com.project.lms.constant.Dept;
 import com.project.lms.dto.ProfessorDTO;
 import com.project.lms.dto.StudentDTO;
-import com.project.lms.entity.Admin;
 import com.project.lms.entity.Professor;
 import com.project.lms.entity.Student;
 import com.project.lms.entity.TuitionInvoiceUpload;
-import com.project.lms.repository.AdminRepository;
 import com.project.lms.repository.ProfessorRepository;
 import com.project.lms.repository.StudentRepository;
 import com.project.lms.repository.TuitionInvoiceUploadRepository;
@@ -15,10 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,16 +21,14 @@ import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AdminServiceImpl implements AdminService{
+public class AdminServiceImpl implements AdminService {
 
-	private final AdminRepository adminRepository;
 	private final ProfessorRepository professorRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final ModelMapper modelMapper;
@@ -121,7 +113,6 @@ public class AdminServiceImpl implements AdminService{
 		return professorRepository.findAll(pageable)
 				.map(professor -> modelMapper.map(professor, ProfessorDTO.class));
 	}
-
 
 
 	@Override
@@ -222,5 +213,4 @@ public class AdminServiceImpl implements AdminService{
 		return studentRepository.findAll(pageable)
 				.map(student -> modelMapper.map(student, StudentDTO.class));
 	}
-
 }

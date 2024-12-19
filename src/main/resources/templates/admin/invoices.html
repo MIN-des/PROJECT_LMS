@@ -6,171 +6,176 @@
 <th:block th:replace="fragments/header::headerFragment"></th:block>
 
 <div class="container mt-8">
-  <div class="page-inner" style="padding-left: 10rem; padding-right: 10rem;">
-    <div class="row">
-      <!-- 에러 및 성공 메시지 -->
-      <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
-      <div th:if="${success != null}" class="alert alert-success" th:text="${success}"></div>
+    <div class="page-inner" style="padding-left: 10rem; padding-right: 10rem;">
+        <div class="row">
+            <!-- 에러 및 성공 메시지 -->
+            <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+            <div th:if="${success != null}" class="alert alert-success" th:text="${success}"></div>
 
-      <!-- 학번 입력 폼 -->
-      <div class="col-md-4">
-        <div class="card shadow mb-4">
-          <div class="card-header bg-primary custom-card text-white text-center">
-            <h5>학번 입력</h5>
-          </div>
-          <div class="card-body">
-            <form th:action="@{/admin/invoices/student}" method="get">
-              <div class="mb-3">
-                <label for="sId" class="form-label">학번</label>
-                <input type="text" id="sId" name="sId" class="form-control" placeholder="학번 입력" required>
-              </div>
-              <div class="text-center">
-                <button type="submit" class="btn btn-label-primary w-30">조회</button>
-              </div>
-            </form>
-          </div>
+            <!-- 학번 입력 폼 -->
+            <div class="col-md-4">
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-primary custom-card text-white text-center">
+                        <h5>학번 입력</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/invoices/student}" method="get">
+                            <div class="mb-3">
+                                <label for="sId" class="form-label">학번</label>
+                                <input type="text" id="sId" name="sId" class="form-control" placeholder="학번 입력"
+                                       required>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-label-primary w-30">조회</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 등록금 고지서 업로드 -->
+                <div th:if="${student != null}" class="card shadow">
+                    <div class="card-header bg-success custom-card text-white text-center">
+                        <h5>등록금 고지서 업로드</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/invoices/upload}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="sId" th:value="${student.sId}">
+                            <div class="mb-3">
+                                <label for="file" class="form-label">등록금 고지서 파일 (PDF)</label>
+                                <input type="file" id="file" name="file" class="form-control" accept="application/pdf"
+                                       required>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-label-primary w-30">업로드</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 학생 정보 -->
+            <div class="col-md-8">
+                <div th:if="${student != null}" class="card shadow">
+                    <div class="card-header bg-primary custom-card text-white text-center">
+                        <h5>학생 정보</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered text-center">
+                            <tr>
+                                <th>학번</th>
+                                <td th:text="${student.sId}"></td>
+                            </tr>
+                            <tr>
+                                <th>이름</th>
+                                <td th:text="${student.sName}"></td>
+                            </tr>
+                            <tr>
+                                <th>이메일</th>
+                                <td th:text="${student.sEmail}"></td>
+                            </tr>
+                            <tr>
+                                <th>주소</th>
+                                <td th:text="${student.sAdd}"></td>
+                            </tr>
+                            <tr>
+                                <th>전화번호</th>
+                                <td th:text="${student.sTel}"></td>
+                            </tr>
+                            <tr>
+                                <th>학년</th>
+                                <td th:text="${student.grade}"></td>
+                            </tr>
+                            <tr>
+                                <th>학부</th>
+                                <td th:text="${student.sDept.koreanName}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- 등록금 고지서 업로드 -->
-        <div th:if="${student != null}" class="card shadow">
-          <div class="card-header bg-success custom-card text-white text-center">
-            <h5>등록금 고지서 업로드</h5>
-          </div>
-          <div class="card-body">
-            <form th:action="@{/admin/invoices/upload}" method="post" enctype="multipart/form-data">
-              <input type="hidden" name="sId" th:value="${student.sId}">
-              <div class="mb-3">
-                <label for="file" class="form-label">등록금 고지서 파일 (PDF)</label>
-                <input type="file" id="file" name="file" class="form-control" accept="application/pdf" required>
-              </div>
-              <div class="text-center">
-                <button type="submit" class="btn btn-label-primary w-30">업로드</button>
-              </div>
-            </form>
-          </div>
+        <!-- 등록금 고지서 관리 섹션 -->
+        <div class="row mt-5">
+            <!-- 등록금 고지서 목록 -->
+            <div class="col-md-12">
+                <div th:if="${invoices != null && invoices.size() > 0}" class="card shadow">
+                    <div class="card-header bg-info custom-purple text-white text-center">
+                        <h5>등록금 고지서 목록</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered text-center">
+                            <thead>
+                            <tr>
+                                <th>파일명</th>
+                                <th>다운로드</th>
+                                <th>미리보기</th>
+                                <th>삭제</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="invoice : ${invoices}">
+                                <td th:text="${invoice.fileName}"></td>
+                                <td>
+                                    <a th:href="@{'/admin/invoices/download/' + ${invoice.tId}}"
+                                       class="btn btn-label-primary btn-sm">다운로드</a>
+                                </td>
+                                <td>
+                                    <button class="btn btn-label-secondary btn-sm" th:attr="data-id=${invoice.tId}"
+                                            onclick="previewInvoiceFromData(this)">미리보기
+                                    </button>
+                                </td>
+                                <td>
+                                    <form th:action="@{'/admin/invoices/delete/' + ${invoice.tId}}" method="post">
+                                        <input type="hidden" name="sId" th:value="${student.sId}">
+                                        <button type="submit" class="btn btn-label-danger btn-sm">삭제</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <!-- 학생 정보 -->
-      <div class="col-md-8">
-        <div th:if="${student != null}" class="card shadow">
-          <div class="card-header bg-primary custom-card text-white text-center">
-            <h5>학생 정보</h5>
-          </div>
-          <div class="card-body">
-            <table class="table table-bordered text-center">
-              <tr>
-                <th>학번</th>
-                <td th:text="${student.sId}"></td>
-              </tr>
-              <tr>
-                <th>이름</th>
-                <td th:text="${student.sName}"></td>
-              </tr>
-              <tr>
-                <th>이메일</th>
-                <td th:text="${student.sEmail}"></td>
-              </tr>
-              <tr>
-                <th>주소</th>
-                <td th:text="${student.sAdd}"></td>
-              </tr>
-              <tr>
-                <th>전화번호</th>
-                <td th:text="${student.sTel}"></td>
-              </tr>
-              <tr>
-                <th>학년</th>
-                <td th:text="${student.grade}"></td>
-              </tr>
-              <tr>
-                <th>학부</th>
-                <td th:text="${student.sDept.koreanName}"></td>
-              </tr>
-            </table>
-          </div>
+        <!-- 등록금 고지서 미리보기 -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div id="preview-container" class="card shadow" style="display: none;">
+                    <div class="card-header bg-info custom-purple text-white text-center">
+                        <h5>등록금 고지서 미리보기</h5>
+                    </div>
+                    <div class="card-body">
+                        <iframe id="preview-frame" src="" style="width: 100%; height: 600px;" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
     </div>
-
-    <!-- 등록금 고지서 관리 섹션 -->
-    <div class="row mt-5">
-      <!-- 등록금 고지서 목록 -->
-      <div class="col-md-12">
-        <div th:if="${invoices != null && invoices.size() > 0}" class="card shadow">
-          <div class="card-header bg-info custom-purple text-white text-center">
-            <h5>등록금 고지서 목록</h5>
-          </div>
-          <div class="card-body">
-            <table class="table table-bordered text-center">
-              <thead>
-              <tr>
-                <th>파일명</th>
-                <th>다운로드</th>
-                <th>미리보기</th>
-                <th>삭제</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr th:each="invoice : ${invoices}">
-                <td th:text="${invoice.fileName}"></td>
-                <td>
-                  <a th:href="@{'/admin/invoices/download/' + ${invoice.tId}}" class="btn btn-label-primary btn-sm">다운로드</a>
-                </td>
-                <td>
-                  <button class="btn btn-label-secondary btn-sm" th:attr="data-id=${invoice.tId}" onclick="previewInvoiceFromData(this)">미리보기</button>
-                </td>
-                <td>
-                  <form th:action="@{'/admin/invoices/delete/' + ${invoice.tId}}" method="post">
-                    <input type="hidden" name="sId" th:value="${student.sId}">
-                    <button type="submit" class="btn btn-label-danger btn-sm">삭제</button>
-                  </form>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 등록금 고지서 미리보기 -->
-    <div class="row mt-4">
-      <div class="col-md-12">
-        <div id="preview-container" class="card shadow" style="display: none;">
-          <div class="card-header bg-info custom-purple text-white text-center">
-            <h5>등록금 고지서 미리보기</h5>
-          </div>
-          <div class="card-body">
-            <iframe id="preview-frame" src="" style="width: 100%; height: 600px;" frameborder="0"></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
 </div>
 <th:block th:replace="fragments/footer::footerFragment"></th:block>
 
 <script>
-  function previewInvoiceFromData(button) {
-    const tId = button.getAttribute('data-id'); // data-id에서 tId를 가져옴
-    const previewContainer = document.getElementById('preview-container');
-    const previewFrame = document.getElementById('preview-frame');
+    function previewInvoiceFromData(button) {
+      const tId = button.getAttribute('data-id'); // data-id에서 tId를 가져옴
+      const previewContainer = document.getElementById('preview-container');
+      const previewFrame = document.getElementById('preview-frame');
 
-    // 현재 창이 열려 있는 상태인지 확인
-    if (previewContainer.style.display === 'block' && previewFrame.src.includes(`/student/invoices/preview/${tId}`)) {
-      // 이미 열려 있는 상태라면 닫기
-      previewContainer.style.display = 'none';
-      previewFrame.src = ''; // iframe URL 초기화
-      return;
+      // 현재 창이 열려 있는 상태인지 확인
+      if (previewContainer.style.display === 'block' && previewFrame.src.includes(`/student/invoices/preview/${tId}`)) {
+        // 이미 열려 있는 상태라면 닫기
+        previewContainer.style.display = 'none';
+        previewFrame.src = ''; // iframe URL 초기화
+        return;
+      }
+
+      // 새로운 미리보기 URL 설정 및 창 열기
+      const previewUrl = `/student/invoices/preview/${tId}`;
+      previewFrame.src = previewUrl;
+      previewContainer.style.display = 'block';
     }
-
-    // 새로운 미리보기 URL 설정 및 창 열기
-    const previewUrl = `/student/invoices/preview/${tId}`;
-    previewFrame.src = previewUrl;
-    previewContainer.style.display = 'block';
-  }
 
 </script>
 </body>

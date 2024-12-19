@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class SchoolMealServiceImpl implements SchoolMealService{
+public class SchoolMealServiceImpl implements SchoolMealService {
 	private static final String BASE_URL = "https://open.neis.go.kr/hub/mealServiceDietInfo";
 	private static final String API_KEY = "0bff5fc6d15649de951888f66285a922"; // 발급받은 API Key
 
@@ -37,8 +37,6 @@ public class SchoolMealServiceImpl implements SchoolMealService{
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 
 		try {
-//			System.out.println("Request URL: " + url); // 테스트용 / 로그에 apikey 찍힘
-
 			// HTTP GET 요청
 			ResponseEntity<String> responseEntity = restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, entity, String.class);
 			String responseBody = responseEntity.getBody();

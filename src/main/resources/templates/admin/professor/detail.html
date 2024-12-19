@@ -6,206 +6,208 @@
 <th:block th:replace="fragments/header::headerFragment"></th:block>
 
 <div class="container mt-8">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card shadow">
-        <div class="card-header bg-primary custom-card text-white text-center ">
-          <h5>교수 정보 수정</h5>
-        </div>
-        <div class="card-body">
-          <form th:action="@{'/admin/professors/' + ${professor.pId} + '/edit'}" th:object="${professor}" method="post">
-            <input type="hidden" name="pPw" th:value="${professor.pPw}" class="form-control">
-            <input type="hidden" name="page" th:value="${page != null ? page : 0}">
-            <input type="hidden" name="searchType" th:value="${searchType != null ? searchType : ''}">
-            <input type="hidden" name="keyword" th:value="${keyword != null ? keyword : ''}">
-            <input type="hidden" name="sortField" th:value="${sortField != null ? sortField : 'pId'}">
-            <input type="hidden" name="sortDir" th:value="${sortDir != null ? sortDir : 'asc'}">
-            <input type="hidden" name="isSorted" th:value="${isSorted != null ? isSorted : 'false'}">
-            <div class="mb-3">
-              <label for="pId" class="form-label">교직원 번호</label>
-              <input type="text" class="form-control" id="pId" th:field="*{pId}" readonly>
-            </div>
-            <div class="mb-3">
-              <label for="pName" class="form-label">이름</label>
-              <input type="text" class="form-control" id="pName" th:field="*{pName}">
-            </div>
-            <div class="mb-3">
-              <label for="pTel" class="form-label">전화번호</label>
-              <input type="text" class="form-control" id="pTel" th:field="*{pTel}">
-            </div>
-            <div class="mb-3">
-              <label for="pAdd" class="form-label">주소</label>
-              <div class="input-group">
-                <input type="text" id="pAdd" th:value="${professor.pAdd}" class="form-control"
-                       readonly/>
-                <button type="button" class="btn btn-label-primary" onclick="toggleAddressEdit()">수정
-                </button>
-              </div>
-              <div id="newAddressContainer" style="display: none;" class="mt-2">
-                <div class="input-group">
-                  <input type="text" id="newPAdd" name="newPAdd" th:value="${professor.pAdd}" class="form-control"
-                         placeholder="새 주소 입력"/>
-                  <button type="button" class="btn btn-label-primary" data-bs-toggle="modal"
-                          data-bs-target="#addressModal">주소 검색
-                  </button>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary custom-card text-white text-center ">
+                    <h5>교수 정보 수정</h5>
                 </div>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="pEmail" class="form-label">이메일</label>
-              <input type="email" class="form-control" id="pEmail" th:field="*{pEmail}">
-            </div>
+                <div class="card-body">
+                    <form th:action="@{'/admin/professors/' + ${professor.pId} + '/edit'}" th:object="${professor}"
+                          method="post">
+                        <input type="hidden" name="pPw" th:value="${professor.pPw}" class="form-control">
+                        <input type="hidden" name="page" th:value="${page != null ? page : 0}">
+                        <input type="hidden" name="searchType" th:value="${searchType != null ? searchType : ''}">
+                        <input type="hidden" name="keyword" th:value="${keyword != null ? keyword : ''}">
+                        <input type="hidden" name="sortField" th:value="${sortField != null ? sortField : 'pId'}">
+                        <input type="hidden" name="sortDir" th:value="${sortDir != null ? sortDir : 'asc'}">
+                        <input type="hidden" name="isSorted" th:value="${isSorted != null ? isSorted : 'false'}">
+                        <div class="mb-3">
+                            <label for="pId" class="form-label">교직원 번호</label>
+                            <input type="text" class="form-control" id="pId" th:field="*{pId}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pName" class="form-label">이름</label>
+                            <input type="text" class="form-control" id="pName" th:field="*{pName}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pTel" class="form-label">전화번호</label>
+                            <input type="text" class="form-control" id="pTel" th:field="*{pTel}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pAdd" class="form-label">주소</label>
+                            <div class="input-group">
+                                <input type="text" id="pAdd" th:value="${professor.pAdd}" class="form-control"
+                                       readonly/>
+                                <button type="button" class="btn btn-label-primary" onclick="toggleAddressEdit()">수정
+                                </button>
+                            </div>
+                            <div id="newAddressContainer" style="display: none;" class="mt-2">
+                                <div class="input-group">
+                                    <input type="text" id="newPAdd" name="newPAdd" th:value="${professor.pAdd}"
+                                           class="form-control"
+                                           placeholder="새 주소 입력"/>
+                                    <button type="button" class="btn btn-label-primary" data-bs-toggle="modal"
+                                            data-bs-target="#addressModal">주소 검색
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pEmail" class="form-label">이메일</label>
+                            <input type="email" class="form-control" id="pEmail" th:field="*{pEmail}">
+                        </div>
 
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="pBirth" class="form-label">생년월일</label>
-                <input type="date" class="form-control" id="pBirth" th:field="*{pBirth}">
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="year" class="form-label">입사년도</label>
-                <select name="year" id="year" class="form-select">
-                  <option th:each="i : ${#numbers.sequence(1970, 2024)}"
-                          th:value="${i}"
-                          th:text="${i}"
-                          th:selected="${i == professor.year}"></option>
-                </select>
-              </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="pBirth" class="form-label">생년월일</label>
+                                <input type="date" class="form-control" id="pBirth" th:field="*{pBirth}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="year" class="form-label">입사년도</label>
+                                <select name="year" id="year" class="form-select">
+                                    <option th:each="i : ${#numbers.sequence(1970, 2024)}"
+                                            th:value="${i}"
+                                            th:text="${i}"
+                                            th:selected="${i == professor.year}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="pGen" class="form-label">성별</label>
+                                <select name="pGen" id="pGen" class="form-select">
+                                    <option th:each="gender : ${T(com.project.lms.constant.Gen).values()}"
+                                            th:value="${gender.name()}"
+                                            th:text="${gender.koreanName}"
+                                            th:selected="${gender.name() == (professor.pGen != null ? professor.pGen.name() : '')}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="pDept" class="form-label">학부</label>
+                                <select name="pDept" id="pDept" class="form-select">
+                                    <option th:each="department : ${T(com.project.lms.constant.Dept).values()}"
+                                            th:value="${department.name()}"
+                                            th:text="${department.koreanName}"
+                                            th:selected="${department.name() == (professor.pDept != null ? professor.pDept.name() : '')}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="role" class="form-label">권한</label>
+                            <input type="text" class="form-control" id="role" th:field="*{role.koreanName}" readonly>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-label-primary me-2">수정</button>
+
+                    </form>
+                    <form th:action="@{'/admin/professors/' + ${professor.pId} + '/delete'}" method="post">
+                        <input type="hidden" name="page" th:value="${page != null ? page : 0}">
+                        <input type="hidden" name="searchType" th:value="${searchType != null ? searchType : ''}">
+                        <input type="hidden" name="keyword" th:value="${keyword != null ? keyword : ''}">
+                        <input type="hidden" name="sortField" th:value="${sortField != null ? sortField : 'pId'}">
+                        <input type="hidden" name="sortDir" th:value="${sortDir != null ? sortDir : 'asc'}">
+                        <input type="hidden" name="isSorted" th:value="${isSorted != null ? isSorted : 'false'}">
+                        <button type="submit" class="btn btn-label-danger">삭제</button>
+                    </form>
+
+                </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="pGen" class="form-label">성별</label>
-                <select name="pGen" id="pGen" class="form-select">
-                  <option th:each="gender : ${T(com.project.lms.constant.Gen).values()}"
-                          th:value="${gender.name()}"
-                          th:text="${gender.koreanName}"
-                          th:selected="${gender.name() == (professor.pGen != null ? professor.pGen.name() : '')}"></option>
-                </select>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="pDept" class="form-label">학부</label>
-                <select name="pDept" id="pDept" class="form-select">
-                  <option th:each="department : ${T(com.project.lms.constant.Dept).values()}"
-                          th:value="${department.name()}"
-                          th:text="${department.koreanName}"
-                          th:selected="${department.name() == (professor.pDept != null ? professor.pDept.name() : '')}"></option>
-                </select>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="role" class="form-label">권한</label>
-              <input type="text" class="form-control" id="role" th:field="*{role}" readonly>
-            </div>
-
-            <div class="d-flex justify-content-between">
-              <button type="submit" class="btn btn-label-primary me-2">수정</button>
-
-          </form>
-          <form th:action="@{'/admin/professors/' + ${professor.pId} + '/delete'}" method="post">
-            <input type="hidden" name="page" th:value="${page != null ? page : 0}">
-            <input type="hidden" name="searchType" th:value="${searchType != null ? searchType : ''}">
-            <input type="hidden" name="keyword" th:value="${keyword != null ? keyword : ''}">
-            <input type="hidden" name="sortField" th:value="${sortField != null ? sortField : 'pId'}">
-            <input type="hidden" name="sortDir" th:value="${sortDir != null ? sortDir : 'asc'}">
-            <input type="hidden" name="isSorted" th:value="${isSorted != null ? isSorted : 'false'}">
-            <button type="submit" class="btn btn-label-danger">삭제</button>
-          </form>
-
         </div>
-      </div>
     </div>
-  </div>
 </div>
 </div>
 
 <!-- Modal for Address Search -->
 <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addressModalLabel">주소 검색</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="input-group mb-3">
-          <input type="text" id="addressSearchInput" class="form-control"
-                 placeholder="도로명 또는 지번 주소를 입력하세요">
-          <button type="button" class="btn btn-primary" onclick="searchAddress()">검색</button>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addressModalLabel">주소 검색</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="text" id="addressSearchInput" class="form-control"
+                           placeholder="도로명 또는 지번 주소를 입력하세요">
+                    <button type="button" class="btn btn-primary" onclick="searchAddress()">검색</button>
+                </div>
+                <div id="addressResult" class="list-group"></div>
+            </div>
         </div>
-        <div id="addressResult" class="list-group"></div>
-      </div>
     </div>
-  </div>
 </div>
 <th:block th:replace="fragments/footer::footerFragment"></th:block>
 
 <script>
-  function toggleEdit(fieldId) {
-      const inputField = document.getElementById(fieldId);
-      if (inputField) {
-          inputField.style.display = "block";
-          inputField.focus();
-      }
-  }
+    function toggleEdit(fieldId) {
+        const inputField = document.getElementById(fieldId);
+        if (inputField) {
+            inputField.style.display = "block";
+            inputField.focus();
+        }
+    }
 
-  function toggleAddressEdit() {
-      const newAddressContainer = document.getElementById("newAddressContainer");
-      if (newAddressContainer.style.display === "none") {
-          newAddressContainer.style.display = "block";
-      } else {
-          newAddressContainer.style.display = "none";
-      }
-  }
+    function toggleAddressEdit() {
+        const newAddressContainer = document.getElementById("newAddressContainer");
+        if (newAddressContainer.style.display === "none") {
+            newAddressContainer.style.display = "block";
+        } else {
+            newAddressContainer.style.display = "none";
+        }
+    }
 
 </script>
 
 <script>
-  function searchAddress() {
-     const query = document.getElementById('addressSearchInput').value;
-     if (!query) {
-         alert('주소를 입력하세요!');
-         return;
-     }
+    function searchAddress() {
+       const query = document.getElementById('addressSearchInput').value;
+       if (!query) {
+           alert('주소를 입력하세요!');
+           return;
+       }
 
-     // Kakao 주소 검색 API 요청
-     const apiUrl = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}`;
-     const apiKey = '848a61ea755fa4899a301f126a35bd4c'; // 자신의 Kakao API 키로 변경
+       // Kakao 주소 검색 API 요청
+       const apiUrl = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}`;
+       const apiKey = '848a61ea755fa4899a301f126a35bd4c'; // 자신의 Kakao API 키로 변경
 
-     fetch(apiUrl, {
-         method: 'GET',
-         headers: { 'Authorization': `KakaoAK ${apiKey}` }
-     })
-         .then(response => response.json())
-         .then(data => {
-             const results = data.documents;
-             const resultContainer = document.getElementById('addressResult');
-             resultContainer.innerHTML = '';
+       fetch(apiUrl, {
+           method: 'GET',
+           headers: { 'Authorization': `KakaoAK ${apiKey}` }
+       })
+           .then(response => response.json())
+           .then(data => {
+               const results = data.documents;
+               const resultContainer = document.getElementById('addressResult');
+               resultContainer.innerHTML = '';
 
-             if (results.length === 0) {
-                 resultContainer.innerHTML = '<div class="text-danger">검색 결과가 없습니다.</div>';
-                 return;
-             }
+               if (results.length === 0) {
+                   resultContainer.innerHTML = '<div class="text-danger">검색 결과가 없습니다.</div>';
+                   return;
+               }
 
-             results.forEach(result => {
-                 const address = result.address_name;
-                 const item = document.createElement('button');
-                 item.classList.add('list-group-item', 'list-group-item-action');
-                 item.textContent = address;
+               results.forEach(result => {
+                   const address = result.address_name;
+                   const item = document.createElement('button');
+                   item.classList.add('list-group-item', 'list-group-item-action');
+                   item.textContent = address;
 
-                 // 검색된 주소를 'newPAdd' 필드에 입력
-                 item.onclick = () => {
-                     document.getElementById('newPAdd').value = address;
-                     const modal = bootstrap.Modal.getInstance(document.getElementById('addressModal'));
-                     modal.hide(); // 모달 닫기
-                 };
-                 resultContainer.appendChild(item);
-             });
-         })
-         .catch(error => {
-             console.error('Error:', error);
-             alert('주소 검색 중 오류가 발생했습니다.');
-         });
- }
+                   // 검색된 주소를 'newPAdd' 필드에 입력
+                   item.onclick = () => {
+                       document.getElementById('newPAdd').value = address;
+                       const modal = bootstrap.Modal.getInstance(document.getElementById('addressModal'));
+                       modal.hide(); // 모달 닫기
+                   };
+                   resultContainer.appendChild(item);
+               });
+           })
+           .catch(error => {
+               console.error('Error:', error);
+               alert('주소 검색 중 오류가 발생했습니다.');
+           });
+   }
 </script>
 </body>
 </html>

@@ -1,8 +1,5 @@
 package com.project.lms.service;
 
-import com.project.lms.entity.Admin;
-import com.project.lms.entity.Professor;
-import com.project.lms.entity.Student;
 import com.project.lms.repository.AdminRepository;
 import com.project.lms.repository.ProfessorRepository;
 import com.project.lms.repository.StudentRepository;
@@ -15,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @Service
