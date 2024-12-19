@@ -1,73 +1,139 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>채팅 페이지</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block th:replace="fragments/head::headFragment"></th:block>
 <body>
-<h1>채팅</h1>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
 
-<!-- 채팅 상대방 정보 출력 -->
-<h3 th:text="'채팅 상대: ' + ${receiverName} + ' (' + ${receiverId} + ')'">채팅 상대</h3>
+<div class="container" style="max-width: 800px; margin: 0 auto;">
+  <div class="page-inner">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="fw-bold">
+        채팅
+      </h1>
+      <!-- 오른쪽 위에 버튼 추가 -->
+      <a th:href="@{/message/main}" class="btn btn-label-primary">메인 페이지로 돌아가기</a>
+    </div>
 
-<!-- 채팅 내역 출력 -->
-<h4>채팅 내역</h4>
-<ul id="chatHistory">
-    <li th:each="message : ${chatHistory}">
-        <span th:text="|${message.senderName} (${message.senderId}): ${message.content}|"></span>
-    </li>
-</ul>
+    <div class="chat-container" style="height: 800px;">
+      <!-- 채팅 상대방 정보 -->
+      <div class="chat-header custom-chat" th:text="'채팅 상대: ' + ${receiverName} + ' (' + ${receiverId} + ')'"></div>
 
-<!-- 메시지 전송 폼 -->
-<form id="chatForm">
-    <input type="hidden" id="receiverId" name="receiverId" th:value="${receiverId}" />
-    <input type="hidden" id="receiverName" name="receiverName" th:value="${receiverName}" />
+      <!-- 채팅 내역 -->
+      <ul id="chatHistory" class="chat-messages">
+        <li th:each="message : ${chatHistory}"
+            th:classappend="${message.senderId == #authentication.name} ? 'sent' : 'received'"
+            th:text="|${message.senderName}: ${message.content}|"></li>
+      </ul>
 
-    <textarea id="content" name="content" placeholder="메시지를 입력하세요" required></textarea>
-    <button type="submit">전송</button>
-</form>
+      <!-- 메시지 미리보기 -->
+      <div id="messagePreview" class="message-preview"></div>
 
-<!-- 채팅 내역 자동 새로고침 -->
+      <!-- 메시지 입력 폼 -->
+      <form id="chatForm" class="chat-footer">
+        <input type="hidden" id="receiverId" name="receiverId" th:value="${receiverId}"/>
+        <input type="hidden" id="receiverName" name="receiverName" th:value="${receiverName}"/>
+        <textarea id="content" name="content" placeholder="메시지를 입력하세요" required></textarea>
+        <button type="submit" class="custom-chat">전송</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
 <script>
-    $(document).ready(function () {
-        // 메시지 전송
-        $("#chatForm").on("submit", function (event) {
-            event.preventDefault(); // 기본 폼 제출 방지
+  document.addEventListener("DOMContentLoaded", function () {
+    const chatForm = document.getElementById("chatForm");
+    const chatHistory = document.getElementById("chatHistory");
+    const messagePreview = document.getElementById("messagePreview");
 
-            const data = {
-                receiverId: $("#receiverId").val(),
-                content: $("#content").val()
-            };
+    let isAtBottom = true; // 사용자가 스크롤을 맨 아래로 유지하는지 여부
+    let lastMessageId = null; // 마지막 메시지 ID를 저장
 
-            $.post("/message/api/send", data, function () {
-                $("#content").val(""); // 입력 필드 초기화
-                loadChatHistory(); // 채팅 내역 갱신
-            }).fail(function () {
-                alert("메시지 전송에 실패했습니다.");
-            });
-        });
+    // 스크롤 이벤트 감지
+    chatHistory.addEventListener("scroll", () => {
+        const scrollPosition = chatHistory.scrollTop + chatHistory.clientHeight;
+        isAtBottom = scrollPosition >= chatHistory.scrollHeight - 5;
 
-        // 채팅 내역 불러오기
-        function loadChatHistory() {
-            const receiverId = $("#receiverId").val();
-            $.get(`/message/api/history/${receiverId}`, function (chatHistory) {
-                const chatList = $("#chatHistory");
-                chatList.empty(); // 기존 내역 삭제
-                chatHistory.forEach(function (message) {
-                    const chatLine = `<li>${message.senderName} (${message.senderId}): ${message.content}</li>`;
-                    chatList.append(chatLine);
-                });
-            }).fail(function () {
-                alert("채팅 내역을 불러오지 못했습니다.");
-            });
+        if (isAtBottom) {
+            messagePreview.style.display = "none"; // 맨 아래로 스크롤하면 미리보기 숨김
         }
-
-        // 일정 시간마다 채팅 내역 새로고침 (0.5초마다)
-        setInterval(loadChatHistory, 500);
     });
+
+    // 메시지 전송 이벤트
+    chatForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const receiverId = document.getElementById("receiverId").value;
+        const content = document.getElementById("content").value;
+
+        fetch("/message/api/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `receiverId=${receiverId}&content=${encodeURIComponent(content)}`
+        }).then(response => {
+            if (response.ok) {
+                document.getElementById("content").value = ""; // 입력 필드 초기화
+                loadChatHistory(true); // 스크롤을 맨 아래로 이동
+            }
+        }).catch(() => alert("메시지 전송에 실패했습니다."));
+    });
+
+    // 채팅 내역 불러오기
+    function loadChatHistory(scrollToBottom = false) {
+        const receiverId = document.getElementById("receiverId").value;
+        fetch(`/message/api/history/${receiverId}`)
+            .then(response => response.json())
+            .then(messages => {
+                const previousScrollTop = chatHistory.scrollTop; // 이전 스크롤 위치 저장
+                const previousScrollHeight = chatHistory.scrollHeight; // 이전 스크롤 높이 저장
+
+                chatHistory.innerHTML = ""; // 기존 메시지 초기화
+                let newLastMessageId = null; // 새로운 마지막 메시지 ID 저장
+
+                messages.forEach(message => {
+                    const chatLine = document.createElement("li");
+                    chatLine.textContent = `${message.senderName}: ${message.content}`;
+                    chatLine.classList.add(message.senderId === `[[${#authentication.name}]]` ? 'sent' : 'received');
+                    chatHistory.appendChild(chatLine);
+
+                    newLastMessageId = message.messageId; // 메시지 ID 업데이트
+                });
+
+                if (scrollToBottom) {
+                    chatHistory.scrollTop = chatHistory.scrollHeight; // 스크롤을 맨 아래로 이동
+                } else if (!isAtBottom) {
+                    // 스크롤 유지: 이전 위치와 상대적인 위치 계산
+                    chatHistory.scrollTop = previousScrollTop + (chatHistory.scrollHeight - previousScrollHeight);
+                }
+
+                // 새로운 메시지가 있을 때만 미리보기 표시
+                if (newLastMessageId && newLastMessageId !== lastMessageId && !isAtBottom) {
+                    const lastMessage = messages.find(msg => msg.messageId === newLastMessageId);
+                    if (lastMessage && lastMessage.senderId !== `[[${#authentication.name}]]`) {
+                        messagePreview.textContent = `${lastMessage.senderName}: ${lastMessage.content}`;
+                        messagePreview.style.display = "block";
+                    }
+                }
+
+                // 마지막 메시지 ID 업데이트
+                lastMessageId = newLastMessageId;
+            });
+    }
+
+    // 미리보기 클릭 시 스크롤 맨 아래로 이동
+    messagePreview.addEventListener("click", function () {
+        chatHistory.scrollTop = chatHistory.scrollHeight; // 스크롤을 맨 아래로 이동
+        messagePreview.style.display = "none"; // 미리보기 숨김
+    });
+
+    // 채팅 자동 새로고침 (1초마다)
+    setInterval(() => loadChatHistory(false), 1000);
+
+    loadChatHistory(true); // 페이지 로드 시 채팅 내역 불러오기
+});
+
 </script>
 
-<a href="/message/main">메인 페이지로 돌아가기</a>
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 </body>
 </html>

@@ -1,13 +1,11 @@
 package com.project.lms.service;
 
 import com.project.lms.dto.OrderDTO;
-import com.project.lms.entity.Course;
 import com.project.lms.entity.Order;
 import com.project.lms.entity.Professor;
 import com.project.lms.entity.Student;
 
 import java.util.List;
-import java.util.Map;
 
 public interface OrderService {
 

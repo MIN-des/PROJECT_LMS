@@ -113,7 +113,6 @@ public class BoardServiceImpl implements BoardService {
   }
 
 
-
   // 게시글 수정 처리
   public void modify(Long bno, @NotEmpty(message = "제목은 필수 항목입니다.") @Size(max = 200) String title, @NotEmpty(message = "내용은 필수 항목입니다.") String content) {
     Board board = boardRepository.findById(bno)
@@ -246,6 +245,7 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByKeywordAndRegDateBetween(keyword, startDateTime, endDateTime, pageable);
     }
   }
+
   @Transactional
   public void incrementViews(Long bno) {
     Board board = boardRepository.findById(bno)

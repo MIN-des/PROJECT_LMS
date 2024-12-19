@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <th:block th:replace="fragments/head::headFragment"></th:block>
 
@@ -8,16 +9,17 @@
 
 <div class="container">
   <div class="page-inner">
-    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-      <div>
-        <h3 class="fw-bold mb-3">
-          <a th:href="@{/professor/courses/studentList/{cId}}" class="text-decoration-none text-dark">내 강의
-            리스트</a>
-        </h3>
+    <div layout:fragment="content" class="container my-3">
+      <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+        <div>
+          <h1 class="my-4 notice-header">
+            <a th:href="@{/professor/courses/studentList/{cId}}" class="text-decoration-none text-dark">내 강의
+              리스트</a>
+          </h1>
+        </div>
       </div>
-    </div>
 
-    <div class="table-responsive">
+
       <table class="table table-bordered table-hover text-center">
         <thead class="table-dark">
         <tr>
@@ -72,10 +74,12 @@
       <div th:if="${#lists.isEmpty(orders)}" class="text-center">
         <p>수강한 학생 정보가 없습니다.</p>
       </div>
+      <a href="/professor/courses/myCourses" class="btn btn-outline-primary">내 강의로 돌아가기</a>
     </div>
-    <a href="/professor/courses/myCourses" class="btn btn-outline-primary">내 강의로 돌아가기</a>
+
   </div>
 </div>
+
 <th:block th:replace="fragments/footer::footerFragment"></th:block>
 </body>
 </html>

@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface ScheduleService {
   Schedule createSchedule(ScheduleDTO scheduleDTO);
+
   List<Schedule> getAllSchedules();
+
   Schedule getScheduleById(Long sno);
+
   void deleteSchedule(Long sno);
+
   void updateSchedule(ScheduleDTO scheduleDTO);
+
   Page<Schedule> getSchedules(int page, int size);
 }

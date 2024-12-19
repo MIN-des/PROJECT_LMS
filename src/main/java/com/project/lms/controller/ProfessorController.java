@@ -1,7 +1,5 @@
 package com.project.lms.controller;
 
-import com.project.lms.dto.CourseDTO;
-import com.project.lms.entity.Course;
 import com.project.lms.entity.Professor;
 import com.project.lms.repository.ProfessorRepository;
 import com.project.lms.service.CourseService;
@@ -15,8 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/professor")
@@ -24,7 +20,6 @@ import java.util.Map;
 public class ProfessorController {
 
   private final ProfessorRepository professorRepository;
-  private final CourseService courseService;
   private final PasswordEncoder passwordEncoder;
 
   // 로그인 후 교수 자신의 정보 조회

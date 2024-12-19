@@ -19,41 +19,41 @@ import javax.servlet.http.HttpServletResponse;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UnifiedUserDetailsService unifiedUserDetailsService;
+  @Autowired
+  private UnifiedUserDetailsService unifiedUserDetailsService;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(unifiedUserDetailsService)
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(unifiedUserDetailsService)
             .passwordEncoder(passwordEncoder());
-    }
+  }
 
-    // 보안 설정 커스터마이징
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.headers()
+  // 보안 설정 커스터마이징
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.headers()
             .frameOptions()
             .sameOrigin(); // SAMEORIGIN 설정으로 변경 / pdf 파일 미리보기 설정
 
-        http.headers()
+    http.headers()
             .cacheControl()
             .disable();
 
-        http.csrf().disable();
+    http.csrf().disable();
 
-        http.formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/main", true)
-                .usernameParameter("username")
-                .failureUrl("/login?error=true")
-                .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/");
+    http.formLogin()
+            .loginPage("/login")
+            .defaultSuccessUrl("/main", true)
+            .usernameParameter("username")
+            .failureUrl("/login?error=true")
+            .and()
+            .logout()
+            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+            .logoutSuccessUrl("/");
 
-        http.authorizeRequests()
-                .antMatchers("/", "/login", "/board","/board/**","schedule/**", "/student/invoices/preview/**", "/invoices/download/**", "/meals/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
-                .antMatchers("/dashboard", "/dashboard/**").permitAll()
+    http.authorizeRequests()
+            .antMatchers("/", "/login", "/board", "/board/**", "schedule/**", "/student/invoices/preview/**", "/invoices/download/**", "/meals/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
+            .antMatchers("/dashboard", "/dashboard/**").permitAll()
 
             // 정적 자원에 대한 접근 허용(주로 쓰는 건 assets 안에 있음)
             .antMatchers("/assets/**").permitAll()
@@ -69,23 +69,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/message/**").hasAnyAuthority(Role.ROLE_STUDENT.name(), Role.ROLE_PROFESSOR.name())
             .anyRequest().authenticated();
 
-        http.exceptionHandling()
+    http.exceptionHandling()
             .authenticationEntryPoint((request, response, authException) -> {
-                // 인증되지 않은 사용자는 로그인 페이지로 이동
-                response.sendRedirect("/login");
+              // 인증되지 않은 사용자는 로그인 페이지로 이동
+              response.sendRedirect("/login");
             })
             .accessDeniedHandler((request, response, accessDeniedException) -> {
-                // 권한이 없는 사용자는 로그인 페이지로 이동
-                response.sendRedirect("/login");
+              // 권한이 없는 사용자는 로그인 페이지로 이동
+              response.sendRedirect("/login");
             });
 
-        http.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint()); // 인증 문제 예외처리
-    }
+    http.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint()); // 인증 문제 예외처리
+  }
 
-    // http 요청에 대한 보안을 설정함
-    // 페이지 권한, 로그인 페이지, 로그아웃 메소드 등
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  // http 요청에 대한 보안을 설정함
+  // 페이지 권한, 로그인 페이지, 로그아웃 메소드 등
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }

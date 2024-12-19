@@ -699,7 +699,7 @@
         <div class="card-body">
           <form th:action="@{/schedule/modify}" method="post" th:object="${schedule}">
             <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
-            <input type="hidden" th:field="*{sno}" />
+            <input type="hidden" th:field="*{sno}"/>
 
             <!-- Content Field -->
             <div class="mb-3">
@@ -728,10 +728,6 @@
         </div>
       </div>
     </div>
-
-
-
-
 
 
     <footer class="footer">

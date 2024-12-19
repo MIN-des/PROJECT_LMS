@@ -14,10 +14,10 @@ import javax.persistence.MappedSuperclass;
 @Getter
 public abstract class BaseEntity extends BaseTimeEntity {
 
-    @CreatedBy
-    @Column(updatable = false)
-    private String createdBy; // 생성한 사람
+  @CreatedBy
+  @Column(updatable = false)
+  private String createdBy; // 생성한 사람
 
-    @LastModifiedBy
-    private String modifiedBy; // 수정한 사람
+  @LastModifiedBy
+  private String modifiedBy; // 수정한 사람
 }

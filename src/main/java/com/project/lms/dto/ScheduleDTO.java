@@ -1,6 +1,5 @@
 package com.project.lms.dto;
 
-import com.project.lms.entity.Schedule;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

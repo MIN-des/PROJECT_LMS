@@ -31,15 +31,15 @@
             </div>
           </div>
 
-<!--          &lt;!&ndash; 내용 필드 &ndash;&gt;
-          <div class="mb-3">
-            <label for="content" class="form-label">내용</label>
-            <textarea id="content" th:field="*{content}" class="form-control" rows="10"></textarea>
-            &lt;!&ndash; 내용 오류 메시지 &ndash;&gt;
-            <div th:if="${#fields.hasErrors('content')}" class="text-danger">
-              <span th:errors="*{content}"></span>
-            </div>
-          </div>-->
+          <!--          &lt;!&ndash; 내용 필드 &ndash;&gt;
+                    <div class="mb-3">
+                      <label for="content" class="form-label">내용</label>
+                      <textarea id="content" th:field="*{content}" class="form-control" rows="10"></textarea>
+                      &lt;!&ndash; 내용 오류 메시지 &ndash;&gt;
+                      <div th:if="${#fields.hasErrors('content')}" class="text-danger">
+                        <span th:errors="*{content}"></span>
+                      </div>
+                    </div>-->
 
           <!-- 내용 필드 (Quill 에디터로 대체) -->
           <div class="mb-3">

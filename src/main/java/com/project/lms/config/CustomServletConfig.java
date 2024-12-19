@@ -9,17 +9,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class CustomServletConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        registry.addResourceHandler("/js/**")
-                .addResourceLocations("classpath:/static/js/");
-        registry.addResourceHandler("/fonts/**")
-                .addResourceLocations("classpath:/static/fonts/");
-        registry.addResourceHandler("/css/**")
-                .addResourceLocations("classpath:/static/css/");
-        registry.addResourceHandler("/assets/**")
-                .addResourceLocations("classpath:/static/assets/");
-    }
+    registry.addResourceHandler("/js/**")
+            .addResourceLocations("classpath:/static/js/");
+    registry.addResourceHandler("/fonts/**")
+            .addResourceLocations("classpath:/static/fonts/");
+    registry.addResourceHandler("/css/**")
+            .addResourceLocations("classpath:/static/css/");
+    registry.addResourceHandler("/assets/**")
+            .addResourceLocations("classpath:/static/assets/");
+  }
 
 }

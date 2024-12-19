@@ -26,7 +26,8 @@
             </div>
             <div class="mb-3">
               <label for="pId" class="form-label">교직원 번호</label>
-              <input type="text" id="pId" name="pId" th:value="${professor.pId}" class="form-control" style="padding: 5px 10px;" required>
+              <input type="text" id="pId" name="pId" th:value="${professor.pId}" class="form-control"
+                     style="padding: 5px 10px;" required>
             </div>
             <div class="mb-3">
               <label for="pName" class="form-label">이름</label>
@@ -45,7 +46,8 @@
               <label for="newPAdd" class="form-label">주소</label>
               <div class="d-flex align-items-center">
                 <input type="text" id="newPAdd" name="newPAdd" th:value="${professor.pAdd}" class="form-control">
-                <button type="button" class="btn btn-label-primary" style="width: max-content; white-space: nowrap;" data-bs-toggle="modal"
+                <button type="button" class="btn btn-label-primary" style="width: max-content; white-space: nowrap;"
+                        data-bs-toggle="modal"
                         data-bs-target="#addressModal">주소 검색
                 </button>
               </div>
@@ -53,14 +55,16 @@
 
             <div class="mb-3">
               <label for="pEmail" class="form-label">이메일</label>
-              <input type="email" id="pEmail" name="pEmail" th:value="${professor.pEmail}" class="form-control" required>
+              <input type="email" id="pEmail" name="pEmail" th:value="${professor.pEmail}" class="form-control"
+                     required>
             </div>
 
             <div class="row">
               <!-- 생년월일 -->
               <div class="col-md-6">
                 <label for="pBirth" class="form-label">생년월일</label>
-                <input type="date" id="pBirth" name="pBirth" th:value="${professor.pBirth}" class="form-control" required>
+                <input type="date" id="pBirth" name="pBirth" th:value="${professor.pBirth}" class="form-control"
+                       required>
               </div>
               <!-- 학부 -->
               <div class="col-md-6">

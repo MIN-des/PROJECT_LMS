@@ -1,7 +1,6 @@
 package com.project.lms.service;
 
 import com.project.lms.dto.EnrollDTO;
-import com.project.lms.dto.CourseDTO;
 import com.project.lms.dto.EnrollCourseDTO;
 import com.project.lms.entity.*;
 import com.project.lms.repository.CourseRepository;
@@ -11,9 +10,7 @@ import com.project.lms.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,9 +67,6 @@ public class EnrollServiceImpl implements EnrollService {
     enrollCourse.setCourse(course);
     enroll.getEnrollCourses().add(enrollCourse);
 
-    // 강의 정원 감소
-//    course.decreaseRestNum();
-
     enrollRepository.save(enroll);
     return convertToDTO(enroll);
   }
@@ -117,35 +111,6 @@ public class EnrollServiceImpl implements EnrollService {
 
     enroll.getEnrollCourses().remove(enrollCourse);
 
-    // 강의 정원 복구
-//    enrollCourse.getCourse().increaseRestNum();
-
     enrollRepository.save(enroll);
   }
-
-//  @Override
-//  public Map<String, Object> getOrdersWithScores(String sId) {
-//    // 학생 확인
-//    Student student = studentRepository.findById(sId)
-//            .orElseThrow(() -> new IllegalArgumentException("해당 학생 정보를 찾을 수 없습니다."));
-//
-//    // 학생의 수강신청 내역 조회
-//    List<Order> orders = orderRepository.findByStudent_sId(sId);
-//
-//    // 결과를 Map 형태로 구성
-//    Map<String, Object> result = new HashMap<>();
-//    result.put("student", student.getSName()); // 학생 이름
-//    result.put("orders", orders.stream().map(order -> {
-//      Map<String, Object> orderDetails = new HashMap<>();
-//      orderDetails.put("courseName", order.getCourse().getCName()); // 강의 이름
-//      orderDetails.put("score", order.getScore() != null ? order.getScore() : "미부여"); // 성적
-//      orderDetails.put("courseId", order.getCourse().getCId()); // 강의 ID
-//      orderDetails.put("credits", order.getCourse().getCredits());  // 총 학점
-//      orderDetails.put("professorName", order.getCourse().getProfessor().getPName());  // 교수 이름
-//      orderDetails.put("dept", order.getCourse().getProfessor().getPDept());
-//      return orderDetails;
-//    }).collect(Collectors.toList()));
-//
-//    return result;
-//  }
 }

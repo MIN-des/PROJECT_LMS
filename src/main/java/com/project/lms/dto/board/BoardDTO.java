@@ -15,23 +15,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor // 파라미터가 없는 디폴트 생성자를 자동으로 생성
 public class BoardDTO {
 
-    private Long bno;
+  private Long bno;
 
-    @NotEmpty
-    @Size(min = 3, max = 100)
-    private String title;
+  @NotEmpty
+  @Size(min = 3, max = 100)
+  private String title;
 
-    @NotEmpty
-    private String content;
+  @NotEmpty
+  private String content;
 
-    @NotEmpty
-    private String writer;
+  @NotEmpty
+  private String writer;
 
-    private int views;
+  private int views;
 
-    private LocalDateTime regDate;
+  private LocalDateTime regDate;
 
-    private LocalDateTime modDate;
-
-    // private List<AllBoardFile> fileList = new ArrayList<>();
+  private LocalDateTime modDate;
 }

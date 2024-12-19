@@ -56,6 +56,7 @@ public class AdminController {
       return "admin/student/create";
     }
   }
+
   // 교수 생성 폼 페이지
   @GetMapping("/professors/create")
   public String createProfessorForm(Model model, Principal principal) {
@@ -124,7 +125,6 @@ public class AdminController {
         if (keyword == null || keyword.isEmpty()) {
           students = adminService.getAllStudents(pageable);
         } else {
-//					Dept.valueOf(keyword.toUpperCase());
           students = adminService.searchStudentsByDept(keyword, pageable);
         }
       } else {

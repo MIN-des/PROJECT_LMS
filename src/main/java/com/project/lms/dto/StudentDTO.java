@@ -14,21 +14,21 @@ import javax.persistence.Enumerated;
 @AllArgsConstructor
 @Builder
 public class StudentDTO {
-	private String sId;
-	private String sName;
-	private String sPw;
-	private String sTel;
-	private String sAdd;
-	private String sBirth;
+  private String sId;
+  private String sName;
+  private String sPw;
+  private String sTel;
+  private String sAdd;
+  private String sBirth;
 
-	@Column(unique = true)
-	private String sEmail;
+  @Column(unique = true)
+  private String sEmail;
 
-	private int grade;
-	private Gen sGen;
+  private int grade;
+  private Gen sGen;
 
-	@Enumerated(EnumType.STRING)
-	private Dept sDept;
+  @Enumerated(EnumType.STRING)
+  private Dept sDept;
 
-	private Role role = Role.ROLE_STUDENT;
+  private Role role = Role.ROLE_STUDENT;
 }

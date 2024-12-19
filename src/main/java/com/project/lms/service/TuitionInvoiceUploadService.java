@@ -9,18 +9,18 @@ import java.util.List;
 
 public interface TuitionInvoiceUploadService {
 
-	TuitionInvoiceUpload getInvoiceById(Long tId);
+  TuitionInvoiceUpload getInvoiceById(Long tId);
 
-	void uploadInvoice(String sId, MultipartFile file) throws Exception; // 관리자: 파일 업로드
+  void uploadInvoice(String sId, MultipartFile file) throws Exception; // 관리자: 파일 업로드
 
-	void deleteInvoice(Long tId) throws Exception; // 관리자: 파일 삭제
+  void deleteInvoice(Long tId) throws Exception; // 관리자: 파일 삭제
 
-	List<TuitionInvoiceUploadDTO> getInvoicesByStudentId(String sId); // 학생: 파일 조회
+  List<TuitionInvoiceUploadDTO> getInvoicesByStudentId(String sId); // 학생: 파일 조회
 
-	byte[] downloadInvoice(Long tId) throws Exception; // 학생: 파일 다운로드
+  byte[] downloadInvoice(Long tId) throws Exception; // 학생: 파일 다운로드
 
-	StudentDTO getStudentById(String id); // 학생 정보 가져오기
+  StudentDTO getStudentById(String id); // 학생 정보 가져오기
 
-	boolean isInvoiceOwnedByStudent(Long tId, String sId);
+  boolean isInvoiceOwnedByStudent(Long tId, String sId);
 
 }

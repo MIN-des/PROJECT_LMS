@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 public class CourseSearchDTO { // 강의 검색
 
-    private String searchDateType; // 검색 유형
-    private RestStatus searchRestStatus; // 잔여 여부
-    private String searchBy;
-    private String searchQuery = ""; // 검색 조건
+  private String searchDateType; // 검색 유형
+  private RestStatus searchRestStatus; // 잔여 여부
+  private String searchBy;
+  private String searchQuery = ""; // 검색 조건
 }

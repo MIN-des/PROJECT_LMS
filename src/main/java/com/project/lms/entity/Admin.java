@@ -16,11 +16,11 @@ import javax.persistence.Id;
 @ToString
 public class Admin {
 
-    @Id
-    private String aId; // role 1자리(A, P, S) +  입학연도 2자리 + dept 1자리 + 숫자 3자리(001...)
-    private String aName; // 부서 이름만 교무처 홍보처 총무처 대외협력처
-    private String aPw;
+  @Id
+  private String aId; // role 1자리(A, P, S) +  입학연도 2자리 + dept 1자리 + 숫자 3자리(001...)
+  private String aName; // 부서 이름만 교무처 홍보처 총무처 대외협력처
+  private String aPw;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+  @Enumerated(EnumType.STRING)
+  private Role role;
 }

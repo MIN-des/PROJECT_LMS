@@ -6,7 +6,6 @@ import com.project.lms.entity.Student;
 import com.project.lms.entity.TuitionInvoiceUpload;
 import com.project.lms.repository.StudentRepository;
 import com.project.lms.service.EnrollService;
-import com.project.lms.service.OrderService;
 import com.project.lms.service.StudentService;
 import com.project.lms.service.TuitionInvoiceUploadService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +41,6 @@ public class StudentController {
   private final TuitionInvoiceUploadService tuitionInvoiceUploadService;
   private final StudentRepository studentRepository;
   private final PasswordEncoder passwordEncoder;
-  private final EnrollService enrollService;
 
   @GetMapping("/info")
   public String getStudentInfo(Model model, Principal principal) {
@@ -97,10 +93,6 @@ public class StudentController {
     if (updatedStudent.getSPw() != null && !updatedStudent.getSPw().isEmpty()) {
       student.setSPw(passwordEncoder.encode(updatedStudent.getSPw()));
     }
-
-    // 업데이트 가능한 필드 업데이트
-//    student.setSTel(updatedStudent.getSTel());
-//    student.setSAdd(updatedStudent.getSAdd());
 
     studentRepository.save(student);
 
@@ -191,8 +183,8 @@ public class StudentController {
     headers.setContentDispositionFormData("attachment", encodedFileName);
 
     return ResponseEntity.ok()
-        .headers(headers)
-        .body(fileData);
+            .headers(headers)
+            .body(fileData);
   }
 
   // 등록금 고지서 미리보기
@@ -206,8 +198,8 @@ public class StudentController {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_PDF); // 브라우저가 PDF로 렌더링하도록 Content-Type 설정
     return ResponseEntity.ok()
-        .headers(headers)
-        .body(fileData);
+            .headers(headers)
+            .body(fileData);
   }
 
   @GetMapping("/grades")

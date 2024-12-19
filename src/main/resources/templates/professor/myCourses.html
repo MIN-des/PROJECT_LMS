@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <th:block th:replace="fragments/head::headFragment"></th:block>
 
@@ -8,44 +9,45 @@
 
 <div class="container">
   <div class="page-inner">
-    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-      <div>
-        <h3 class="fw-bold mb-3">
-          <a th:href="@{/professor/courses/myCourses}" class="text-decoration-none text-dark">내 강의 리스트</a>
-        </h3>
+    <div layout:fragment="content" class="container my-3">
+      <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+        <div>
+          <h1 class="my-4 notice-header">
+            <a th:href="@{/professor/courses/myCourses}" class="text-decoration-none text-dark">내 강의 리스트</a>
+          </h1>
+        </div>
       </div>
-    </div>
 
-    <div th:if="${successMessage}" class="alert alert-success" role="alert">
-      <p th:text="${successMessage}"></p>
-    </div>
-
-    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-      <p th:text="${errorMessage}"></p>
-    </div>
-
-    <!-- 검색 폼 -->
-    <form th:action="@{/professor/courses/myCourses}" method="get" class="mb-3">
-      <div class="row">
-        <div class="col-md-1">
-          <select name="searchType" id="searchType" class="form-select" required>
-            <option th:selected="${searchType == 'id'}" value="id">강의 ID</option>
-            <option th:selected="${searchType == 'name'}" value="name">강의명</option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <input type="text" name="searchQuery" class="form-control" id="searchForm"
-                 placeholder="검색어 입력" th:value="${searchQuery}"/>
-        </div>
-        <div class="col-md-1">
-          <button type="submit" class="btn btn-outline-primary custom-btn">검색</button>
-        </div>
-        <div class="col-md-4"></div>
+      <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <p th:text="${successMessage}"></p>
       </div>
-    </form>
 
-    <!-- 강의 목록 -->
-    <div class="table-responsive">
+      <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <p th:text="${errorMessage}"></p>
+      </div>
+
+      <!-- 검색 폼 -->
+      <form th:action="@{/professor/courses/myCourses}" method="get" class="mb-3">
+        <div class="row">
+          <div class="col-md-1">
+            <select name="searchType" id="searchType" class="form-select" required>
+              <option th:selected="${searchType == 'id'}" value="id">강의 ID</option>
+              <option th:selected="${searchType == 'name'}" value="name">강의명</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <input type="text" name="searchQuery" class="form-control" id="searchForm"
+                   placeholder="검색어 입력" th:value="${searchQuery}"/>
+          </div>
+          <div class="col-md-1">
+            <button type="submit" class="btn btn-outline-primary custom-btn">검색</button>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+      </form>
+
+      <!-- 강의 목록 -->
+
       <table class="table table-bordered table-hover text-center">
         <thead class="table-dark">
         <tr>

@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AdminDTO {
-	private String aId;
-	private String aPw;
-	private String aName;
-	private Role role = Role.ROLE_ADMIN;
+  private String aId;
+  private String aPw;
+  private String aName;
+  private Role role = Role.ROLE_ADMIN;
 }

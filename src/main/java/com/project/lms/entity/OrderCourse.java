@@ -1,13 +1,10 @@
 package com.project.lms.entity;
 
-import com.project.lms.constant.Dept;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Getter

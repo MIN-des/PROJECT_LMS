@@ -6,8 +6,6 @@ import com.project.lms.entity.Files;
 import com.project.lms.service.admin.BoardServiceImpl;
 import com.project.lms.service.admin.FileServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Safelist;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -93,8 +91,6 @@ public class BoardController {
       int currentBlock = page / 5; // 5개의 페이지를 한 블록으로 계산
       int startPage = currentBlock * 5; // 현재 블록의 시작 페이지
       int endPage = Math.min(startPage + 4, totalPages - 1); // 현재 블록의 마지막 페이지 번호
-      //   int startPage = Math.max(currentBlock * 5, 0); // 현재 블록의 시작 페이지
-      //    int endPage = Math.min(startPage + 4, Math.max(totalPages - 1, 0)); // 현재 블록의 끝 페이지
 
       // 모델에 데이터 추가
       model.addAttribute("paging", pagings);
@@ -139,7 +135,6 @@ public class BoardController {
   // 게시글 등록 페이지
   @GetMapping("/admin/board/create")
   public String boardCreate(RegisterFormDTO registerFormDto) {
-    //model.addAttribute("registerFormDTO", new RegisterFormDTO());// RegisterFormDTO 객체를 모델에 추가
     return "admin/board/register"; // 등록 페이지 반환
   }
 
@@ -154,11 +149,6 @@ public class BoardController {
     // Spring Security를 사용하여 현재 로그인된 사용자 ID 가져오기
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String writer = authentication.getName(); // 로그인된 사용자의 ID
-
-    // XSS 공격 방지를 위한 필터링 적용 (이미지 태그 허용)
-//    String sanitizedContent = Jsoup.clean(registerFormDto.getContent(),
-//            Safelist.relaxed().addTags("img").addAttributes("img", "src", "alt", "title")); // 수정: 이미지 태그와 속성 허용
-//    registerFormDto.setContent(sanitizedContent);
 
     //게시글 생성
     Board newBoard = this.boardServiceImpl.create(registerFormDto.getTitle(), registerFormDto.getContent());
@@ -214,7 +204,6 @@ public class BoardController {
     String fileUrl = "/uploaded-images/" + savedFileName;
     return Map.of("url", fileUrl); // 클라이언트에 URL을 반환
   }
-
 
 
   // 게시글 수정 폼

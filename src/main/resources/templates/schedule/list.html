@@ -693,7 +693,8 @@
 
     <div class="container mt-8 d-flex justify-content-center">
       <div class="card shadow border-0" style="border-radius: 15px; width: 600px; overflow: hidden;">
-        <div class="card-header text-center" style="background: linear-gradient(135deg, #1e90ff, #87cefa); color: white;">
+        <div class="card-header text-center"
+             style="background: linear-gradient(135deg, #1e90ff, #87cefa); color: white;">
           <h4 class="fw-bold mb-0">스케줄 목록</h4>
         </div>
         <div class="card-body p-4">
@@ -728,7 +729,8 @@
                   <span aria-hidden="true">&laquo;</span>
                 </a>
               </li>
-              <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages != null ? totalPages -1 : 0)}" th:classappend="${currentPage == i} ? 'active'">
+              <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages != null ? totalPages -1 : 0)}"
+                  th:classappend="${currentPage == i} ? 'active'">
                 <a class="page-link" th:href="@{/schedule/list(page=${i})}" th:text="${i + 1}"></a>
               </li>
               <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
