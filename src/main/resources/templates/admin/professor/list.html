@@ -27,24 +27,22 @@
             <select name="searchType" id="searchType" class="form-select">
               <option value="id" th:selected="${searchType == 'id'}">ID</option>
               <option value="name" th:selected="${searchType == 'name'}">이름</option>
-              <option value="dept" th:selected="${searchType == 'dept'}">학부</option>
             </select>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-2">
             <input type="text" name="keyword" id="searchForm" placeholder="검색어 입력" th:value="${keyword}"
                    class="form-control">
           </div>
           <div class="col-md-1">
             <button type="submit" class="btn btn-label-primary custom-btn">검색</button>
           </div>
-          <div class="col-md-4"></div>
+          <div class="col-md-6"></div>
           <div class="col-md-2 d-flex justify-content-end">
             <a th:href="@{/admin/professors/create}" class="btn btn-label-primary">교수 추가</a>
           </div>
         </div>
       </form>
 
-      <!--<div class="table-responsive">-->
       <table class="table table-bordered table-hover text-center">
         <thead class="table-dark">
         <tr>
@@ -123,7 +121,7 @@
     </div>
   </div>
 </div>
-<!--</div>-->
+
 
 <th:block th:replace="fragments/footer::footerFragment"></th:block>
 </body>

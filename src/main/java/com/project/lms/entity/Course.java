@@ -54,7 +54,6 @@ public class Course extends BaseEntity {
   public void updateCourse(CourseDTO courseDTO) {
     this.cName = courseDTO.getCName();
     this.credits = courseDTO.getCredits();
-//        this.maxCapacity=courseDTO.getMaxCapacity(); // 수정할 수 있지만 수정하면 문제 생길듯
     this.restNum = courseDTO.getRestNum();
   }
 

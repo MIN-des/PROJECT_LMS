@@ -9,6 +9,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Data
 @Builder
 @AllArgsConstructor // 모든 필드 값을 파라미터로 받는 생성자를 자동으로 생성
@@ -29,7 +31,9 @@ public class BoardDTO {
 
   private int views;
 
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime regDate;
 
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime modDate;
 }

@@ -28,7 +28,7 @@
 
     <form th:action="@{/professor/courses/list}" method="get" class="mb-3">
       <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-2">
           <select class="form-select" id="searchType" name="searchType" required>
             <option th:selected="${searchType == 'id'}" value="id">강의 ID</option>
             <option th:selected="${searchType == 'name'}" value="name">강의명</option>
@@ -36,17 +36,17 @@
             <option th:selected="${searchType == 'pName'}" value="pName">교수명</option>
           </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <input type="text" class="form-control" id="searchForm" name="searchQuery" th:value="${searchQuery}"
                  placeholder="검색어 입력"/>
         </div>
         <div class="col-md-1">
-          <button type="submit" class="btn btn-outline-primary custom-btn">검색</button>
+          <button type="submit" class="btn btn-label-primary custom-btn">검색</button>
         </div>
 
         <div class="col-md-4"></div>
         <div class="col-md-2 d-flex justify-content-end">
-          <a th:href="@{/professor/courses/create}" class="btn btn-outline-primary"><b>강의 등록</b></a>
+          <a th:href="@{/professor/courses/create}" class="btn btn-label-primary"><b>강의 등록</b></a>
         </div>
       </div>
     </form>
@@ -80,10 +80,10 @@
           <td th:text="${course.restNum}"></td>
           <td>
             <a th:href="@{/professor/courses/update/{cId}(cId=${course.cId})}"
-               class="btn btn-sm btn-outline-primary custom-btn">수정</a>
+               class="btn btn-sm btn-label-primary custom-btn">수정</a>
             <form th:action="@{/professor/courses/delete}" method="post" style="display: inline;">
               <input type="hidden" name="cId" th:value="${course.cId}"/>
-              <button type="submit" class="btn btn-sm btn-outline-danger custom-btn"
+              <button type="submit" class="btn btn-sm btn-label-danger custom-btn"
                       onclick="return confirm('해당 강의를 삭제하시겠습니까?')">
                 삭제
               </button>

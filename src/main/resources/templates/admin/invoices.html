@@ -22,7 +22,8 @@
             <form th:action="@{/admin/invoices/student}" method="get">
               <div class="mb-3">
                 <label for="sId" class="form-label">학번</label>
-                <input type="text" id="sId" name="sId" class="form-control" placeholder="학번 입력" required>
+                <input type="text" id="sId" name="sId" class="form-control" placeholder="학번 입력"
+                       required>
               </div>
               <div class="text-center">
                 <button type="submit" class="btn btn-label-primary w-30">조회</button>
@@ -41,7 +42,8 @@
               <input type="hidden" name="sId" th:value="${student.sId}">
               <div class="mb-3">
                 <label for="file" class="form-label">등록금 고지서 파일 (PDF)</label>
-                <input type="file" id="file" name="file" class="form-control" accept="application/pdf" required>
+                <input type="file" id="file" name="file" class="form-control" accept="application/pdf"
+                       required>
               </div>
               <div class="text-center">
                 <button type="submit" class="btn btn-label-primary w-30">업로드</button>
@@ -115,10 +117,13 @@
               <tr th:each="invoice : ${invoices}">
                 <td th:text="${invoice.fileName}"></td>
                 <td>
-                  <a th:href="@{'/admin/invoices/download/' + ${invoice.tId}}" class="btn btn-label-primary btn-sm">다운로드</a>
+                  <a th:href="@{'/admin/invoices/download/' + ${invoice.tId}}"
+                     class="btn btn-label-primary btn-sm">다운로드</a>
                 </td>
                 <td>
-                  <button class="btn btn-label-secondary btn-sm" th:attr="data-id=${invoice.tId}" onclick="previewInvoiceFromData(this)">미리보기</button>
+                  <button class="btn btn-label-secondary btn-sm" th:attr="data-id=${invoice.tId}"
+                          onclick="previewInvoiceFromData(this)">미리보기
+                  </button>
                 </td>
                 <td>
                   <form th:action="@{'/admin/invoices/delete/' + ${invoice.tId}}" method="post">

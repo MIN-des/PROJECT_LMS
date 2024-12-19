@@ -29,18 +29,18 @@
       <!-- 검색 폼 -->
       <form th:action="@{/professor/courses/myCourses}" method="get" class="mb-3">
         <div class="row">
-          <div class="col-md-1">
+          <div class="col-md-2">
             <select name="searchType" id="searchType" class="form-select" required>
               <option th:selected="${searchType == 'id'}" value="id">강의 ID</option>
               <option th:selected="${searchType == 'name'}" value="name">강의명</option>
             </select>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" name="searchQuery" class="form-control" id="searchForm"
                    placeholder="검색어 입력" th:value="${searchQuery}"/>
           </div>
           <div class="col-md-1">
-            <button type="submit" class="btn btn-outline-primary custom-btn">검색</button>
+            <button type="submit" class="btn btn-label-primary custom-btn">검색</button>
           </div>
           <div class="col-md-4"></div>
         </div>
@@ -70,7 +70,7 @@
           <td th:text="${course.restNum}"></td>
           <td>
             <a th:href="@{/professor/courses/studentList/{cId}(cId=${course.cId})}"
-               class="btn btn-outline-primary custom-btn">
+               class="btn btn-label-primary custom-btn">
               조회하기
             </a>
           </td>

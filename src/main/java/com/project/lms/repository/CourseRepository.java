@@ -7,12 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
   // 특정 교수의 모든 강의 조회 (페이징)
-  Page<Course> findByProfessor_pId(/*@Param("pId")*/ String pId, Pageable pageable);
+  Page<Course> findByProfessor_pId(String pId, Pageable pageable);
 
   // 특정 교수의 강의 ID로 검색
   @Query("SELECT c FROM Course c WHERE c.professor.pId = :pId AND c.cId = :cId")

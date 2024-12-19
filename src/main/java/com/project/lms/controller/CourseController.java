@@ -74,6 +74,7 @@ public class CourseController { // 강의 조회(권한 전체), 생성/수정/�
       model.addAttribute("course", courseDTO);
 
       return "course/create"; // 강의 생성 페이지에 머무름
+
     } catch (Exception e) {
       // 예상하지 못한 오류 처리
       model.addAttribute("errorMsg", "강의를 생성하는 중 문제가 발생했습니다. 다시 시도해주세요.");

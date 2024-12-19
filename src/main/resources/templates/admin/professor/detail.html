@@ -13,7 +13,8 @@
           <h5>교수 정보 수정</h5>
         </div>
         <div class="card-body">
-          <form th:action="@{'/admin/professors/' + ${professor.pId} + '/edit'}" th:object="${professor}" method="post">
+          <form th:action="@{'/admin/professors/' + ${professor.pId} + '/edit'}" th:object="${professor}"
+                method="post">
             <input type="hidden" name="pPw" th:value="${professor.pPw}" class="form-control">
             <input type="hidden" name="page" th:value="${page != null ? page : 0}">
             <input type="hidden" name="searchType" th:value="${searchType != null ? searchType : ''}">
@@ -43,7 +44,8 @@
               </div>
               <div id="newAddressContainer" style="display: none;" class="mt-2">
                 <div class="input-group">
-                  <input type="text" id="newPAdd" name="newPAdd" th:value="${professor.pAdd}" class="form-control"
+                  <input type="text" id="newPAdd" name="newPAdd" th:value="${professor.pAdd}"
+                         class="form-control"
                          placeholder="새 주소 입력"/>
                   <button type="button" class="btn btn-label-primary" data-bs-toggle="modal"
                           data-bs-target="#addressModal">주소 검색
@@ -94,7 +96,7 @@
 
             <div class="mb-3">
               <label for="role" class="form-label">권한</label>
-              <input type="text" class="form-control" id="role" th:field="*{role}" readonly>
+              <input type="text" class="form-control" id="role" th:field="*{role.koreanName}" readonly>
             </div>
 
             <div class="d-flex justify-content-between">

@@ -52,8 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutSuccessUrl("/");
 
     http.authorizeRequests()
-            .antMatchers("/", "/login", "/board", "/board/**", "schedule/**", "/student/invoices/preview/**", "/invoices/download/**", "/meals/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
-            .antMatchers("/dashboard", "/dashboard/**").permitAll()
+      .antMatchers("/", "/login", "/board", "/board/**", "schedule/**", "/uploaded-images/**",
+        "/student/invoices/preview/**", "/invoices/download/**", "/meals/**").permitAll() // 모든 사람이 볼 수 있음, 미리보기 추가함 url 설정도 추가함
+      .antMatchers("/dashboard", "/dashboard/**").permitAll()
+      // 공지사항 및 학사일정 API는 누구나 접근 가능
+      .antMatchers("/api/notices", "/api/schedules").permitAll()
 
             // 정적 자원에 대한 접근 허용(주로 쓰는 건 assets 안에 있음)
             .antMatchers("/assets/**").permitAll()

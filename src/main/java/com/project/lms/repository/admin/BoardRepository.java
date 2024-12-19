@@ -67,5 +67,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecific
   Page<Board> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrWriterContainingIgnoreCase(
           String title, String content, String writer, Pageable pageable);
 
+  //수정
+  Page<Board> findAllByOrderByRegDateDesc(Pageable pageable);
 
 }

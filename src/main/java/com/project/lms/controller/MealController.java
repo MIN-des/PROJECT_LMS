@@ -1,7 +1,7 @@
 package com.project.lms.controller;
 
 import com.project.lms.service.SchoolMealService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequiredArgsConstructor
 public class MealController {
 
-  @Autowired
-  private SchoolMealService schoolMealService;
+  private final SchoolMealService schoolMealService;
 
   @GetMapping("/meals")
   public ResponseEntity<Map<String, Object>> getMeal(@RequestParam(value = "date", required = false) String date) {

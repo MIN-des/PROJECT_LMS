@@ -24,10 +24,13 @@ import org.springframework.web.util.UriUtils;
 
 import javax.validation.Valid;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -205,33 +208,32 @@ public class BoardController {
     return Map.of("url", fileUrl); // 클라이언트에 URL을 반환
   }
 
-
-  // 게시글 수정 폼
+  //수정
   @GetMapping("/admin/board/detail/{bno}/modify")
   public String modifyForm(@PathVariable Long bno, Model model) {
     Board board = boardServiceImpl.getBoard(bno);
+    if (board == null) {
+      throw new RuntimeException("Board not found for id: " + bno);
+    }
 
     // 게시글 데이터를 DTO에 담아 폼에 전달
     RegisterFormDTO registerFormDTO = new RegisterFormDTO();
     registerFormDTO.setTitle(board.getTitle());
     registerFormDTO.setContent(board.getContent());
 
+    // 파일 리스트가 null인 경우 빈 리스트로 초기화
+    if (board.getFileList() == null) {
+      board.setFileList(new ArrayList<>());
+    }
+
     model.addAttribute("registerFormDTO", registerFormDTO);
-    model.addAttribute("bno", bno);
+    model.addAttribute("board", board); // board 객체 전달
+    model.addAttribute("fileList", board.getFileList()); // 파일 리스트 전달
+
 
     return "admin/board/modify";
   }
 
-  // 게시글 수정 처리
-  @PostMapping("/admin/board/detail/{bno}/modify")
-  // 파일 업로드 처리
-  public String modify(@PathVariable Long bno, @Valid @ModelAttribute RegisterFormDTO registerFormDTO, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      return "admin/board/modify";
-    }
-    boardServiceImpl.modify(bno, registerFormDTO.getTitle(), registerFormDTO.getContent());
-    return "redirect:/board/detail/{bno}";
-  }
 
   // 게시글 삭제
   @PostMapping("/admin/board/detail/{bno}/delete")
@@ -266,7 +268,10 @@ public class BoardController {
 
     board.getFileList().add(files);
     boardServiceImpl.save(board);  // 파일 정보 저장 후 board 객체 저장
-
+    // 파일을 직접 스트림으로 저장
+    try (FileOutputStream fos = new FileOutputStream(targetFile)) {
+      fos.write(file.getBytes());
+    }
     return "redirect:/board/detail/" + bno;
   }
 
@@ -283,6 +288,38 @@ public class BoardController {
     return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + UriUtils.encode(file.getFName(), "UTF-8"))
             .body(resource);
+  }
+
+  //수정
+  @DeleteMapping("/admin/board/file/delete/{fileId}")
+  @ResponseBody
+  public ResponseEntity<?> deleteFile(@PathVariable Long fileId) {
+    fileService.deleteFile(fileId);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/admin/board/detail/{bno}/modify")
+  public String modify(@PathVariable Long bno, @Valid @ModelAttribute RegisterFormDTO registerFormDTO,
+                       BindingResult bindingResult,
+                       @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
+
+    if (bindingResult.hasErrors()) {
+      return "admin/board/modify";
+    }
+
+    // 게시글 수정
+    boardServiceImpl.modify(bno, registerFormDTO.getTitle(), registerFormDTO.getContent());
+
+    // 파일 업로드 처리 (비어있는 파일은 무시)
+    if (files != null && !files.isEmpty()) {
+      for (MultipartFile file : files) {
+        if (file != null && !file.isEmpty()) {
+          fileService.uploadFile(bno, file);
+        }
+      }
+    }
+
+    return "redirect:/board/detail/" + bno;
   }
 
 

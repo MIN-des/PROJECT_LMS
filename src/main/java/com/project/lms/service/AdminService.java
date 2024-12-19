@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface AdminService {
-  // 교수 관련 메서드
+  // 교수 관련 메소드
   ProfessorDTO createProfessor(ProfessorDTO professorDTO);
 
   Optional<ProfessorDTO> getProfessorById(String pId);
@@ -25,7 +25,7 @@ public interface AdminService {
 
   Page<ProfessorDTO> getAllProfessors(Pageable pageable);
 
-  // 학생 관련 메서드
+  // 학생 관련 메소드
   StudentDTO createStudent(StudentDTO studentDTO);
 
   Optional<StudentDTO> getStudentById(String sId);

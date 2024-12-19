@@ -20,6 +20,7 @@ import java.security.Principal;
 public class ProfessorController {
 
   private final ProfessorRepository professorRepository;
+  private final CourseService courseService;
   private final PasswordEncoder passwordEncoder;
 
   // 로그인 후 교수 자신의 정보 조회
@@ -44,6 +45,7 @@ public class ProfessorController {
             .orElseThrow(() -> new IllegalArgumentException("Professor not found for ID: " + pId));
 
     model.addAttribute("professor", professor); // 교수 정보 전달
+
     return "professor/modify"; // modify.html 렌더링
   }
 
@@ -87,6 +89,6 @@ public class ProfessorController {
     // 성공 메시지 추가
     redirectAttributes.addFlashAttribute("successMessage", "내 정보가 성공적으로 수정되었습니다.");
 
-    return "redirect:/professor/modify"; // 수정 페이지로 리다이렉트
+    return "redirect:/professor/info"; // 수정 페이지로 리다이렉트
   }
 }

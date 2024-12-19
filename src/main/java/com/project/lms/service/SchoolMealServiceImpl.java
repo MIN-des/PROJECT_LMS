@@ -37,7 +37,6 @@ public class SchoolMealServiceImpl implements SchoolMealService {
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
     try {
-
       // HTTP GET 요청
       ResponseEntity<String> responseEntity = restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, entity, String.class);
       String responseBody = responseEntity.getBody();

@@ -90,8 +90,14 @@ public class MainController {
     return "dashboard";
   }
 
-  @GetMapping("/")
-  public String root() {
-    return "redirect:/login";
-  }
+	@GetMapping("/")
+	public String root() {
+		return "redirect:/login";
+	}
+
+	@GetMapping("/dashboard/map")
+	public String showMapPage() {
+		return "map"; // templates/map.html 렌더링
+	}
 }
+

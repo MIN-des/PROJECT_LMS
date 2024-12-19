@@ -6,7 +6,6 @@ import com.project.lms.dto.StudentDTO;
 import com.project.lms.entity.Professor;
 import com.project.lms.entity.Student;
 import com.project.lms.entity.TuitionInvoiceUpload;
-import com.project.lms.repository.AdminRepository;
 import com.project.lms.repository.ProfessorRepository;
 import com.project.lms.repository.StudentRepository;
 import com.project.lms.repository.TuitionInvoiceUploadRepository;
@@ -30,7 +29,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
-  private final AdminRepository adminRepository;
   private final ProfessorRepository professorRepository;
   private final PasswordEncoder passwordEncoder;
   private final ModelMapper modelMapper;
@@ -215,5 +213,4 @@ public class AdminServiceImpl implements AdminService {
     return studentRepository.findAll(pageable)
             .map(student -> modelMapper.map(student, StudentDTO.class));
   }
-
 }

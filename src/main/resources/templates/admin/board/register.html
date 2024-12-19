@@ -11,14 +11,16 @@
 
     <!-- Board Section -->
     <div class="row">
-      <h1 class="text-center my-4" style="cursor: pointer;" onclick="location.href='/board/list'">학사 게시판</h1>
+      <h1 class="text-center my-4 notice-header" style="cursor: pointer;" onclick="location.href='/board/list'">학사
+        게시판</h1>
       <div layout:fragment="content" class="container">
         <h2 class="my-3 border-bottom pb-2">게시글 등록</h2>
         <form th:action="@{/admin/board/create}" enctype="multipart/form-data" method="post"
               th:object="${registerFormDTO}"><!--enctype="multipart/form-data-->
           <!-- 오류 메시지 출력 -->
           <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div> <!-- 수정: err.defaultMessage -> err -->
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+            <!-- 수정: err.defaultMessage -> err -->
           </div>
 
           <!-- 제목 필드 -->
@@ -31,20 +33,10 @@
             </div>
           </div>
 
-          <!--          &lt;!&ndash; 내용 필드 &ndash;&gt;
-                    <div class="mb-3">
-                      <label for="content" class="form-label">내용</label>
-                      <textarea id="content" th:field="*{content}" class="form-control" rows="10"></textarea>
-                      &lt;!&ndash; 내용 오류 메시지 &ndash;&gt;
-                      <div th:if="${#fields.hasErrors('content')}" class="text-danger">
-                        <span th:errors="*{content}"></span>
-                      </div>
-                    </div>-->
-
-          <!-- 내용 필드 (Quill 에디터로 대체) -->
           <div class="mb-3">
             <label for="content" class="form-label">내용</label>
-            <div id="quill-editor" style="min-height: 300px; background: #fff; border: 1px solid #ced4da;"></div>
+            <div id="quill-editor"
+                 style="min-height: 300px; background: #fff; border: 1px solid #ced4da;"></div>
             <input type="hidden" id="content" name="content" th:field="*{content}">
             <div th:if="${#fields.hasErrors('content')}" class="text-danger">
               <span th:errors="*{content}"></span>

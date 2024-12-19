@@ -29,7 +29,7 @@
               <label for="pPw" class="form-label">비밀번호</label>
               <div class="input-group">
                 <input type="password" id="pPw" value="******" class="form-control" readonly/>
-                <button type="button" class="btn btn-outline-primary" onclick="toggleEdit('newPw')">수정
+                <button type="button" class="btn btn-label-primary" onclick="toggleEdit('newPw')">수정
                 </button>
               </div>
               <input type="password" id="newPw" name="newPw" class="form-control mt-2"
@@ -41,7 +41,7 @@
               <div class="input-group">
                 <input type="text" id="pTel" th:value="${professor.pTel}" class="form-control"
                        readonly/>
-                <button type="button" class="btn btn-outline-primary" onclick="toggleEdit('newPTel')">수정
+                <button type="button" class="btn btn-label-primary" onclick="toggleEdit('newPTel')">수정
                 </button>
               </div>
               <input type="text" id="newPTel" name="newPTel" class="form-control mt-2"
@@ -53,14 +53,14 @@
               <div class="input-group">
                 <input type="text" id="pAdd" th:value="${professor.pAdd}" class="form-control"
                        readonly/>
-                <button type="button" class="btn btn-outline-primary" onclick="toggleAddressEdit()">수정
+                <button type="button" class="btn btn-label-primary" onclick="toggleAddressEdit()">수정
                 </button>
               </div>
               <div id="newAddressContainer" style="display: none;" class="mt-2">
                 <div class="input-group">
                   <input type="text" id="newPAdd" name="newPAdd" class="form-control"
                          placeholder="새 주소 입력"/>
-                  <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                  <button type="button" class="btn btn-label-primary" data-bs-toggle="modal"
                           data-bs-target="#addressModal">주소 검색
                   </button>
                 </div>
@@ -89,8 +89,8 @@
                      readonly>
             </div>
             <div class="d-flex justify-content-between">
-              <button type="submit" class="btn btn-outline-primary">저장</button>
-              <a th:href="@{/professor/info}" class="btn btn-outline-danger">취소</a>
+              <button type="submit" class="btn btn-label-primary">저장</button>
+              <a th:href="@{/professor/info}" class="btn btn-label-danger">취소</a>
             </div>
           </form>
         </div>
@@ -110,7 +110,7 @@
         <div class="input-group mb-3">
           <input type="text" id="addressSearchInput" class="form-control"
                  placeholder="도로명 또는 지번 주소를 입력하세요">
-          <button type="button" class="btn btn-primary" onclick="searchAddress()">검색</button>
+          <button type="button" class="btn btn-label-primary" onclick="searchAddress()">검색</button>
         </div>
         <div id="addressResult" class="list-group"></div>
       </div>
