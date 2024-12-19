@@ -2,13 +2,10 @@ package com.project.lms.service;
 
 import com.project.lms.dto.CourseDTO;
 import com.project.lms.entity.Course;
-import com.project.lms.entity.Order;
 import com.project.lms.entity.Professor;
 import com.project.lms.repository.CourseRepository;
-import com.project.lms.repository.OrderRepository;
 import com.project.lms.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -127,7 +124,6 @@ public class CourseServiceImpl implements CourseService {
         course.updateCourse(courseDTO);
         courseRepository.save(course);
     }
-
 
     @Override
     public Page<CourseDTO> searchCoursesById(Long cId, Pageable pageable) {

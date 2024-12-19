@@ -1,6 +1,5 @@
 package com.project.lms.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +23,9 @@ public class Message {
     private String receiverName;
     private String content;       // 메시지 내용
     private LocalDateTime sendDate; // 전송 일시 (조회용)
+
+    // 추가함
+    private boolean isRead = false; // 읽음 여부
 
     // 메시지 생성자
     public Message(String senderId, String senderName, String receiverId, String receiverName, String content) {

@@ -3,8 +3,6 @@ package com.project.lms.service;
 import com.project.lms.dto.MessageDTO;
 import com.project.lms.entity.Message;
 import com.project.lms.repository.MessageRepository;
-import com.project.lms.repository.ProfessorRepository;
-import com.project.lms.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +15,18 @@ import java.util.stream.Collectors;
 public class MessageService {
 
     private final MessageRepository messageRepository;
-    private final StudentRepository studentRepository;
-    private final ProfessorRepository professorRepository;
+
+    @Transactional
+    public void markMessagesAsRead(String receiverId, String senderId) {
+        // 특정 발신자와 수신자 간의 읽지 않은 메시지를 읽음 처리
+        messageRepository.markMessagesAsRead(receiverId, senderId);
+    }
+
+    @Transactional(readOnly = true)
+    public Long getUnreadMessageCount(String receiverId, String senderId) {
+        // 읽지 않은 메시지 개수 조회
+        return messageRepository.countByReceiverIdAndSenderIdAndIsReadFalse(receiverId, senderId);
+    }
 
     @Transactional
     public void sendMessage(MessageDTO messageDTO) {
@@ -30,9 +38,9 @@ public class MessageService {
                 messageDTO.getReceiverName(), // 수신자 이름
                 messageDTO.getContent()
         );
+
         messageRepository.save(message);
     }
-
 
     @Transactional(readOnly = true)
     public List<MessageDTO> getChatHistory(String senderId, String receiverId) {

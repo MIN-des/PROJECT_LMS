@@ -5,7 +5,6 @@ import com.project.lms.dto.OrderDTO;
 import com.project.lms.dto.StudentDTO;
 import com.project.lms.service.EnrollService;
 import com.project.lms.service.OrderService;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 
 @Controller
@@ -34,7 +32,7 @@ public class EnrollController {
         String sId = principal.getName();
         System.out.println("Logged-in student ID: " + sId);
 
-        if(sId == null) {
+        if (sId == null) {
             throw new IllegalArgumentException("로그인 정보가 없습니다.");
         }
 
@@ -64,7 +62,7 @@ public class EnrollController {
     }
 
     @PostMapping("/delete")
-    public String deleteCourseFromEnroll(@RequestParam Long cId, Principal principal,RedirectAttributes redirectAttributes){
+    public String deleteCourseFromEnroll(@RequestParam Long cId, Principal principal, RedirectAttributes redirectAttributes) {
         try {
             String sId = principal.getName();
             enrollService.removeCourseFromEnroll(sId, cId);

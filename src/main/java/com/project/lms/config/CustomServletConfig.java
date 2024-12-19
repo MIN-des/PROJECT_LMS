@@ -21,5 +21,4 @@ public class CustomServletConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/assets/**")
                 .addResourceLocations("classpath:/static/assets/");
     }
-
 }

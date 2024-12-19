@@ -3,7 +3,6 @@ package com.project.lms.dto;
 import com.project.lms.constant.Dept;
 import com.project.lms.constant.RestStatus;
 import com.project.lms.entity.Course;
-import com.project.lms.entity.Professor;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
@@ -44,11 +43,6 @@ public class CourseDTO {
     private String pName;
 
     private List<String> studentIds; // 강의를 신청한 학생 ID 목록
-
-    // 사용할지 안할지 모름
-    /*public String getStatus() {
-        return restNum > 0 ? "AVAILABLE" : "FULL";
-    }*/
 
     private static ModelMapper modelMapper = new ModelMapper();
 

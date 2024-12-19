@@ -2,13 +2,10 @@ package com.project.lms.dto;
 
 import com.project.lms.constant.Dept;
 import com.project.lms.constant.OrderStatus;
-import com.project.lms.entity.Course;
 import com.project.lms.entity.Order;
-import com.project.lms.entity.Student;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;

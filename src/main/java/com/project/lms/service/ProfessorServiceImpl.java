@@ -20,97 +20,96 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProfessorServiceImpl implements ProfessorService {
 
-  private final ProfessorRepository professorRepository;
-  private final PasswordEncoder passwordEncoder;
-  private final ModelMapper modelMapper;
+    private final ProfessorRepository professorRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
-  @Override
-  public ProfessorDTO createProfessor(ProfessorDTO professorDTO) {
-    if (professorRepository.existsById(professorDTO.getPId())) {
-      throw new IllegalArgumentException("이미 중복된 교직원 번호가 존재합니다.");
+    @Override
+    public ProfessorDTO createProfessor(ProfessorDTO professorDTO) {
+        if (professorRepository.existsById(professorDTO.getPId())) {
+            throw new IllegalArgumentException("이미 중복된 교직원 번호가 존재합니다.");
+        }
+
+        // 비밀번호 암호화
+        if (professorDTO.getPPw() != null && !professorDTO.getPPw().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(professorDTO.getPPw());
+            professorDTO.setPPw(encodedPassword);
+        }
+
+        if (professorRepository.existsBypEmail(professorDTO.getPEmail())) {
+            throw new IllegalArgumentException("이미 중복된 이메일이 존재합니다.");
+        }
+
+        Professor professor = modelMapper.map(professorDTO, Professor.class);
+        return modelMapper.map(professorRepository.save(professor), ProfessorDTO.class);
     }
 
-    // 비밀번호 암호화
-    if (professorDTO.getPPw() != null && !professorDTO.getPPw().isEmpty()) {
-      String encodedPassword = passwordEncoder.encode(professorDTO.getPPw());
-      professorDTO.setPPw(encodedPassword);
+    // 관리자, 교수가 교수 세부정보 조회
+    @Override
+    public Optional<ProfessorDTO> getProfessorById(String pId) {
+        return professorRepository.findById(pId)
+                .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
     }
 
-    if (professorRepository.existsBypEmail(professorDTO.getPEmail())) {
-      throw new IllegalArgumentException("이미 중복된 이메일이 존재합니다.");
+    // 관리자가 교수 정보 업데이트
+    @Override
+    public ProfessorDTO updateProfessor(String pId, ProfessorDTO professorDTO) {
+        Professor professor = professorRepository.findById(pId)
+                .orElseThrow(() -> new EntityNotFoundException("Professor with id " + pId + " not found"));
+
+        // 교직원 번호 중복 확인
+        if (!professor.getPId().equals(professorDTO.getPId()) && professorRepository.existsById(professorDTO.getPId())) {
+            throw new IllegalArgumentException("이미 중복된 교직원 번호가 존재합니다: " + professorDTO.getPId());
+        }
+
+        // 이메일 중복 확인
+        if (!professor.getPEmail().equals(professorDTO.getPEmail()) && professorRepository.existsBypEmail(professorDTO.getPEmail())) {
+            throw new IllegalArgumentException("이미 중복된 이메일이 존재합니다: " + professorDTO.getPEmail());
+        }
+
+        // 비밀번호 암호화
+        if (professorDTO.getPPw() != null && !professorDTO.getPPw().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(professorDTO.getPPw());
+            professorDTO.setPPw(encodedPassword);
+        }
+
+        modelMapper.map(professorDTO, professor);
+        return modelMapper.map(professorRepository.save(professor), ProfessorDTO.class);
     }
 
-    Professor professor = modelMapper.map(professorDTO, Professor.class);
-    return modelMapper.map(professorRepository.save(professor), ProfessorDTO.class);
-  }
-
-  // 관리자, 교수가 교수 세부정보 조회
-  @Override
-  public Optional<ProfessorDTO> getProfessorById(String pId) {
-    return professorRepository.findById(pId)
-            .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
-  }
-
-  // 관리자가 교수 정보 업데이트
-  @Override
-  public ProfessorDTO updateProfessor(String pId, ProfessorDTO professorDTO) {
-    Professor professor = professorRepository.findById(pId)
-            .orElseThrow(() -> new EntityNotFoundException("Professor with id " + pId + " not found"));
-
-    // 교직원 번호 중복 확인
-    if (!professor.getPId().equals(professorDTO.getPId()) && professorRepository.existsById(professorDTO.getPId())) {
-      throw new IllegalArgumentException("이미 중복된 교직원 번호가 존재합니다: " + professorDTO.getPId());
+    @Override
+    public void deleteProfessor(String pId) {
+        professorRepository.deleteById(pId);
     }
 
-    // 이메일 중복 확인
-    if (!professor.getPEmail().equals(professorDTO.getPEmail()) && professorRepository.existsBypEmail(professorDTO.getPEmail())) {
-      throw new IllegalArgumentException("이미 중복된 이메일이 존재합니다: " + professorDTO.getPEmail());
+    @Override
+    public Page<ProfessorDTO> searchProfessorsById(String pId, Pageable pageable) {
+        return professorRepository.findBypIdContainingIgnoreCase(pId, pageable)
+                .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
     }
 
-    // 비밀번호 암호화
-    if (professorDTO.getPPw() != null && !professorDTO.getPPw().isEmpty()) {
-      String encodedPassword = passwordEncoder.encode(professorDTO.getPPw());
-      professorDTO.setPPw(encodedPassword);
+    @Override
+    public Page<ProfessorDTO> searchProfessorsByName(String pName, Pageable pageable) {
+        return professorRepository.findBypNameContainingIgnoreCase(pName, pageable)
+                .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
     }
 
-    modelMapper.map(professorDTO, professor);
-    return modelMapper.map(professorRepository.save(professor), ProfessorDTO.class);
-  }
-
-  @Override
-  public void deleteProfessor(String pId) {
-    professorRepository.deleteById(pId);
-  }
-
-  @Override
-  public Page<ProfessorDTO> searchProfessorsById(String pId, Pageable pageable) {
-    return professorRepository.findBypIdContainingIgnoreCase(pId, pageable)
-            .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
-  }
-
-  @Override
-  public Page<ProfessorDTO> searchProfessorsByName(String pName, Pageable pageable) {
-    return professorRepository.findBypNameContainingIgnoreCase(pName, pageable)
-            .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
-  }
-
-  @Override
-  public Page<ProfessorDTO> searchProfessorsByDept(String pDept, Pageable pageable) {
-    try {
-      // pDept 를 Enum 타입으로 변환
-      Dept dept = Dept.valueOf(pDept.toUpperCase()); // 유효하지 않은 값이면 예외 발생
-      return professorRepository.findBypDept(dept, pageable) // 변환된 Dept 타입 사용
-              .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
-    } catch (IllegalArgumentException e) {
-      // 변환 실패 시 예외 처리
-      throw new IllegalArgumentException("유효하지 않은 학부 값입니다.");
+    @Override
+    public Page<ProfessorDTO> searchProfessorsByDept(String pDept, Pageable pageable) {
+        try {
+            // pDept 를 Enum 타입으로 변환
+            Dept dept = Dept.valueOf(pDept.toUpperCase()); // 유효하지 않은 값이면 예외 발생
+            return professorRepository.findBypDept(dept, pageable) // 변환된 Dept 타입 사용
+                    .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
+        } catch (IllegalArgumentException e) {
+            // 변환 실패 시 예외 처리
+            throw new IllegalArgumentException("유효하지 않은 학부 값입니다.");
+        }
     }
-  }
 
-  @Override
-  public Page<ProfessorDTO> getAllProfessors(Pageable pageable) {
-    return professorRepository.findAll(pageable)
-            .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
-  }
-
+    @Override
+    public Page<ProfessorDTO> getAllProfessors(Pageable pageable) {
+        return professorRepository.findAll(pageable)
+                .map(professor -> modelMapper.map(professor, ProfessorDTO.class));
+    }
 }

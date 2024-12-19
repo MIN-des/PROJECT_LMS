@@ -19,6 +19,14 @@
               </a>
             </li>
 
+            <!-- 학사 게시판 -->
+            <li class="nav-item dropdown">
+              <a th:href="@{/board/list}">
+                <i class="fas fa-clipboard-list"></i>
+                <p>학사 게시판</p>
+              </a>
+            </li>
+
             <!-- 학생 페이지 섹션 -->
             <li class="nav-item dropdown">
               <a th:if="${#authorization.expression('hasRole(''ROLE_STUDENT'')')}"
@@ -35,13 +43,12 @@
                       <p>내 정보</p>
                     </a>
                   </li>
-                  <li>
-                  <li>
+                  <!--<li>
                   <a th:href="@{/board/list}">
                     <i class="fas fa-clipboard-list"></i>
                       <p>학사 게시판</p>
                     </a>
-                  </li>
+                  </li>-->
                   <li>
                     <a th:href="@{/student/courses/list}">
                       <i class="fas fa-list-alt"></i>
@@ -94,23 +101,22 @@
                   </li>
                   <li>
                     <a th:href="@{/professor/courses/list}">
-                      <i class="fas fa-th-list"></i>
+                        <i class="fa-solid fa-list-ul"></i>
                       <p>전체 강의 조회</p>
                     </a>
                   </li>
                   <li>
                     <a th:href="@{/professor/courses/myCourses}">
-                      <i class="fas fa-th-list"></i>
+                        <i class="fa-solid fa-chalkboard-user"></i>
                       <p>내 강의 조회</p>
                     </a>
                   </li>
                   <li>
-                    <a th:href="@{/board/list}">
-                      <i class="fas fa-clipboard-list"></i>
-                      <p>학사 게시판</p>
+                    <a th:href="@{/message/main}">
+                      <i class="fa-regular fa-comment-dots"></i>
+                      <p>강의 채팅</p>
                     </a>
                   </li>
-
                 </ul>
               </div>
             </li>
@@ -151,6 +157,22 @@
                   </li>
                 </ul>
               </div>
+            </li>
+
+            <!-- 총장 인사말 -->
+            <li class="nav-item dropdown">
+              <a th:href="@{/dashboard/greetings}">
+                <i class="fa-solid fa-pen-nib"></i>
+                <p>총장 인사말</p>
+              </a>
+            </li>
+
+            <!-- 찾아오시는 길 -->
+            <li class="nav-item dropdown">
+              <a th:href="@{/dashboard/}">
+                <i class="fa-solid fa-location-dot"></i>
+                <p>캠퍼스 안내</p>
+              </a>
             </li>
           </ul>
         </div>

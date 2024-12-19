@@ -1,30 +1,74 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <title>채팅 메인 페이지</title>
-</head>
+<th:block th:replace="fragments/head::headFragment"></th:block>
 <body>
-<h1>채팅 메인 페이지</h1>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
 
-<!-- 수강한 교수 (학생만 볼 수 있음) -->
-<h2 sec:authorize="hasRole('ROLE_STUDENT')">수강한 교수</h2>
-<ul sec:authorize="hasRole('ROLE_STUDENT')">
-    <li th:each="professor : ${professors}">
-        <a th:href="@{/message/chat(receiverId=${professor.pId}, receiverName=${professor.pName})}"
-           th:text="${professor.pName + ' (' + professor.pId + ')'}"></a>
-    </li>
-</ul>
+<div class="container">
+    <div class="page-inner">
+        <h1 class="fw-bold mb-4">
+            <a th:href="@{/message/main}" sec:authorize="hasRole('ROLE_STUDENT')"
+               class="text-decoration-none text-dark">수강 중인 강의 채팅방 목록</a>
+            <a th:href="@{/message/main}" sec:authorize="hasRole('ROLE_PROFESSOR')"
+               class="text-decoration-none text-dark">신청한 학생 채팅방 목록</a>
+        </h1>
 
-<!-- 신청한 학생 (교수만 볼 수 있음) -->
-<h2 sec:authorize="hasRole('ROLE_PROFESSOR')">신청한 학생</h2>
-<ul sec:authorize="hasRole('ROLE_PROFESSOR')">
-    <li th:each="student : ${students}">
-        <a th:href="@{/message/chat(receiverId=${student.sId}, receiverName=${student.sName})}"
-           th:text="${student.sName + ' (' + student.sId + ')'}"></a>
-    </li>
-</ul>
+        <!--수강한 교수 (학생만 볼 수 있음)-->
+        <div class="row" sec:authorize="hasRole('ROLE_STUDENT')">
+            <div class="col-md-4 mb-4" th:each="professor : ${professors}">
+                <div class="card text-center shadow mb-4" style="min-height: 300px;">
+                    <div class="card-header custom-chat text-white">
+                        <ul class="list-unstyled mb-0" style="font-size: 1.2rem; text-align: center;">
+                            <li th:each="course : ${professor['courses']}" th:text="${course.cName}"></li>
+                            <span th:if="${professor.unreadCount > 0}"
+                                  th:text="|(${professor.unreadCount}개의 새 메시지)|"></span>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <i class="fa-solid fa-user-tie fa-6x text-muted d-flex flex-column align-items-center justify-content-center"></i>
+                        <h4 class="card-title mt-3" th:text="${professor['pName']}"></h4>
+                        <p class="text-muted mb-2" th:text="'교수 ID : ' + ${professor['pId']}"></p>
+                        <a th:href="@{/message/chat(receiverId=${professor['pId']}, receiverName=${professor['pName']})}"
+                           class="btn btn-label-primary mt-3">
+                            메세지 보내기
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!--신청한 학생 (교수만 볼 수 있음) -->
+        <div class="row" sec:authorize="hasRole('ROLE_PROFESSOR')">
+            <div class="col-md-4 mb-4" th:each="student : ${students}">
+                <div class="card text-center shadow mb-4" style="min-height: 300px;">
+
+                    <!-- 강의명 표시 -->
+                    <div class="card-header custom-chat text-white">
+                        <ul class="list-unstyled mb-0" style="font-size: 1.2rem; text-align: center;">
+                            <!-- 학생이 로그인한 교수의 강의에 신청한 강의명만 출력 -->
+                            <li th:each="course : ${student['courses']}" th:text="${course}"></li>
+
+                            <!-- 읽지 않은 메시지 개수 표시 -->
+                            <span th:if="${student.unreadCount > 0}"
+                                  th:text="|(${student.unreadCount}개의 새 메시지)|"></span>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <i class="fa-solid fa-user-pen fa-6x text-muted d-flex flex-column align-items-center justify-content-center"></i>
+                        <h4 class="card-title mt-3" th:text="${student['sName']}"></h4>
+                        <p class="text-muted mb-2" th:text="'학생 ID : ' + ${student['sId']}"></p>
+                        <a th:href="@{/message/chat(receiverId=${student['sId']}, receiverName=${student['sName']})}"
+                           class="btn btn-label-primary mt-3">
+                            메세지 보내기
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 </body>
 </html>

@@ -14,6 +14,7 @@ import javax.persistence.Enumerated;
 @AllArgsConstructor
 @Builder
 public class StudentDTO {
+
 	private String sId;
 	private String sName;
 	private String sPw;
