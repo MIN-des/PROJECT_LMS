@@ -7,5 +7,5 @@ import java.util.List;
 
 @Data
 public class UploadDTO {
-    private List<Files> files;
+  private List<Files> files;
 }

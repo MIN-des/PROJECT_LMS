@@ -4,6 +4,7 @@ package com.project.lms.service.admin;
 import com.project.lms.dto.board.BoardDTO;
 import com.project.lms.entity.Admin;
 import com.project.lms.entity.Board;
+import com.project.lms.entity.Files;
 import com.project.lms.repository.AdminRepository;
 import com.project.lms.repository.admin.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,12 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -34,6 +37,7 @@ public class BoardServiceImpl implements BoardService {
   private final ModelMapper modelMapper;
   private final BoardRepository boardRepository;
   private final AdminRepository adminRepository; // AdminRepository 주입
+
 
   // 게시글 저장
   public Board save(Board board) {
@@ -94,8 +98,8 @@ public class BoardServiceImpl implements BoardService {
 
     // AdminRepository를 사용해 aName 가져오기
     String writerName = adminRepository.findById(userId)
-            .map(Admin::getAName)
-            .orElse("Unknown");
+      .map(Admin::getAName)
+      .orElse("Unknown");
 
     board.setWriter(writerName); // 작성자 설정
 
@@ -113,11 +117,10 @@ public class BoardServiceImpl implements BoardService {
   }
 
 
-
   // 게시글 수정 처리
   public void modify(Long bno, @NotEmpty(message = "제목은 필수 항목입니다.") @Size(max = 200) String title, @NotEmpty(message = "내용은 필수 항목입니다.") String content) {
     Board board = boardRepository.findById(bno)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
+      .orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
 
     // 제목과 내용 수정
     board.setTitle(title);
@@ -128,14 +131,26 @@ public class BoardServiceImpl implements BoardService {
   }
 
   // 게시글 삭제 처리
+  @Transactional
   public void delete(Long bno) {
     // 게시글 조회
     Board board = boardRepository.findById(bno)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid board ID: " + bno));  // 게시글이 존재하지 않으면 예외 발생
+      .orElseThrow(() -> new IllegalArgumentException("Invalid board ID: " + bno));
+
+    // 게시글에 첨부된 파일 삭제
+    if (board.getFileList() != null && !board.getFileList().isEmpty()) {
+      for (Files file : board.getFileList()) {
+        File physicalFile = new File(file.getFPath());
+        if (physicalFile.exists() && !physicalFile.delete()) {
+          System.err.println("첨부 파일 삭제 실패: " + physicalFile.getAbsolutePath());
+        }
+      }
+    }
 
     // 게시글 삭제
-    boardRepository.delete(board); // 해당 게시글을 삭제
+    boardRepository.delete(board);
   }
+
 
   public Long createBoard(Board board) {
     // Board 객체를 DTO로 변환
@@ -172,7 +187,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     return boardRepository.findByTitleContainingOrContentContainingOrWriterContaining(
-            keyword, keyword, keyword, pageable
+      keyword, keyword, keyword, pageable
     );
 
   }
@@ -193,9 +208,9 @@ public class BoardServiceImpl implements BoardService {
     return boardRepository.findAll((root, query, cb) -> {
       query.distinct(true); // 중복 제거
       return cb.or(
-              cb.like(root.get("title"), "%" + keyword + "%"), // 제목
-              cb.like(root.get("content"), "%" + keyword + "%"), // 내용
-              cb.like(root.get("writer"), "%" + keyword + "%") // 작성자
+        cb.like(root.get("title"), "%" + keyword + "%"), // 제목
+        cb.like(root.get("content"), "%" + keyword + "%"), // 내용
+        cb.like(root.get("writer"), "%" + keyword + "%") // 작성자
       );
     }, pageable);
   }
@@ -246,11 +261,31 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByKeywordAndRegDateBetween(keyword, startDateTime, endDateTime, pageable);
     }
   }
+
   @Transactional
   public void incrementViews(Long bno) {
     Board board = boardRepository.findById(bno)
-            .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다." + bno));
+      .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다." + bno));
     board.setViews(board.getViews() + 1); // 조회수 증가
     boardRepository.save(board); // 변경 사항 저장
+  }
+
+  /**
+   * 최근 공지사항 리스트를 반환
+   *
+   * @param limit 반환할 공지사항의 개수
+   * @return 공지사항 리스트
+   */
+  public List<BoardDTO> getRecentBoards(int limit) {
+    return boardRepository.findAllByOrderByRegDateDesc(PageRequest.of(0, limit))
+      .stream()
+      .map(board -> BoardDTO.builder()
+        .bno(board.getBno())
+        .title(board.getTitle())
+        .writer(board.getWriter())
+        .regDate(board.getRegDate())
+        .build()
+      )
+      .collect(Collectors.toList());
   }
 }

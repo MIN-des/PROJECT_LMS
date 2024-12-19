@@ -6,118 +6,115 @@
 <body>
 <th:block th:replace="fragments/header::headerFragment"></th:block>
 
-  <div class="container">
-    <div class="page-inner">
+<div class="container">
+  <div class="page-inner">
 
-      <!-- Board Section -->
-      <div class="row">
-        <h1 class="text-center my-4 notice-header" style="cursor: pointer;" onclick="location.href='/board/list'">학사 게시판</h1>
-        <div layout:fragment="content" class="container my-3">
-          <!-- 게시글 제목 -->
-          <h2 class="border-bottom py-2" th:text="${board.title}"></h2>
-          <div class="mb-2 text-muted" style="font-size: 1.0rem;">
-            <span th:text="'등록일자: ' + ${#temporals.format(board.regDate, 'yyyy-MM-dd HH:mm')}"></span> |
-            <span th:text="'작성자: ' + ${board.writer}"></span> |
-            <span th:text="'조회수: ' + ${board.views}"></span>
+    <!-- Board Section -->
+    <div class="row">
+      <h1 class="text-center my-4 notice-header" style="cursor: pointer;" onclick="location.href='/board/list'">학사
+        게시판</h1>
+      <div layout:fragment="content" class="container my-3">
+        <!-- 게시글 제목 -->
+        <h2 class="border-bottom py-2" th:text="${board.title}"></h2>
+        <div class="mb-2 text-muted" style="font-size: 1.0rem;">
+          <span th:text="'등록일자: ' + ${#temporals.format(board.regDate, 'yyyy-MM-dd HH:mm')}"></span> |
+          <span th:text="'작성자: ' + ${board.writer}"></span> |
+          <span th:text="'조회수: ' + ${board.views}"></span>
+        </div>
+        <div class="card my-3">
+          <div class="card-body" style="min-height: 400px;"><!-- 최소 높이 설정 -->
+            <!-- 게시글 내용 -->
+            <div class="card-text" style="white-space: pre-line; font-size: 1.4rem;"
+                 th:utext="${board.content}"></div>
           </div>
-          <div class="card my-3">
-            <div class="card-body" style="min-height: 400px;"><!-- 최소 높이 설정 -->
-              <!-- 게시글 내용 -->
-              <div class="card-text" style="white-space: pre-line; font-size: 1.4rem;" th:utext="${board.content}"></div>
-            </div>
-          </div>
+        </div>
 
-          <!-- 업로드된 파일 목록 -->
+        <!-- 업로드된 파일 목록 -->
+        <div class="my-3">
           <div class="my-3">
-            <div class="my-3">
-              <h5>첨부 파일</h5>
-              <ul>
-                <li th:each="file : ${board.fileList}">
+            <h5>첨부 파일</h5>
+            <ul>
+              <li th:each="file : ${board.fileList}">
                   <span th:if="${file != null}">
                         <!-- 이미지 파일 처리 -->
                     <a href="javascript:void(0);"
                        th:attr="data-image-url=@{/board/file/download/{id}(id=${file.id})}, data-file-name=${file.fName}"
                        th:text="${file.fName}"
                        onclick="showImage(this)"></a>
-                  <!-- 일반 파일 처리 -->
-                    <a th:if="${!file.fName.toLowerCase().endsWith('.jpg') && !file.fName.toLowerCase().endsWith('.png') && !file.fName.toLowerCase().endsWith('.jpeg') && !file.fName.toLowerCase().endsWith('.gif')}"
-                       th:href="@{/board/file/download/{id}(id=${file.id})}"
-                       download
-                       th:text="${file.fName}"></a>
+                    <!-- 일반 파일 처리 -->
+                    <a
+                      th:if="${!file.fName.toLowerCase().endsWith('.jpg') && !file.fName.toLowerCase().endsWith('.png') && !file.fName.toLowerCase().endsWith('.jpeg') && !file.fName.toLowerCase().endsWith('.gif')}"
+                      th:href="@{/board/file/download/{id}(id=${file.id})}"
+                      download
+                      th:text="${file.fName}"></a>
                         </span>
-                </li>
-              </ul>
-            </div>
+              </li>
+            </ul>
+          </div>
 
-            <!-- 이미지가 표시될 영역 -->
-            <div id="image-viewer" style="display: none; margin-top: 20px; text-align: center;">
-              <h5>이미지 보기</h5>
-              <img id="image-preview" src="" alt="이미지 미리보기" style="max-width: 100%; height: auto;">
-              <!-- 버튼 영역 -->
-              <div style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
-                <a id="image-download" href="" download style="text-decoration: none;">
-                  <button>다운로드</button>
-                </a>
-                <button onclick="closeImageViewer()">닫기</button>
-              </div>
-            </div>
-
-            <script>
-              function showImage(element) {
-                  const imageUrl = element.getAttribute('data-image-url');
-                  const fileName = element.getAttribute('data-file-name');
-
-                  const viewer = document.getElementById('image-viewer');
-                  const imgPreview = document.getElementById('image-preview');
-                  const imgDownload = document.getElementById('image-download');
-
-                  imgPreview.src = imageUrl; // 이미지 URL 설정
-                  imgDownload.href = imageUrl; // 다운로드 링크 설정
-                  imgDownload.download = fileName; // 파일명 설정
-
-                  viewer.style.display = 'block'; // 뷰어 보이기
-              }
-
-              function closeImageViewer() {
-                  const viewer = document.getElementById('image-viewer');
-                  viewer.style.display = 'none'; // 뷰어 숨기기
-              }
-            </script>
-
-
-            <!-- 수정, 삭제 버튼 및 목록으로 돌아가기 버튼 -->
-            <div class="d-flex justify-content-start">
-              <!-- 수정 버튼 -->
-<!--              <button class="btn btn-label-primary mr-3"
-                      th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
-                      data-url="@{/board/file/download/{id}(id=${file.id})}"
-                      data-name="${file.fName}"
-                      onclick="handleFileDownload(this)"
-                      type="button">수정
-              </button>-->
-              <form th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
-                    th:action="@{/admin/board/detail/{bno}/modify(bno=${board.bno})}"
-                    method="get">
-                <button class="btn btn-label-primary mr-3" type="submit">수정</button>
-              </form>
-
-
-              <!-- 삭제 버튼 -->
-              <form th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
-                    th:action="@{/admin/board/detail/{bno}/delete(bno=${board.bno})}"
-                    method="post">
-                <button class="btn btn-label-danger mr-3" type="submit">삭제</button>
-              </form>
-
-              <!-- 목록으로 돌아가기 버튼 -->
-              <a href="/board/list" class="btn btn-label-secondary">목록으로 돌아가기</a>
+          <!-- 이미지가 표시될 영역 -->
+          <div id="image-viewer" style="display: none; margin-top: 20px; text-align: center;">
+            <h5>이미지 보기</h5>
+            <img id="image-preview" src="" alt="이미지 미리보기" style="max-width: 100%; height: auto;">
+            <!-- 버튼 영역 -->
+            <div style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
+              <a id="image-download" href="" download style="text-decoration: none;">
+                <button>다운로드</button>
+              </a>
+              <button onclick="closeImageViewer()">닫기</button>
             </div>
           </div>
 
+          <script>
+            function showImage(element) {
+                const imageUrl = element.getAttribute('data-image-url');
+                const fileName = element.getAttribute('data-file-name');
+
+                const viewer = document.getElementById('image-viewer');
+                const imgPreview = document.getElementById('image-preview');
+                const imgDownload = document.getElementById('image-download');
+
+                imgPreview.src = imageUrl; // 이미지 URL 설정
+                imgDownload.href = imageUrl; // 다운로드 링크 설정
+                imgDownload.download = fileName; // 파일명 설정
+
+                viewer.style.display = 'block'; // 뷰어 보이기
+            }
+
+            function closeImageViewer() {
+                const viewer = document.getElementById('image-viewer');
+                viewer.style.display = 'none'; // 뷰어 숨기기
+            }
+          </script>
+
+
+          <!-- 수정, 삭제 버튼 및 목록으로 돌아가기 버튼 -->
+          <div class="d-flex justify-content-start">
+            <form th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+                  th:action="@{/admin/board/detail/{bno}/modify(bno=${board.bno})}"
+                  method="get">
+              <button class="btn btn-label-primary mr-3" style="margin-right: 10px;" type="submit">수정
+              </button>
+            </form>
+
+
+            <!-- 삭제 버튼 -->
+            <form th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+                  th:action="@{/admin/board/detail/{bno}/delete(bno=${board.bno})}"
+                  method="post">
+              <button class="btn btn-label-danger mr-3" style="margin-right: 10px;" type="submit">삭제
+              </button>
+            </form>
+
+            <!-- 목록으로 돌아가기 버튼 -->
+            <a href="/board/list" class="btn btn-label-secondary">목록으로 돌아가기</a>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
-  <th:block th:replace="fragments/footer::footerFragment"></th:block>
+</div>
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
 </body>
 </html>
