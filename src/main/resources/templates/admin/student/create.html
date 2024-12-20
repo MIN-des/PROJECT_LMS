@@ -73,18 +73,6 @@
               </div>
 
               <div class="col-md-6">
-                <label for="sDept" class="form-label">학부</label>
-                <select id="sDept" name="sDept" class="form-select" required>
-                  <option value="HUMAN" th:selected="${student.sDept == 'HUMAN'}">인문</option>
-                  <option value="SOCIAL" th:selected="${student.sDept == 'SOCIAL'}">사회</option>
-                  <option value="TECH" th:selected="${student.sDept == 'TECH'}">공학</option>
-                  <option value="ARTS" th:selected="${student.sDept == 'ARTS'}">예체능</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
                 <label for="grade" class="form-label">학년</label>
                 <select id="grade" name="grade" class="form-select" required>
                   <option value="1" th:selected="${student.grade == 1}">1학년</option>
@@ -93,12 +81,23 @@
                   <option value="4" th:selected="${student.grade == 4}">4학년</option>
                 </select>
               </div>
+            </div>
 
+            <div class="row">
               <div class="col-md-6">
                 <label for="sGen" class="form-label">성별</label>
                 <select id="sGen" name="sGen" class="form-select" required>
                   <option value="MALE" th:selected="${student.sGen == 'MALE'}">남성</option>
                   <option value="FEMALE" th:selected="${student.sGen == 'FEMALE'}">여성</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="sDept" class="form-label">학부</label>
+                <select id="sDept" name="sDept" class="form-select" required>
+                  <option value="HUMAN" th:selected="${student.sDept == 'HUMAN'}">인문</option>
+                  <option value="SOCIAL" th:selected="${student.sDept == 'SOCIAL'}">사회</option>
+                  <option value="TECH" th:selected="${student.sDept == 'TECH'}">공학</option>
+                  <option value="ARTS" th:selected="${student.sDept == 'ARTS'}">예체능</option>
                 </select>
               </div>
             </div>

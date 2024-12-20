@@ -18,6 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -200,14 +202,18 @@ public class AdminController {
 
     try {
       adminService.updateStudent(id, studentDTO);
+
+      // URL 인코딩 처리
+      String encodedKeyword = keyword != null ? URLEncoder.encode(keyword, "UTF-8") : "";
+
       return "redirect:/admin/students?page=" + (page - 1) +
               (searchType != null ? "&searchType=" + searchType : "") +
-              (keyword != null ? "&keyword=" + keyword : "") +
+              (keyword != null ? "&keyword=" + encodedKeyword : "") +
               "&sortField=" + sortField +
               "&sortDir=" + sortDir +
               "&isSorted=" + isSorted;
 
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | UnsupportedEncodingException e) {
       model.addAttribute("error", e.getMessage());
       model.addAttribute("student", studentDTO);
       model.addAttribute("page", page);
@@ -336,15 +342,18 @@ public class AdminController {
     }
 
     try {
+      // URL 인코딩 처리
+      String encodedKeyword = keyword != null ? URLEncoder.encode(keyword, "UTF-8") : "";
+
       adminService.updateProfessor(id, professorDTO);
       return "redirect:/admin/professors?page=" + (page - 1) +
               (searchType != null ? "&searchType=" + searchType : "") +
-              (keyword != null ? "&keyword=" + keyword : "") +
+              (keyword != null ? "&keyword=" + encodedKeyword : "") +
               "&sortField=" + sortField +
               "&sortDir=" + sortDir +
               "&isSorted=" + isSorted;
 
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | UnsupportedEncodingException e) {
       model.addAttribute("error", e.getMessage());
       model.addAttribute("professor", professorDTO);
       model.addAttribute("page", page);

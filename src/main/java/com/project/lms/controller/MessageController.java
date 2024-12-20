@@ -93,7 +93,15 @@ public class MessageController {
               data.put("pId", prof.getPId());
               data.put("pName", prof.getPName());
               data.put("unreadCount", messageService.getUnreadMessageCount(userId, prof.getPId()));
-              data.put("courses", prof.getCourses()); // 교수의 강의 목록
+
+              // 학생이 특정 교수의 강의 중 신청한 강의만 필터링
+              List<OrderDTO> orders = orderService.getOrdersByStudent_sId(userId);
+              List<String> enrolledCourses = orders.stream()
+                  .filter(order -> order.getPId().equals(prof.getPId())) // 교수 ID와 일치하는 강의만 필터링
+                  .map(OrderDTO::getCName) // 강의명 가져오기
+                  .collect(Collectors.toList());
+
+              data.put("courses", enrolledCourses); // 신청한 강의만 추가
               return data;
             }).collect(Collectors.toList());
 

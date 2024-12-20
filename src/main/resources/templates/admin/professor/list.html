@@ -93,6 +93,10 @@
         </tr>
         </tbody>
       </table>
+      <!-- 검색 결과 없음 메시지 -->
+      <div th:if="${totalPages == 0}" class="alert alert-info text-center">
+        검색 결과가 없습니다.
+      </div>
     </div>
 
     <nav th:if="${totalPages > 0}">
@@ -115,10 +119,7 @@
         </li>
       </ul>
     </nav>
-    <!-- 검색 결과 없음 메시지 -->
-    <div th:if="${totalPages == 0}" class="alert alert-info text-center">
-      검색 결과가 없습니다.
-    </div>
+
   </div>
 </div>
 

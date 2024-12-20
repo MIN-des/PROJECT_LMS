@@ -20,7 +20,7 @@
         <div class="card text-center shadow mb-4" style="min-height: 300px;">
           <div class="card-header custom-chat text-white">
             <ul class="list-unstyled mb-0" style="font-size: 1.2rem; text-align: center;">
-              <li th:each="course : ${professor['courses']}" th:text="${course.cName}"></li>
+              <li th:each="course : ${professor['courses']}" th:text="${course}"></li>
               <span th:if="${professor.unreadCount > 0}"
                     th:text="|(${professor.unreadCount}개의 새 메시지)|"></span>
             </ul>

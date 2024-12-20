@@ -25,7 +25,7 @@ public class Professor extends BaseEntity {
   private String pAdd; // 주소
   private String pBirth; // 생년월일
   private String pEmail;
-  private String year; // 입사년도
+  private int year; // 입사년도
 
   @Enumerated(EnumType.STRING)
   private Gen pGen; // 성별

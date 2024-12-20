@@ -10,6 +10,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -39,6 +40,9 @@ public class Course extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "pId", nullable = false) // 교수 ID를 외래키로 사용
   private Professor professor;
+
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<EnrollCourse> enrollCourseList = new ArrayList<>();
 
   // 강의 생성 시 초기화 메서드
   @PrePersist

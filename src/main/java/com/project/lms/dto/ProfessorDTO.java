@@ -46,7 +46,7 @@ public class ProfessorDTO {
   private String pEmail;
 
   @NotBlank(message = "입사년도는 필수 항목입니다.")
-  private String year; // 입사년도
+  private int year; // 입사년도
 
   @NotBlank(message = "성별은 필수 항목입니다.")
   private Gen pGen; // 성별

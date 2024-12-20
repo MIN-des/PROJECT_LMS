@@ -71,18 +71,6 @@
                 <input type="date" id="pBirth" name="pBirth" th:value="${professor.pBirth}"
                        class="form-control" required>
               </div>
-              <!-- 학부 -->
-              <div class="col-md-6">
-                <label for="pDept" class="form-label">학부</label>
-                <select id="pDept" name="pDept" class="form-select" required>
-                  <option value="HUMAN" th:selected="${professor.pDept == 'HUMAN'}">인문</option>
-                  <option value="SOCIAL" th:selected="${professor.pDept == 'SOCIAL'}">사회</option>
-                  <option value="TECH" th:selected="${professor.pDept == 'TECH'}">공학</option>
-                  <option value="ARTS" th:selected="${professor.pDept == 'ARTS'}">예체능</option>
-                </select>
-              </div>
-            </div>
-            <div class="row">
               <!-- 입사년도 -->
               <div class="col-md-6">
                 <label for="year" class="form-label">입사년도</label>
@@ -93,12 +81,22 @@
                           th:selected="${i == professor.year}"></option>
                 </select>
               </div>
-              <!-- 성별 -->
+            </div>
+            <div class="row">
               <div class="col-md-6">
                 <label for="pGen" class="form-label">성별</label>
                 <select id="pGen" name="pGen" class="form-select" required>
                   <option value="MALE" th:selected="${professor.pGen == 'MALE'}">남성</option>
                   <option value="FEMALE" th:selected="${professor.pGen == 'FEMALE'}">여성</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="pDept" class="form-label">학부</label>
+                <select id="pDept" name="pDept" class="form-select" required>
+                  <option value="HUMAN" th:selected="${professor.pDept == 'HUMAN'}">인문</option>
+                  <option value="SOCIAL" th:selected="${professor.pDept == 'SOCIAL'}">사회</option>
+                  <option value="TECH" th:selected="${professor.pDept == 'TECH'}">공학</option>
+                  <option value="ARTS" th:selected="${professor.pDept == 'ARTS'}">예체능</option>
                 </select>
               </div>
             </div>
