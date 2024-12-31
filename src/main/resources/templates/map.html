@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/head::headFragment"></th:block>
+<body>
+<th:block th:replace="fragments/header::headerFragment"></th:block>
+
+<div class="container mt-8">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary custom-card text-white text-center">
+                    <h5>우리대학교 경로</h5>
+                </div>
+                <div class="card-body">
+                    <div id="map_div" class="map-page-map"></div>
+                    <div class="map-page-info-panel">
+                        <h4 class="info-title">📌 우리대학교</h4>
+                        <div class="info-card">
+                            <p><i class="fas fa-map-marker-alt"></i> <strong>소재지:</strong> 서울특별시 구로구 시흥대로 163길 33 2층, 3층
+                                (주호타워) (우)08393</p>
+                            <p><i class="fas fa-id-badge"></i> <strong>사업자등록번호:</strong> 203-87-00672</p>
+                            <p><i class="fas fa-phone"></i> <strong>전화:</strong> 02-837-9922 | <strong>FAX:</strong>
+                                02-867-2222</p>
+                            <p><i class="fas fa-clock"></i> <strong>운영시간:</strong> 09:30 ~ 22:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/footer::footerFragment"></th:block>
+<script src="https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=8seom6WP9l5elVeBSxZPT4azBvWUsaxD66kbsB8F"></script>
+<script>
+    let map;
+
+    function initTmap() {
+        // 지도 초기화
+        map = new Tmapv3.Map("map_div", {
+            center: new Tmapv3.LatLng(37.482046, 126.898198), // 중심 좌표
+            zoom: 15
+        });
+
+        // 도착지 좌표
+        const endPoint = new Tmapv3.LatLng(37.482046, 126.898198);   // 도착지
+
+        // 도착지 마커 추가
+        new Tmapv3.Marker({
+            position: endPoint,
+            map: map,
+            title: "도착지"
+        });
+
+        // 출발지와 도착지를 기준으로 지도 중심 이동
+        map.setCenter(endPoint);
+    }
+
+    document.addEventListener("DOMContentLoaded", initTmap);
+</script>
+</body>
+</html>
